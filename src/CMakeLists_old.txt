@@ -1,0 +1,49 @@
+# ----------------------------------------------------------------------------
+#  Root CMake file for Soda
+#
+# ----------------------------------------------------------------------------
+
+PROJECT(Soda)
+CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
+
+# Soda Version
+SET (Soda_VERSION_MAJOR 0)
+SET (Soda_VERSION_MINOR 1)
+SET (Soda_VERSION_PATCH 2)
+
+# Disable in source builds
+SET(CMAKE_DISABLE_IN_SOURCE_BUILD ON)
+SET(CMAKE_DISABLE_SOURCE_CHANGES  ON)
+
+IF ("${CMAKE_SOURCE_DIR}" STREQUAL "${CMAKE_BINARY_DIR}")
+  MESSAGE(SEND_ERROR "In-source builds are not allowed.")
+ENDIF ()
+
+# Configure header file
+CONFIGURE_FILE (
+  "${PROJECT_SOURCE_DIR}/sodaconfig.hpp.in"
+  "${PROJECT_BINARY_DIR}/sodaconfig.hpp"
+  )
+
+INCLUDE_DIRECTORIES(${PROJECT_BINARY_DIR})
+
+FILE(GLOB CONFIG_HEADER_FILES "${PROJECT_BINARY_DIR}/*.hpp")
+ADD_CUSTOM_TARGET(${PROJECT_NAME}ConfigHeaders SOURCES ${CONFIG_HEADER_FILES})
+
+# Global Definitions
+SET(${PROJECT_NAME}_DEFINITIONS
+    -std=c++14
+    CACHE INTERNAL "${PROJECT_NAME}: Global Definitions" FORCE)
+
+# Makefile settings
+SET(CMAKE_VERBOSE_MAKEFILE ON)
+SET(CMAKE_COLOR_MAKEFILE   ON)
+
+
+ADD_SUBDIRECTORY(library)
+ADD_SUBDIRECTORY(plugin)
+ADD_SUBDIRECTORY(application)
+
+FILE(GLOB TEXT_FILES "*.txt")
+
+ADD_CUSTOM_TARGET(${PROJECT_NAME}_NonSource SOURCES ${TEXT_FILES})

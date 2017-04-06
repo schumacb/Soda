@@ -1,0 +1,8 @@
+// If the name of this file ends with .in, this is a template to insert cmake
+// variables in a header file. The corresponding headerfile will be generated
+// in the build folder. Otherwise, this is the generated header file and should
+// not be modified.
+
+#define PLUGIN_VERSION_MAJOR @PLUGIN_VERSION_MAJOR@
+#define PLUGIN_VERSION_MINOR @PLUGIN_VERSION_MINOR@
+#define PLUGIN_VERSION_PATCH @PLUGIN_VERSION_PATCH@

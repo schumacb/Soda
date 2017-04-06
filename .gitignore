@@ -5,6 +5,7 @@ lib/
 *-build*/
 doc/documentation.pdf
 *~
+CMakeLists.txt.user
 
 ######
 
