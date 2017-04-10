@@ -16,12 +16,6 @@ ADD_DEFINITIONS(
 # ----------------------------------------------------------------------------
 # External libraries
 
-# Boost
-FIND_PACKAGE(Boost COMPONENTS program_options REQUIRED)
-SET(LIBRARIES ${LIBRARIES} ${Boost_LIBRARIES})
-INCLUDE_DIRECTORIES(${Boost_INCLUDE_DIRS})
-
-
 # OpenCV
 FIND_PACKAGE(OpenCV REQUIRED)
 SET(LIBRARIES ${LIBRARIES} ${OpenCV_LIBS})
