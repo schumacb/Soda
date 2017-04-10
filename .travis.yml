@@ -1,0 +1,12 @@
+language: cpp
+
+compiler:
+    - gcc
+
+dist: trusty
+sudo: required
+
+install:
+    - sudo apt-get install qt5-default libopencv-dev
+
+script: cmake .
