@@ -17,6 +17,13 @@ ENDIF ()
 # Global Definitions
 SET(${PROJECT_NAME}_DEFINITIONS
     -std=c++14
+    -Wall -Wextra -Wshadow -Wnon-virtual-dtor -pedantic
+    -Wold-style-cast -Wcast-align -Wunused -Woverloaded-virtual
+    -Wconversion -Wsign-conversion
+    -Weffc++
+    # unknown in clang 3.8.0
+    # -Wmisleading-indentation
+    # -Weverything
     CACHE INTERNAL "${PROJECT_NAME}: Global Definitions" FORCE)
 
 # Makefile settings
