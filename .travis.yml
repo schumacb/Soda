@@ -4,9 +4,22 @@ compiler:
     - gcc
 
 dist: trusty
-sudo: required
+sudo: false
 
-install:
-    - sudo apt-get install qt5-default libopencv-dev
+addons:
+  apt:
+    sources:
+    packages:
+      - qt5-default
+      - libopencv-dev
 
-script: cmake .
+before_srcipt:
+    - mkdir build
+    - cd build
+    - mkdir clang
+    - cd gcc
+    - cmake ../.. 
+
+script: 
+    - cd build/gcc
+    - make test
