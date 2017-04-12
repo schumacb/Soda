@@ -1,21 +1,19 @@
 
 language: cpp
 
-sudo: false
+sudo: required
+
+services:
+  - docker
 
 compiler:
   - gcc
-
-dist: trusty
 
 addons:
   apt:
     packages:
       - qt5-default
       - libopencv-dev
-
-install:
-  - gcc-5 --version
 
 before_script:
   - cd ${TRAVIS_BUILD_DIR}
