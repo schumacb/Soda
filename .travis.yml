@@ -11,10 +11,11 @@ dist: trusty
 addons:
   apt:
     packages:
-      - g++-5
-      - gcc-5
       - qt5-default
       - libopencv-dev
+
+install:
+  - gcc-5 --version
 
 before_script:
   - cd ${TRAVIS_BUILD_DIR}
