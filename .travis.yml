@@ -1,9 +1,12 @@
 
 language: cpp
+
 sudo: false
 
 compiler:
   - gcc
+
+dist: trusty
 
 sudo: false
 
@@ -23,5 +26,4 @@ bevore_script:
 
 srcipt:
   - cd build-gcc
-  - make
   - make test
