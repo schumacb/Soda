@@ -5,7 +5,6 @@ sudo: false
 compiler:
   - gcc
 
-dist: trusty
 sudo: false
 
 addons:
