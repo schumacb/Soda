@@ -1,17 +1,20 @@
 
 language: cpp
 
-sudo: required
+sudo: false
 
 compiler:
   - gcc
 
 dist: trusty
 
-install:
-  - sudo apt-get install -qq g++-5
-  - sudo apt-get install -qq qt5-default
-  - sudo apt-get install -qq libopencv-dev
+addons:
+  apt:
+    packages:
+      - g++-5
+      - gcc-5
+      - qt5-default
+      - libopencv-dev
 
 before_script:
   - cd ${TRAVIS_BUILD_DIR}
