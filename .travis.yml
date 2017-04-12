@@ -12,16 +12,30 @@ compiler:
 addons:
   apt:
     packages:
+      - gcc-5
+      - g++-5
       - qt5-default
       - libopencv-dev
+    sources:
+      - ubuntu-toolchain-r-test
 
 before_script:
   - cd ${TRAVIS_BUILD_DIR}
   - mkdir build-gcc
   - cd build-gcc
-  - cmake ..
+  - cmake -DCMAKE_CXX_COMPILER=g++-5 -DCMAKE_C_COMPILER=gcc-5 -DCMAKE_BUILD_TYPE=Release ..
+  - mkdir build-gcc-coverage
+  - cd ../build-gcc-coverage
+  - cmake -DCMAKE_CXX_COMPILER=g++-5 -DCMAKE_C_COMPILER=gcc-5 -DCMAKE_BUILD_TYPE=Debug -GENERATE_COVERAGE=ON -DGCOV_COMMAND=gcov-5 ..
+  - make
   - cd ${TRAVIS_BUILD_DIR}
 
 script:
   - cd build-gcc
   - make
+  - make test
+
+after_success:
+  - cd ${TRAVIS_BUILD_DIR}/build-gcc-coverage
+  - make Soda_TestCoverage
+  - bash <(curl -s https://codecov.io/bash)
