@@ -8,22 +8,17 @@ compiler:
 
 dist: trusty
 
-sudo: false
+install:
+  - qt5-default
+  - libopencv-dev
 
-addons:
-  apt:
-    sources:
-    packages:
-      - qt5-default
-      - libopencv-dev
-
-bevore_script:
+before_script:
   - cd ${TRAVIS_BUILD_DIR}
   - mkdir build-gcc
   - cd build-gcc
   - cmake ..
   - cd ${TRAVIS_BUILD_DIR}
 
-srcipt:
+script:
   - cd build-gcc
   - make test
