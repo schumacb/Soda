@@ -9,7 +9,6 @@ compiler:
 dist: trusty
 
 install:
-  - sudo apt-get install -qq gcc-5
   - sudo apt-get install -qq g++-5
   - sudo apt-get install -qq qt5-default
   - sudo apt-get install -qq libopencv-dev
