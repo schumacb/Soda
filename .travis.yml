@@ -14,11 +14,10 @@ addons:
       - libopencv-dev
 
 before_srcipt:
-    - mkdir build
-    - cd build
-    - mkdir clang
+    - mkdir -p build/gcc
     - cd gcc
-    - cmake ../.. 
+    - cmake ../..
+    - cd ${TRAVIS_BUILD_DIR}
 
 script: 
     - cd build/gcc
