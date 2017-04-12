@@ -8,13 +8,11 @@ compiler:
 
 dist: trusty
 
-addons:
-  apt:
-    packages:
-      - gcc-5
-      - g++-5
-      - qt5-default
-      - libopencv-dev
+install:
+  - sudo apt-get install -qq gcc-5
+  - sudo apt-get install -qq g++-5
+  - sudo apt-get install -qq qt5-default
+  - sudo apt-get install -qq libopencv-dev
 
 before_script:
   - cd ${TRAVIS_BUILD_DIR}
