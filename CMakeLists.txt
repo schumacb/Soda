@@ -3,8 +3,16 @@
 #
 # ----------------------------------------------------------------------------
 
-PROJECT(Soda)
 CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
+
+PROJECT(Soda)
+
+# Options
+OPTION(BUILD_TESTS "" ON)
+
+# Set C++ Standard
+SET(CMAKE_CXX_STANDARD 14)
+SET(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # Disable in source builds
 SET(CMAKE_DISABLE_IN_SOURCE_BUILD ON)
@@ -16,7 +24,6 @@ ENDIF ()
 
 # Global Definitions
 SET(${PROJECT_NAME}_DEFINITIONS
-    -std=c++14
     -Wall -Wextra -Wshadow -Wnon-virtual-dtor -pedantic
     -Wold-style-cast -Wcast-align -Wunused -Woverloaded-virtual
     -Wconversion -Wsign-conversion
@@ -29,7 +36,6 @@ SET(${PROJECT_NAME}_DEFINITIONS
 # Makefile settings
 SET(CMAKE_VERBOSE_MAKEFILE ON)
 SET(CMAKE_COLOR_MAKEFILE   ON)
-
 
 ADD_SUBDIRECTORY(external)
 ADD_SUBDIRECTORY(src)
