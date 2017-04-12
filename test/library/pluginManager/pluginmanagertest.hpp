@@ -9,7 +9,7 @@
 
 class TestPlugin : public QObject, public PluginInterface {
     Q_OBJECT
-    Version m_version{Version{1,0,0}};
+    Version m_version{1,0,0};
 public:
     virtual const std::string getName() const { return "TestPlugin";}
     virtual const std::string getDescription() const {return "";}
