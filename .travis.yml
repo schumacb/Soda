@@ -1,3 +1,10 @@
+
+language: cpp
+sudo: false
+
+compiler:
+  - gcc
+
 dist: trusty
 sudo: false
 
@@ -8,9 +15,14 @@ addons:
       - qt5-default
       - libopencv-dev
 
+bevore_script:
+  - cd ${TRAVIS_BUILD_DIR}
+  - mkdir build-gcc
+  - cd build-gcc
+  - cmake ..
+  - cd ${TRAVIS_BUILD_DIR}
+
 srcipt:
-    - mkdir build
-    - cd build
-    - cmake ..
-    - make
-    - make test
+  - cd build-gcc
+  - make
+  - make test
