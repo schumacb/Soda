@@ -9,8 +9,7 @@ compiler:
 dist: trusty
 
 install:
-  - qt5-default
-  - libopencv-dev
+  - apt-get install -qq qt5-default libopencv-dev
 
 before_script:
   - cd ${TRAVIS_BUILD_DIR}
