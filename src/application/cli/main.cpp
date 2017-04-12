@@ -12,7 +12,7 @@ int main(int argc, char** argv) {
     app.addLibraryPath(QCoreApplication::applicationDirPath()+"/../../plugin/utillity");
 
     PluginManager pm;
-    pm.loadPlugins(&app);
+    pm.loadPlugins(app.libraryPaths());
 
     //app.exec();
 

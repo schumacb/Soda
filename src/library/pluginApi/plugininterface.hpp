@@ -14,6 +14,7 @@ private:
                                                    PluginApi_VERSION_MINOR,
                                                    PluginApi_VERSION_PATCH};
 public:
+    virtual ~PluginInterface() {}
     const Version getInterfaceVersion() const { return INTERFACE_VERSION; }
 
     virtual const std::string getName() const = 0;

@@ -11,17 +11,18 @@ class PluginManager : public QObject, public PluginRegistry
     Q_OBJECT
 public:
     explicit PluginManager(QObject *parent = 0);
-    void loadPlugins(QCoreApplication *a);
+    void loadPlugins(QStringList plugin_directories);
 
     // PluginRegistry Interface
-    virtual void registerPlugin(PluginInterface *p);
-    virtual std::vector<PluginInterface*> findPluginByName(std::string name);
-    virtual std::vector<PluginInterface*> findPluginByName(std::string name, Version version, bool exactVersion=false);
-    virtual PluginInterface *finPlugin(std::string pid, Version version);
+    void registerPlugin(PluginInterface &t_plugin);
+    PluginInterface *findPlugin(const std::string t_pid, const Version t_version);
 
-protected:
-    std::map<std::string, PluginInterface*> plugins;
-    std::multimap<std::string, PluginInterface*> deprecatedPlugins;
+private:
+    // members
+    std::map<std::string, PluginInterface*> m_plugins = {};
+    std::multimap<std::string, PluginInterface*> m_deprecated_plugins = {};
+    // functions
+    void registerDepricatedPlugin(PluginInterface &t_plugin);
 
 signals:
 
