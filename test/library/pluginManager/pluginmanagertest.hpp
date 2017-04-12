@@ -6,11 +6,10 @@
 #define PLUGINMANAGERTEST_HPP
 
 #define TestPlugin_PID "de.hochschule-trier.soda.test.testplugin"
-#define TestPlugin_Version Version{1,0,0}
 
 class TestPlugin : public QObject, public PluginInterface {
     Q_OBJECT
-    Version m_version{TestPlugin_Version};
+    Version m_version{Version{1,0,0}};
 public:
     virtual const std::string getName() const { return "TestPlugin";}
     virtual const std::string getDescription() const {return "";}

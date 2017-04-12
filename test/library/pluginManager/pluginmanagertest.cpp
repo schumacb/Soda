@@ -17,7 +17,7 @@ TEST_CASE( "Plugin registration", "[pluginRegistry]" ) {
     pm.registerPlugin(tp);
     findResult = pm.findPlugin("de.hochschule-trier.soda.test.nonexistentplugin", Version{0,0,0});
     REQUIRE( findResult == nullptr );
-    findResult = pm.findPlugin(TestPlugin_PID,TestPlugin_Version);
+    findResult = pm.findPlugin(TestPlugin_PID,tp.getVersion());
     REQUIRE( findResult != nullptr );
     REQUIRE( &tp == findResult );
 
