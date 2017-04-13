@@ -16,7 +16,6 @@ addons:
       - g++-5
       - qt5-default
       - libopencv-dev
-      - catch
     sources:
       - ubuntu-toolchain-r-test
 
