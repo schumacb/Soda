@@ -25,7 +25,7 @@ before_script:
   - cd ${TRAVIS_BUILD_DIR}/build-gcc
   - cmake -DCMAKE_CXX_COMPILER=g++-5 -DCMAKE_C_COMPILER=gcc-5 -DCMAKE_BUILD_TYPE=Release ..
   - cd ${TRAVIS_BUILD_DIR}/build-gcc-coverage
-  - cmake -DCMAKE_CXX_COMPILER=g++-5 -DCMAKE_C_COMPILER=gcc-5 -DCMAKE_BUILD_TYPE=Debug -GENERATE_COVERAGE=ON -DGCOV_COMMAND=gcov-5 ..
+  - cmake -DCMAKE_CXX_COMPILER=g++-5 -DCMAKE_C_COMPILER=gcc-5 -DCMAKE_BUILD_TYPE=Debug -DGENERATE_COVERAGE=ON -DGCOV_COMMAND=gcov-5 ..
   - make
 
 script:
