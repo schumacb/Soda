@@ -1,3 +1,96 @@
+### Own .gitignore templates
+
+bin/
+lib/
+build/
+doc/
+*~
+CMakeLists.txt.user
+coverage.info
+
+######
+
+### Qt .gitignore templates from Github:
+# - https://github.com/github/gitignore/blob/master/Qt.gitignore
+
+# C++ objects and libs
+
+*.slo
+*.lo
+*.o
+*.a
+*.la
+*.lai
+*.so
+*.dll
+*.dylib
+
+# Qt-es
+
+/.qmake.cache
+/.qmake.stash
+*.pro.user
+*.pro.user.*
+*.qbs.user
+*.qbs.user.*
+*.moc
+moc_*.cpp
+qrc_*.cpp
+ui_*.h
+Makefile*
+*build-*
+
+# QtCreator
+
+*.autosave
+
+#QtCtreator Qml
+*.qmlproject.user
+*.qmlproject.user.*
+
+######
+
+### C .gitignore templates from Github:
+# - https://github.com/github/gitignore/blob/master/C.gitignore
+
+# Object files
+*.o
+*.ko
+*.obj
+*.elf
+
+# Precompiled Headers
+*.gch
+*.pch
+
+# Libraries
+*.lib
+*.a
+*.la
+*.lo
+
+# Shared objects (inc. Windows DLLs)
+*.dll
+*.so
+*.so.*
+*.dylib
+
+# Executables
+*.exe
+*.out
+*.app
+*.i*86
+*.x86_64
+*.hex
+
+# Debug files
+*.dSYM/
+
+######
+
+### C++ .gitignore templates from Github:
+# - https://github.com/github/gitignore/blob/master/C%2B%2B.gitignore
+
 # Compiled Object files
 *.slo
 *.lo
@@ -15,7 +108,6 @@
 
 # Fortran module files
 *.mod
-*.smod
 
 # Compiled Static libraries
 *.lai
@@ -27,3 +119,6 @@
 *.exe
 *.out
 *.app
+
+######
+
