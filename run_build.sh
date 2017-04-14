@@ -36,7 +36,7 @@ info "Building GCC Release"
 cd ${BUILD_DIR}/gcc
 cmake -DCMAKE_CXX_COMPILER=g++ -DCMAKE_C_COMPILER=gcc \
   -DCMAKE_BUILD_TYPE=Release \
-  -G Ninja -DCMAKE_MAKE_PROGRAM=ninja
+  -G Ninja -DCMAKE_MAKE_PROGRAM=ninja \
   ${SOURCE_DIR}
 ninja -j8
 if [ $? -ne 0 ]; then
