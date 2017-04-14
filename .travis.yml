@@ -9,6 +9,12 @@ services:
 compiler:
   - gcc
 
+branches:
+  only:
+  - master
+  - testing
+  - travis-ci-test
+
 addons:
   apt:
     packages:
@@ -19,20 +25,31 @@ addons:
     sources:
       - ubuntu-toolchain-r-test
 
-before_script:
-  - cd ${TRAVIS_BUILD_DIR}
-  - mkdir build-gcc && mkdir build-gcc-coverage
-  - cd ${TRAVIS_BUILD_DIR}/build-gcc
-  - cmake -DCMAKE_CXX_COMPILER=g++-5 -DCMAKE_C_COMPILER=gcc-5 -DCMAKE_BUILD_TYPE=Release ..
-  - cd ${TRAVIS_BUILD_DIR}/build-gcc-coverage
-  - cmake -DCMAKE_CXX_COMPILER=g++-5 -DCMAKE_C_COMPILER=gcc-5 -DCMAKE_BUILD_TYPE=Debug -DGENERATE_COVERAGE=ON ..
+before_install:
+    - sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-5 50
+    - export SOURCE_DIR=${TRAVIS_BUILD_DIR}
+    - export BUILD_DIR=${TRAVIS_BUILD_DIR}/build
 
-script:
-  - cd ${TRAVIS_BUILD_DIR}/build-gcc
-  - make
-  - make test
+install:
+  # Installing lcov
+  - cd ${HOME}
+  - wget http://ftp.de.debian.org/debian/pool/main/l/lcov/lcov_1.13.orig.tar.gz
+  - tar xf lcov_1.13.orig.tar.gz
+  - cd lcov-1.13/
+  - sudo make install
+  - cd ${SOURCE_DIR}
+  # Checking versions
+  - lcov --version
+  - g++ --version
+  - qmake -v
+  - pkg-config --libs opencv
+
+before_script:
+  -
+
+script: run_build.sh
 
 after_success:
-  - cd ${TRAVIS_BUILD_DIR}/build-gcc-coverage
-  - make Soda_TestCoverage
+  - cd ${TRAVIS_BUILD_DIR}/build/gcc/debug
+  - ninja TestCoverage
   - bash <(curl -s https://codecov.io/bash)

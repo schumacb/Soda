@@ -8,12 +8,23 @@ CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
 PROJECT(Soda)
 
 # Options
-OPTION(BUILD_TESTS "Build Tests." ON)
-SET(BUILD_TESTS ${BUILD_TESTS}
-    CACHE INTERNAL "${PROJECT_NAME}: Build Tests" FORCE)
-OPTION(GENERATE_COVERAGE "Generate coverage information for Tests." ON)
-SET(GENERATE_COVERAGE ${GENERATE_COVERAGE}
-    CACHE INTERNAL "${PROJECT_NAME}: Generate Coverage" FORCE)
+OPTION(SODA_BUILD_GUI "Build Graphical User Interface." ON)
+OPTION(SODA_BUILD_TESTS "Build Tests." OFF)
+OPTION(SODA_GENERATE_COVERAGE "Generate coverage information for Tests." OFF)
+
+# Dependencies
+FIND_PACKAGE(OpenCV REQUIRED)
+FIND_PACKAGE(Qt5Core REQUIRED)
+FIND_PACKAGE(Qt5Network REQUIRED)
+IF(SODA_BUILD_GUI)
+  FIND_PACKAGE(Qt5Widgets REQUIRED)
+ENDIF()
+
+# Run moc automatically when needed
+SET(CMAKE_AUTOMOC ON)
+
+#CMake Modules
+LIST(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/modules")
 
 # Set C++ Standard
 SET(CMAKE_CXX_STANDARD 14)
@@ -27,24 +38,36 @@ IF ("${CMAKE_SOURCE_DIR}" STREQUAL "${CMAKE_BINARY_DIR}")
   MESSAGE(SEND_ERROR "In-source builds are not allowed.")
 ENDIF ()
 
-# Global Definitions
-SET(${PROJECT_NAME}_DEFINITIONS
-    -Wall -Wextra -Wshadow -Wnon-virtual-dtor -pedantic
-    -Wold-style-cast -Wcast-align -Wunused -Woverloaded-virtual
-    -Wconversion -Wsign-conversion
-    -Weffc++
+# Setting default folders
+SET(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/lib)
+SET(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/lib)
+SET(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)
+
+# Compiler flaggs
+SET(CMAKE_CXX_FLAGS " \
+    -Wall -Wextra -Wshadow -Wnon-virtual-dtor -pedantic \
+    -Wold-style-cast -Wcast-align -Wunused -Woverloaded-virtual \
+    -Wconversion -Wsign-conversion \
+    -Weffc++ \
+    "
     # unknown in clang 3.8.0
     # -Wmisleading-indentation
     # -Weverything
-    CACHE INTERNAL "${PROJECT_NAME}: Global Definitions" FORCE)
+)
 
 # Ceck build environment
 IF($ENV{TRAVIS})
   IF($ENV{TRAVIS} STREQUAL "true")
-    MESSAGE(STATUS "Travis build")
-    SET(IS_TRAVIS_BUILD TRUE)
-    SET(GNERATE_COVERAGE TRUE)
+    MESSAGE(STATUS "This is a Travis CI build.")
+    SET(IS_TRAVIS_BUILD ON)
+    SET(SODA_BUILD_TESTS ON)
+    SET(SODA_GNERATE_COVERAGE ON)
   ENDIF()
+ENDIF()
+
+IF(SODA_BUILD_TESTS AND SODA_GENERATE_COVERAGE)
+  SET(CMAKE_CXX_FLAGS "-g -O0 -fprofile-arcs -ftest-coverage")
+  SET(CMAKE_C_FLAGS "-g -O0 -fprofile-arcs -ftest-coverage")
 ENDIF()
 
 # Makefile settings
@@ -53,11 +76,10 @@ SET(CMAKE_COLOR_MAKEFILE   ON)
 
 ADD_SUBDIRECTORY(external)
 ADD_SUBDIRECTORY(src)
+ADD_SUBDIRECTORY(test)
 
-IF(BUILD_TESTS)
-  ENABLE_TESTING()
-ENDIF()
+FILE(GLOB RESOURCE_FILES ".gitignore" ".travis.yml" "INSTALL" "LICENCE"
+    "*.txt" "*.md" "*.sh")
 
-FILE(GLOB TEXT_FILES "INSTALL" "LICENCE" "*.txt" "*.md" .travis.yml)
-
-ADD_CUSTOM_TARGET(${PROJECT_NAME}_NonSource SOURCES ${TEXT_FILES})
+# This target only serves to show resources in IDEs.
+ADD_CUSTOM_TARGET(${PROJECT_NAME}Resources SOURCES ${RESOURCE_FILES})

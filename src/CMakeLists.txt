@@ -7,9 +7,9 @@ PROJECT(Source)
 
 
 # Soda Version
-SET (Soda_VERSION_MAJOR 0)
-SET (Soda_VERSION_MINOR 1)
-SET (Soda_VERSION_PATCH 2)
+SET(Soda_VERSION_MAJOR 0)
+SET(Soda_VERSION_MINOR 1)
+SET(Soda_VERSION_PATCH 2)
 
 
 # Configure header file

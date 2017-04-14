@@ -4,7 +4,5 @@
 #
 # ----------------------------------------------------------------------------
 
-PROJECT(application)
-
 ADD_SUBDIRECTORY(cli)
 ADD_SUBDIRECTORY(gui)

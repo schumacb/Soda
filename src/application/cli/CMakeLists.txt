@@ -5,40 +5,35 @@
 
 PROJECT(soda-cli)
 
+# Add source files
+AUX_SOURCE_DIRECTORY(${PROJECT_SOURCE_DIR} SOURCE_FILES)
+LIST(APPEND INCLUDES ${PROJECT_SOURCE_DIR})
+
+# ----------------------------------------------------------------------------
+# External libraries
+
+# Qt
+LIST(APPEND LIBRARIES Qt5::Core)
+LIST(APPEND INCLUDES ${QT_INCLUDES})
+
+# ----------------------------------------------------------------------------
+# Internal libraries
+
+# PluginManager
+LIST(APPEND INCLUDES ${pluginManager_INCLUDES})
+LIST(APPEND LIBRARIES ${pluginManager_LIBS})
+# ----------------------------------------------------------------------------
+
+# Cleanup lists
+LIST(REMOVE_DUPLICATES LIBRARIES)
+LIST(REMOVE_DUPLICATES INCLUDES)
 
 # Add global definitions
 ADD_DEFINITIONS(
     ${Soda_DEFINITIONS}
 )
 
-
-# ----------------------------------------------------------------------------
-# External libraries
-
-# Qt
-
-# find includes in corresponding build directories
-SET(CMAKE_INCLUDE_CURRENT_DIR ON)
-# run moc automatically when needed
-SET(CMAKE_AUTOMOC ON)
-
-FIND_PACKAGE(Qt5Core REQUIRED)
-SET(LIBRARIES ${LIBRARIES} Qt5::Core)
-
-INCLUDE_DIRECTORIES(${QT_INCLUDES})
-
-
-# ----------------------------------------------------------------------------
-# Internal libraries
-
-# PluginManager
-INCLUDE_DIRECTORIES(${pluginApi_INCLUDE_DIRS})
-INCLUDE_DIRECTORIES(${pluginManager_INCLUDE_DIRS})
-SET(LIBRARIES ${LIBRARIES} pluginManager)
-# ----------------------------------------------------------------------------
-
-
 # Build Application
-AUX_SOURCE_DIRECTORY(. SRC_LIST)
-ADD_EXECUTABLE(${PROJECT_NAME} ${SRC_LIST})
+INCLUDE_DIRECTORIES(${INCLUDES})
+ADD_EXECUTABLE(${PROJECT_NAME} ${SOURCE_FILES})
 TARGET_LINK_LIBRARIES(${PROJECT_NAME} ${LIBRARIES})
