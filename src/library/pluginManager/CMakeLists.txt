@@ -6,42 +6,39 @@
 
 PROJECT(pluginManager)
 
-# Add global definitions
-ADD_DEFINITIONS(
-    ${Soda_DEFINITIONS}
-)
+# Add source files
+AUX_SOURCE_DIRECTORY(${PROJECT_SOURCE_DIR} SOURCE_FILES)
+LIST(APPEND INCLUDES ${PROJECT_SOURCE_DIR})
 
 # ----------------------------------------------------------------------------
-# External libraries
+# Add external libraries
 
 # Qt
-# find includes in corresponding build directories
-SET(CMAKE_INCLUDE_CURRENT_DIR ON)
-# run moc automatically when needed
-SET(CMAKE_AUTOMOC ON)
-
-FIND_PACKAGE(Qt5Core REQUIRED)
-SET(LIBRARIES ${LIBRARIES} Qt5::Core)
-
-SET(INCLUDE_DIRS ${INCLUDE_DIRS} ${QT_INCLUDES})
-
+LIST(APPEND INCLUDES ${QT_INCLUDES})
+LIST(APPEND LIBRARIES Qt5::Core)
 
 # ----------------------------------------------------------------------------
-# Internal libraries
+# Add internal libraries
 
 # PluginApi
-SET(INCLUDE_DIRS ${INCLUDE_DIRS} ${pluginApi_INCLUDE_DIRS})
+LIST(APPEND INCLUDES ${pluginApi_INCLUDES})
+LIST(APPEND LIBRARIES ${pluginApi_LIBS})
+
 # ----------------------------------------------------------------------------
 
+# Cleanup lists
+LIST(REMOVE_DUPLICATES INCLUDES)
+LIST(REMOVE_DUPLICATES LIBRARIES)
 
 # Build Library
-LIST(REMOVE_DUPLICATES INCLUDE_DIRS)
-INCLUDE_DIRECTORIES(${INCLUDE_DIRS})
-AUX_SOURCE_DIRECTORY(. SRC_LIST)
-ADD_LIBRARY(${PROJECT_NAME} STATIC ${SRC_LIST})
-TARGET_LINK_LIBRARIES(${PROJECT_NAME} ${LIBRARIES})
-# Expose includes for other projects
-SET(${PROJECT_NAME}_INCLUDE_DIRS ${PROJECT_SOURCE_DIR} ${INCLUDE_DIRS}
+INCLUDE_DIRECTORIES(${INCLUDES})
+ADD_LIBRARY(${PROJECT_NAME} STATIC ${SOURCE_FILES})
+TARGET_LINK_LIBRARIES(${PROJECT_NAME} PUBLIC ${LIBRARIES})
+
+# Expose includes directories and libraries for other projects
+SET(${PROJECT_NAME}_INCLUDES ${INCLUDES}
     CACHE INTERNAL "${PROJECT_NAME}: Include Directories" FORCE)
+SET(${PROJECT_NAME}_LIBS ${PROJECT_NAME} ${LIBRARIES}
+    CACHE INTERNAL "${PROJECT_NAME}: Libraries" FORCE)
 
 

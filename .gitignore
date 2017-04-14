@@ -2,10 +2,11 @@
 
 bin/
 lib/
-*-build*/
-doc/documentation.pdf
+build/
+doc/
 *~
 CMakeLists.txt.user
+coverage.info
 
 ######
 
