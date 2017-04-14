@@ -20,6 +20,8 @@ addons:
     packages:
       - gcc-5
       - g++-5
+      - cmake
+      - ninja-build
       - qt5-default
       - libopencv-dev
     sources:
