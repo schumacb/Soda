@@ -6,32 +6,29 @@
 
 PROJECT(pluginManager)
 
+# Add source files
 AUX_SOURCE_DIRECTORY(${PROJECT_SOURCE_DIR} SOURCE_FILES)
 LIST(APPEND INCLUDES ${PROJECT_SOURCE_DIR})
 
 # ----------------------------------------------------------------------------
-# External libraries
+# Add external libraries
 
 # Qt
 LIST(APPEND INCLUDES ${QT_INCLUDES})
 LIST(APPEND LIBRARIES Qt5::Core)
 
 # ----------------------------------------------------------------------------
-# Internal libraries
+# Add internal libraries
 
 # PluginApi
 LIST(APPEND INCLUDES ${pluginApi_INCLUDES})
 LIST(APPEND LIBRARIES ${pluginApi_LIBS})
+
 # ----------------------------------------------------------------------------
 
 # Cleanup lists
-LIST(REMOVE_DUPLICATES LIBRARIES)
 LIST(REMOVE_DUPLICATES INCLUDES)
-
-# Add global definitions
-ADD_DEFINITIONS(
-    ${Soda_DEFINITIONS}
-)
+LIST(REMOVE_DUPLICATES LIBRARIES)
 
 # Build Library
 INCLUDE_DIRECTORIES(${INCLUDES})

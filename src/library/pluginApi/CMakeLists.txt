@@ -27,19 +27,14 @@ LIST(APPEND INCLUDES ${PROJECT_SOURCE_DIR} ${PROJECT_BINARY_DIR})
 # Add external Libraries
 
 # OpenCV
-LIST(APPEND LIBRARIES ${OpenCV_LIBS})
 LIST(APPEND INCLUDES ${OpenCV_INCLUDES})
+LIST(APPEND LIBRARIES ${OpenCV_LIBS})
 
 # Qt
-LIST(APPEND LIBRARIES Qt5::Core)
 LIST(APPEND INCLUDES ${QT_INCLUDES})
+LIST(APPEND LIBRARIES Qt5::Core)
+
 # ----------------------------------------------------------------------------
-
-
-# Add global definitions
-ADD_DEFINITIONS(
-    ${Soda_DEFINITIONS}
-)
 
 # Build Library
 ADD_CUSTOM_TARGET(${PROJECT_NAME}Headers SOURCES ${HEADER_FILES})

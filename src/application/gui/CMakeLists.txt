@@ -11,22 +11,17 @@ AUX_SOURCE_DIRECTORY(${PROJECT_SOURCE_DIR} SOURCE_FILES)
 LIST(APPEND INCLUDES ${PROJECT_SOURCE_DIR})
 
 # ----------------------------------------------------------------------------
-# External libraries
+# Add external libraries
 
 # Qt
-LIST(APPEND LIBRARIES Qt5::Core Qt5::Widgets)
 LIST(APPEND INCLUDES ${QT_INCLUDES})
+LIST(APPEND LIBRARIES Qt5::Core Qt5::Widgets)
 
 # ----------------------------------------------------------------------------
 
 # Cleanup lists
 LIST(REMOVE_DUPLICATES LIBRARIES)
 LIST(REMOVE_DUPLICATES INCLUDES)
-
-# Add global definitions
-ADD_DEFINITIONS(
-    ${Soda_DEFINITIONS}
-)
 
 IF(SODA_BUILD_GUI)
   # Build Application

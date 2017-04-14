@@ -14,18 +14,18 @@ LIST(APPEND INCLUDES ${PROJECT_SOURCE_DIR})
 # External libraries
 
 # OpenCV
-LIST(APPEND LIBRARIES ${OpenCV_LIBS})
 LIST(APPEND INCLUDES ${OpenCV_INCLUDES})
+LIST(APPEND LIBRARIES ${OpenCV_LIBS})
 
 # Qt
-LIST(APPEND LIBRARIES Qt5::Core Qt5::Network)
 LIST(APPEND INCLUDES ${QT_INCLUDES})
+LIST(APPEND LIBRARIES Qt5::Core Qt5::Network)
+
 # ----------------------------------------------------------------------------
 
-# Add global definitions
-ADD_DEFINITIONS(
-    ${Soda_DEFINITIONS}
-)
+# Cleanup lists
+LIST(REMOVE_DUPLICATES INCLUDES)
+LIST(REMOVE_DUPLICATES LIBRARIES)
 
 # Build library
 INCLUDE_DIRECTORIES(${INCLUDES})
