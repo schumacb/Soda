@@ -18,7 +18,7 @@ IF(SODA_BUILD_TESTS)
 
   IF(GENERATE_COVERAGE AND CMAKE_COMPILER_IS_GNUCXX)
     INCLUDE(CodeCoverage)
-      setup_target_for_coverage(TestCoverage tests coverage)
+    setup_target_for_coverage(TestCoverage tests coverage)
   ENDIF(GENERATE_COVERAGE AND CMAKE_COMPILER_IS_GNUCXX)
 ELSE(SODA_BUILD_TESTS)
   ADD_CUSTOM_TARGET(${PROJECT_NAME} SOURCES ${SOURCE_FILES})

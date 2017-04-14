@@ -6,6 +6,7 @@ build/
 doc/
 *~
 CMakeLists.txt.user
+coverage.info
 
 ######
 

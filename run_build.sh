@@ -36,8 +36,7 @@ info "Building GCC Release"
 cd ${BUILD_DIR}/gcc
 cmake -DCMAKE_CXX_COMPILER=g++ -DCMAKE_C_COMPILER=gcc \
   -DCMAKE_BUILD_TYPE=Release \
-  -G Ninja -DCMAKE_MAKE_PROGRAM=ninja \
-  -DBUILD_TESTING=ON \
+  -G Ninja -DCMAKE_MAKE_PROGRAM=ninja
   ${SOURCE_DIR}
 ninja -j8
 if [ $? -ne 0 ]; then
@@ -47,15 +46,11 @@ else
   success "Successfully built GCC Release"
 fi
 
-#info "Running tests on GCC Release build"
-#src/library/pluginManager/pluginManagerTest
-
 info "Building GCC Debug"
 cd ${BUILD_DIR}/gcc/debug
 cmake -DCMAKE_CXX_COMPILER=g++ -DCMAKE_C_COMPILER=gcc \
   -DCMAKE_BUILD_TYPE=Debug \
   -G Ninja -DCMAKE_MAKE_PROGRAM=ninja  \
-  -DBUILD_TESTING=ON -DGENERATE_COVERAGE=ON \
   ${SOURCE_DIR}
 ninja -j8
 if [ $? -ne 0 ]; then
@@ -64,6 +59,5 @@ if [ $? -ne 0 ]; then
 else
   success "Successfully built GCC Debug"
 fi
-#info "Running tests on GCC Debug build"
-#ninja test
-
+info "Running tests on GCC Debug build"
+ninja TestCoverage
