@@ -30,7 +30,7 @@ This project is build with following tools:
 ##<a name="prereq"></a> Prerequisites
 
 To build the project you need to install: (Click the Dependencies for instructions)
- * [`CMake`(https://cmake.org/install/)
+ * [`CMake`](https://cmake.org/install/)
  * [`Qt-5`](http://doc.qt.io/qt-5/gettingstarted.html)
  * [`OpenCV`](http://docs.opencv.org/master/df/d65/tutorial_table_of_content_introduction.html)
 
