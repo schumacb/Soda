@@ -14,7 +14,7 @@ namespace utillity {
 class FrameGrabber : public pluginapi::ImageSource {
   Q_OBJECT
 protected:
-  cv::VideoCapture m_capture;
+  cv::VideoCapture m_capture{};
 
 public:
   FrameGrabber(QObject *parent = 0);
