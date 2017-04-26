@@ -24,6 +24,7 @@ addons:
       - ninja-build
       - qt5-default
       - libopencv-dev
+      - libopencv-highgui-dev
     sources:
       - ubuntu-toolchain-r-test
 
