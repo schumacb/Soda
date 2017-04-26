@@ -8,7 +8,7 @@
 #include <QObject>
 #include <QtTest/qtest.h>
 
-#include "plugininterface.hpp"
+#include "plugin.hpp"
 #include "pluginregistry.hpp"
 #include "version.hpp"
 
@@ -18,9 +18,9 @@
     PluginApi_VERSION_MAJOR, PluginApi_VERSION_MINOR, PluginApi_VERSION_PATCH  \
   }
 
-class TestPlugin : public QObject, public PluginInterface {
+class TestPlugin : public QObject, public Plugin {
   Q_OBJECT
-  Q_INTERFACES(PluginInterface)
+  Q_INTERFACES(Plugin)
   Version m_version = TestPlugin_Version;
 
 public:
@@ -37,7 +37,7 @@ public:
 
 class TestPluginRegistry : public PluginRegistry {
 public:
-  virtual void registerPlugin(PluginInterface &t_plugin) override {
+  virtual void registerPlugin(Plugin &t_plugin) override {
     std::cerr
         << "Error: This is only a test stub without functionallity! "
            "TestPluginRegistry::registerPlugin() was called with plugin \""
@@ -46,8 +46,8 @@ public:
     throw std::bad_function_call();
   }
 
-  virtual PluginInterface *findPlugin(const std::string t_pid,
-                                      const Version t_version) override {
+  virtual Plugin *findPlugin(const std::string t_pid,
+                             const Version t_version) override {
     std::cerr << "Error: This is only a test stub without functionallity! "
                  "TestPluginRegistry::findPlugin() was called with PID \""
               << t_pid << "\" and version \"" << t_version << "\"!"
@@ -70,14 +70,14 @@ private slots:
 
   void pluginApi() {
     TestPlugin p;
-    QVERIFY(PluginInterface::getInterfaceVersion() == TestPlugin_Version);
+    QVERIFY(Plugin::getInterfaceVersion() == TestPlugin_Version);
   }
 
   void destructors() {
     PluginRegistry *pr = new TestPluginRegistry();
     delete pr;
 
-    PluginInterface *pi = new TestPlugin();
+    Plugin *pi = new TestPlugin();
     delete pi;
   }
 

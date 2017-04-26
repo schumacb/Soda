@@ -6,22 +6,22 @@
 
 #include <opencv2/opencv.hpp>
 
-#include "plugininterface.hpp"
+#include "plugin.hpp"
 
 #include "pluginconfig.hpp"
 
 #define BlobDetectPluginID "de.hochschule-trier.soda.plugin.blobdetect"
 
-namespace Soda {
+namespace soda {
 
-namespace Plugin {
+namespace plugin {
 
-namespace BlobDetect {
+namespace blobdetect {
 
-class BlobDetect : public QObject, public PluginInterface {
+class BlobDetect : public QObject, public Plugin {
   Q_OBJECT
   Q_PLUGIN_METADATA(IID BlobDetectPluginID FILE "blobdetect.json")
-  Q_INTERFACES(PluginInterface)
+  Q_INTERFACES(Plugin)
 protected:
   const std::string PID = BlobDetectPluginID;
   static constexpr Version VERSION = {

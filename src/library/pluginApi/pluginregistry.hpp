@@ -3,7 +3,7 @@
 
 #include <vector>
 
-#include "plugininterface.hpp"
+#include "plugin.hpp"
 
 class PluginRegistry {
 
@@ -21,10 +21,10 @@ public:
 
   virtual ~PluginRegistry() {}
 
-  virtual void registerPlugin(PluginInterface &t_plugin) = 0;
+  virtual void registerPlugin(Plugin &t_plugin) = 0;
 
-  virtual PluginInterface *findPlugin(const std::string t_pid,
-                                      const Version t_version) = 0;
+  virtual Plugin *findPlugin(const std::string t_pid,
+                             const Version t_version) = 0;
 };
 
 #endif // PLUGINREGISTRY_HPP

@@ -1,22 +1,16 @@
 #include "blobdetect.hpp"
 
-namespace Soda {
+namespace soda {
 
-namespace Plugin {
+namespace plugin {
 
-namespace BlobDetect {
+namespace blobdetect {
 
-BlobDetect::BlobDetect(QObject *parent) : QObject(parent)
-{
-}
+BlobDetect::BlobDetect(QObject *parent) : QObject(parent) {}
 
-void BlobDetect::onLoad() {
+void BlobDetect::onLoad() {}
 
-}
-
-void BlobDetect::onUnload() {
-
-}
+void BlobDetect::onUnload() {}
 
 } // namespace BlobDetect
 

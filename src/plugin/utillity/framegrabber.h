@@ -1,23 +1,33 @@
 #ifndef FRAMEGRABBER_H
 #define FRAMEGRABBER_H
 
-#include <QObject>
+#include <opencv2/videoio.hpp>
 
-namespace Soda {
+#include "imagesource.hpp"
 
-namespace Plugin {
+namespace soda {
 
-namespace Utillity {
+namespace plugin {
 
+namespace utillity {
 
-class FrameGrabber
-{
+class FrameGrabber : public pluginapi::ImageSource {
+  Q_OBJECT
+protected:
+  cv::VideoCapture m_capture;
+
 public:
-    FrameGrabber();
+  FrameGrabber(QObject *parent = 0);
+  bool isOpened();
+
+  // Algorithm interface
+public:
+  void setConfiguration(QJsonDocument);
+  void run();
+  // ImageSource interface
 
 signals:
-
-public slots:
+  void imageReady(cv::Mat);
 };
 
 } // namespace Utillity

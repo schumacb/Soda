@@ -5,15 +5,39 @@
 
 #include "pluginmanager.hpp"
 
-int main(int argc, char** argv) {
+#include "utillity.hpp"
 
-    QCoreApplication app(argc, argv);
+using namespace soda::plugin::utillity;
 
-    app.addLibraryPath(QCoreApplication::applicationDirPath()+"/../lib");
-    PluginManager pm;
-    pm.loadPlugins(app.libraryPaths());
+int main(int argc, char **argv) {
 
-    //app.exec();
+  QCoreApplication app(argc, argv);
 
-    return 0;
+  app.addLibraryPath(QCoreApplication::applicationDirPath() + "/../lib");
+  PluginManager pm;
+
+  auto libPaths = app.libraryPaths();
+
+  pm.loadPlugins(libPaths);
+
+  Plugin *pi = pm.findPlugin("de.hochschule-trier.soda.plugin.utillity",
+                             Version{0, 1, 0});
+  if (pi) {
+    Utillity *ut = dynamic_cast<Utillity *>(pi);
+    // Utillity* ut = (Utillity*)pi;
+    FrameGrabber &fg = ut->getFrameGrabber();
+    ImageRenderer &ir = ut->getImageRenderer();
+
+    QObject::connect(&fg, SIGNAL(imageReady(cv::Mat)), &ir,
+                     SLOT(process(cv::Mat)));
+
+    while (true) {
+      fg.run();
+      cv::waitKey(20);
+    }
+  }
+
+  // app.exec();
+
+  return 0;
 }

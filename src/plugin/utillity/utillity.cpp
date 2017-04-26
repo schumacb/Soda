@@ -1,22 +1,16 @@
 #include "utillity.hpp"
 
-namespace Soda {
+namespace soda {
 
-namespace Plugin {
+namespace plugin {
 
-namespace Utillity {
+namespace utillity {
 
-Utillity::Utillity(QObject *parent) : QObject(parent)
-{
-}
+Utillity::Utillity(QObject *parent) : QObject(parent) {}
 
-void Utillity::onLoad() {
+void Utillity::onLoad() {}
 
-}
-
-void Utillity::onUnload() {
-
-}
+void Utillity::onUnload() {}
 
 } // namespace Utillity
 

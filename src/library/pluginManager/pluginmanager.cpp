@@ -3,9 +3,9 @@
 #include <QDir>
 #include <QPluginLoader>
 
-#include <QDebug>   // TODO: Remove line
+#include <QDebug> // TODO: Remove line
 
-#include "plugininterface.hpp"
+#include "plugin.hpp"
 
 PluginManager::PluginManager(QObject *parent) : QObject(parent) {}
 
@@ -27,15 +27,14 @@ void PluginManager::loadPlugins(QStringList plugin_directories) {
         continue;
       }
 
-      if (PluginInterface *plugin =
-              qobject_cast<PluginInterface *>(pluginLoaderInstance)) {
+      if (Plugin *plugin = qobject_cast<Plugin *>(pluginLoaderInstance)) {
         registerPlugin(*plugin);
       }
     }
   }
 }
 
-void PluginManager::registerPlugin(PluginInterface &t_plugin) {
+void PluginManager::registerPlugin(Plugin &t_plugin) {
   auto pid = t_plugin.getPid();
   auto it = m_plugins.find(pid);
   auto pair = std::make_pair(pid, &t_plugin);
@@ -45,16 +44,16 @@ void PluginManager::registerPlugin(PluginInterface &t_plugin) {
     auto plugin = it->second;
     if (t_plugin.getVersion() > plugin->getVersion()) {
       // newer version
-      registerDepricatedPlugin(*plugin);
+      m_registerDepricatedPlugin(*plugin);
       it->second = &t_plugin;
     } else if (t_plugin.getVersion() < plugin->getVersion()) {
       // older version
-      registerDepricatedPlugin(t_plugin);
+      m_registerDepricatedPlugin(t_plugin);
     }
   }
 }
 
-void PluginManager::registerDepricatedPlugin(PluginInterface &t_plugin) {
+void PluginManager::m_registerDepricatedPlugin(Plugin &t_plugin) {
   auto pid = t_plugin.getPid();
   auto it = m_deprecated_plugins.find(pid);
   auto pair = std::make_pair(pid, &t_plugin);
@@ -72,8 +71,8 @@ void PluginManager::registerDepricatedPlugin(PluginInterface &t_plugin) {
   }
 }
 
-PluginInterface *PluginManager::findPlugin(const std::string t_pid,
-                                           const Version t_version) {
+Plugin *PluginManager::findPlugin(const std::string t_pid,
+                                  const Version t_version) {
   auto plugins_it = m_plugins.find(t_pid);
   auto deprecated_plugins_range = m_deprecated_plugins.equal_range(t_pid);
   if (plugins_it != m_plugins.end() &&

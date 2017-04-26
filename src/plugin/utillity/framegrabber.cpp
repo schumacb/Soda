@@ -1,14 +1,30 @@
 #include "framegrabber.h"
 
-namespace Soda {
+#include <QJsonDocument>
 
-namespace Plugin {
+namespace soda {
 
-namespace Utillity {
+namespace plugin {
 
-FrameGrabber::FrameGrabber()
-{
+namespace utillity {
 
+FrameGrabber::FrameGrabber(QObject *parent) : ImageSource(parent) {}
+
+void FrameGrabber::setConfiguration(QJsonDocument configuration) {}
+
+void FrameGrabber::run() {
+
+  if (m_capture.isOpened()) {
+    cv::Mat frame;
+    m_capture >> frame;
+    emit imageReady(frame);
+
+  } else {
+    bool open;
+    do {
+      open = m_capture.open(0);
+    } while (!open);
+  }
 }
 
 } // namespace Utillity

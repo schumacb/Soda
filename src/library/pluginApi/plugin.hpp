@@ -9,10 +9,10 @@
 #include "pluginapiconfig.hpp"
 #include "version.hpp"
 
-class PluginInterface {
+class Plugin {
 
 protected:
-  PluginInterface() {}
+  Plugin() {}
 
   constexpr static Version interface_version{PluginApi_VERSION_MAJOR,
                                              PluginApi_VERSION_MINOR,
@@ -20,14 +20,14 @@ protected:
 
 public:
   // no copy operations
-  PluginInterface(const PluginInterface &) = delete;
-  PluginInterface &operator=(const PluginInterface &) = delete;
+  Plugin(const Plugin &) = delete;
+  Plugin &operator=(const Plugin &) = delete;
 
   // no move operations
-  PluginInterface(const PluginInterface &&) = delete;
-  PluginInterface &operator=(const PluginInterface &&) = delete;
+  Plugin(const Plugin &&) = delete;
+  Plugin &operator=(const Plugin &&) = delete;
 
-  inline virtual ~PluginInterface() {}
+  inline virtual ~Plugin() {}
 
   inline static constexpr Version getInterfaceVersion() {
     return interface_version;
@@ -40,10 +40,12 @@ public:
 
   virtual void onLoad() = 0;
   virtual void onUnload() = 0;
+
+  template <typename Feature> Feature getFeature(std::string fid);
 };
 
 #define PluginInterface_IID "de.hochschule-trier.soda.PluginInterface"
 
-Q_DECLARE_INTERFACE(PluginInterface, PluginInterface_IID)
+Q_DECLARE_INTERFACE(Plugin, PluginInterface_IID)
 
 #endif // PLUGININTERFACE_HPP
