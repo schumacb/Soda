@@ -2,7 +2,7 @@
 #define PLUGINMANAGERTEST_HPP
 
 #include <QObject>
-#include <QTest/qtest.h>
+#include <QtTest/qtest.h>
 
 #include "plugin.hpp"
 #include "pluginmanager.hpp"
