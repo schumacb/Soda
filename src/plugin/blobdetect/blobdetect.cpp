@@ -6,7 +6,7 @@ namespace Plugin {
 
 namespace BlobDetect {
 
-BlobDetect::BlobDetect(QObject *parent) :QObject(parent)
+BlobDetect::BlobDetect(QObject *parent) : QObject(parent)
 {
 }
 

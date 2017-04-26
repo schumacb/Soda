@@ -4,7 +4,7 @@
 #
 # ----------------------------------------------------------------------------
 
-PROJECT(pluginApi)
+PROJECT(PluginApi)
 
 # Set API version
 SET (PluginApi_VERSION_MAJOR 0)

@@ -37,8 +37,8 @@ LIST(APPEND LIBRARIES Qt5::Core)
 # Add internal libraries
 
 # pluginApi
-LIST(APPEND INCLUDES ${pluginApi_INCLUDES})
-LIST(APPEND LIBRARIES ${pluginApi_LIBS})
+LIST(APPEND INCLUDES ${PluginApi_INCLUDES})
+LIST(APPEND LIBRARIES ${PluginApi_LIBS})
 
 # ----------------------------------------------------------------------------
 

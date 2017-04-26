@@ -20,8 +20,13 @@ LIST(APPEND LIBRARIES Qt5::Core)
 # Add internal libraries
 
 # PluginManager
-LIST(APPEND INCLUDES ${pluginManager_INCLUDES})
-LIST(APPEND LIBRARIES ${pluginManager_LIBS})
+LIST(APPEND INCLUDES ${PluginManager_INCLUDES})
+LIST(APPEND LIBRARIES ${PluginManager_LIBS})
+
+# Requiredplugins
+LIST(APPEND INCLUDES ${Utillity_INCLUDES})
+LIST(APPEND LIBRARIES ${Utillity_LIBS})
+
 # ----------------------------------------------------------------------------
 
 # Cleanup lists

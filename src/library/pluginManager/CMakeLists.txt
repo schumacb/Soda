@@ -4,7 +4,7 @@
 #
 # ----------------------------------------------------------------------------
 
-PROJECT(pluginManager)
+PROJECT(PluginManager)
 
 # Add source files
 AUX_SOURCE_DIRECTORY(${PROJECT_SOURCE_DIR} SOURCE_FILES)
@@ -21,8 +21,8 @@ LIST(APPEND LIBRARIES Qt5::Core)
 # Add internal libraries
 
 # PluginApi
-LIST(APPEND INCLUDES ${pluginApi_INCLUDES})
-LIST(APPEND LIBRARIES ${pluginApi_LIBS})
+LIST(APPEND INCLUDES ${PluginApi_INCLUDES})
+LIST(APPEND LIBRARIES ${PluginApi_LIBS})
 
 # ----------------------------------------------------------------------------
 

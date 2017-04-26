@@ -4,7 +4,7 @@
 #
 # ----------------------------------------------------------------------------
 
-PROJECT(server)
+PROJECT(Network)
 
 # Add source files
 AUX_SOURCE_DIRECTORY(${PROJECT_SOURCE_DIR} SOURCE_FILES)

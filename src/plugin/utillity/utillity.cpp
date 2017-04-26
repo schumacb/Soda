@@ -6,7 +6,7 @@ namespace Plugin {
 
 namespace Utillity {
 
-Utillity::Utillity(QObject *parent) :QObject(parent)
+Utillity::Utillity(QObject *parent) : QObject(parent)
 {
 }
 

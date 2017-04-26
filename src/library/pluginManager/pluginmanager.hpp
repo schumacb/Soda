@@ -15,7 +15,12 @@ public:
 
     // PluginRegistry Interface
     void registerPlugin(PluginInterface &t_plugin);
-    PluginInterface *findPlugin(const std::string t_pid, const Version t_version);
+    PluginInterface *findPlugin(const std::string t_pid,
+                                const Version t_version);
+
+    size_t countRegisteredPlugins() {
+        return m_plugins.size() + m_deprecated_plugins.size();
+    }
 
 private:
     // members

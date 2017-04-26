@@ -3,27 +3,43 @@
 
 #include <string>
 
+#include <QObject>
 #include <QtPlugin>
 
-#include "version.hpp"
 #include "pluginapiconfig.hpp"
+#include "version.hpp"
 
 class PluginInterface {
-private:
-    constexpr static Version INTERFACE_VERSION = { PluginApi_VERSION_MAJOR,
-                                                   PluginApi_VERSION_MINOR,
-                                                   PluginApi_VERSION_PATCH};
+
+protected:
+  PluginInterface() {}
+
+  constexpr static Version interface_version{PluginApi_VERSION_MAJOR,
+                                             PluginApi_VERSION_MINOR,
+                                             PluginApi_VERSION_PATCH};
+
 public:
-    virtual ~PluginInterface() {}
-    const Version getInterfaceVersion() const { return INTERFACE_VERSION; }
+  // no copy operations
+  PluginInterface(const PluginInterface &) = delete;
+  PluginInterface &operator=(const PluginInterface &) = delete;
 
-    virtual const std::string getName() const = 0;
-    virtual const std::string getDescription() const  = 0;
-    virtual const std::string getPid() const = 0;
-    virtual const Version getVersion() const = 0;
+  // no move operations
+  PluginInterface(const PluginInterface &&) = delete;
+  PluginInterface &operator=(const PluginInterface &&) = delete;
 
-    virtual void onLoad() = 0;
-    virtual void onUnload() = 0;
+  inline virtual ~PluginInterface() {}
+
+  inline static constexpr Version getInterfaceVersion() {
+    return interface_version;
+  }
+
+  virtual const std::string getName() const = 0;
+  virtual const std::string getDescription() const = 0;
+  virtual const std::string getPid() const = 0;
+  virtual const Version getVersion() const = 0;
+
+  virtual void onLoad() = 0;
+  virtual void onUnload() = 0;
 };
 
 #define PluginInterface_IID "de.hochschule-trier.soda.PluginInterface"
