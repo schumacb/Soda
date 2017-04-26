@@ -61,4 +61,3 @@ else
   success "Successfully built GCC Debug"
 fi
 info "Running tests on GCC Debug build"
-ninja TestCoverage
