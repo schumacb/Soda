@@ -3,9 +3,6 @@ language: cpp
 
 sudo: required
 
-services:
-  - docker
-
 compiler:
   - gcc
 
@@ -15,39 +12,23 @@ branches:
   - testing
   - travis-ci-test
 
-addons:
-  apt:
-    packages:
-      - gcc-5
-      - g++-5
-      - cmake
-      - ninja-build
-      - qt5-default
-      - libopencv-dev
-      - libopencv-highgui-dev
-    sources:
-      - ubuntu-toolchain-r-test
+arch:
+  packages:
+    - gcc-5
+    - g++-5
+    - cmake
+    - ninja-build
+    - lcov
+    - qt5-default
+    - libopencv-dev
+  script: ./run_build.sh
 
 before_install:
-    - sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-5 50
     - export SOURCE_DIR=${TRAVIS_BUILD_DIR}
     - export BUILD_DIR=${TRAVIS_BUILD_DIR}/build
 
-install:
-  # Installing lcov
-  - cd ${HOME}
-  - wget http://ftp.de.debian.org/debian/pool/main/l/lcov/lcov_1.13.orig.tar.gz
-  - tar xf lcov_1.13.orig.tar.gz
-  - cd lcov-1.13/
-  - sudo make install
-  - cd ${SOURCE_DIR}
-  # Checking versions
-  - lcov --version
-  - g++ --version
-  - qmake -v
-  - pkg-config --libs opencv
-
-script: ./run_build.sh
+script:
+  - "curl -s https://raw.githubusercontent.com/mikkeloscar/arch-travis/master/arch-travis.sh | bash"
 
 after_success:
   # Creating report
