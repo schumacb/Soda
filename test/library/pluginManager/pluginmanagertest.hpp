@@ -1,27 +1,105 @@
-#include <QObject>
-
-#include "plugininterface.hpp"
-
 #ifndef PLUGINMANAGERTEST_HPP
 #define PLUGINMANAGERTEST_HPP
 
-#define TestPlugin_PID "de.hochschule-trier.soda.test.testplugin"
+#include <QObject>
+#include <QTest>
 
-class TestPlugin : public QObject, public PluginInterface {
+#include "plugininterface.hpp"
+#include "pluginmanager.hpp"
+
+#include "library/pluginApi/pluginapitest.hpp"
+
+class PluginManagerTest: public QObject {
     Q_OBJECT
-    Q_INTERFACES(PluginInterface)
-    Version m_version{1,0,0};
 public:
-    virtual const std::string getName() const { return "TestPlugin";}
-    virtual const std::string getDescription() const {return "";}
-    virtual const std::string getPid() const {return TestPlugin_PID;}
-    virtual const Version getVersion() const {return m_version;}
+    QString current_dir {};
 
-    virtual void onLoad() {}
-    virtual void onUnload() {}
+private slots:
+    void initTestCase(){}
 
-    void setVersion(Version t_version) {m_version = t_version;}
+    void pluginMangerConstructor() {
+        PluginManager *pm = new PluginManager();
+        delete pm;
+    }
 
+    void pluginRegistration(){
+
+        PluginManager pm;
+        PluginInterface* findResult;
+        TestPlugin tp;
+
+        pm.registerPlugin(tp);
+        findResult = pm.findPlugin("de.hochschule-trier.soda.test.nonexistentplugin", Version{0,0,0});
+        QVERIFY( findResult == nullptr );
+        findResult = pm.findPlugin(TestPlugin_PID,tp.getVersion());
+        QVERIFY( findResult != nullptr );
+        QVERIFY( &tp == findResult );
+    }
+
+    void pluginLoading() {
+        PluginManager pm;
+        QStringList dirs;
+        dirs.append(current_dir + "/../lib");
+        pm.loadPlugins(dirs);
+        size_t pluginCount = pm.countRegisteredPlugins();
+        QVERIFY(pluginCount > 0);
+    }
+
+    void pluginSearch() {
+
+        PluginManager pm;
+        PluginInterface* findResult;
+        TestPlugin tp_old, tp, tp_new;
+
+        Version oldVersion{0,0,0};
+        Version currentVersion{1,0,0};
+        Version newVersion{2,0,0};
+
+        tp_old.setVersion(oldVersion);
+        tp.setVersion(currentVersion);
+        tp_new.setVersion(newVersion);
+
+        pm.registerPlugin(tp_old);
+        pm.registerPlugin(tp);
+        pm.registerPlugin(tp_new);
+
+        findResult = pm.findPlugin(TestPlugin_PID,currentVersion);
+        QVERIFY( findResult != nullptr );
+        QVERIFY( &tp == findResult );
+
+        oldVersion = Version{0,0,0};
+        currentVersion = Version{0,1,0};
+        newVersion = Version{0,2,0};
+
+        tp_old.setVersion(oldVersion);
+        tp.setVersion(currentVersion);
+        tp_new.setVersion(newVersion);
+
+        pm.registerPlugin(tp_old);
+        pm.registerPlugin(tp);
+        pm.registerPlugin(tp_new);
+
+        findResult = pm.findPlugin(TestPlugin_PID,currentVersion);
+        QVERIFY( findResult != nullptr );
+        QVERIFY( &tp == findResult );
+
+        oldVersion = Version{0,0,0};
+        currentVersion = Version{0,0,1};
+        newVersion = Version{0,0,2};
+
+        tp_old.setVersion(oldVersion);
+        tp.setVersion(currentVersion);
+        tp_new.setVersion(newVersion);
+
+        pm.registerPlugin(tp_old);
+        pm.registerPlugin(tp);
+        pm.registerPlugin(tp_new);
+
+        findResult = pm.findPlugin(TestPlugin_PID,currentVersion);
+        QVERIFY( findResult != nullptr );
+        QVERIFY( &tp == findResult );
+
+    }
 
 };
 
