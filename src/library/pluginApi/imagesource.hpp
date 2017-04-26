@@ -15,7 +15,7 @@ namespace pluginapi {
 class ImageSource : public Algorithm {
 
 protected:
-  explicit ImageSource(QObject *parrent = 0) : Algorithm(parrent) {}
+  explicit ImageSource(QObject *parent = 0) : Algorithm(parent) {}
 
 public:
   virtual ~ImageSource() {}

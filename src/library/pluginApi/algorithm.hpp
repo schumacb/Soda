@@ -11,7 +11,7 @@ namespace pluginapi {
 class Algorithm : public QObject {
 
 protected:
-  Algorithm(QObject *parrent = 0) : QObject(parrent) {}
+  Algorithm(QObject *parent = 0) : QObject(parent) {}
 
 public:
   virtual ~Algorithm() {}
