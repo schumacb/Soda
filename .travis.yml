@@ -26,16 +26,11 @@ arch:
 before_install:
     - export SOURCE_DIR=${TRAVIS_BUILD_DIR}
     - export BUILD_DIR=${TRAVIS_BUILD_DIR}/build
+    - export GENERATE_COVERAGE=true
+    - export UPLOAD_COVERAGE=true
 
 script:
   - "curl -s https://raw.githubusercontent.com/mikkeloscar/arch-travis/master/arch-travis.sh | bash"
-
-after_success:
-  # Creating report
-  - cd ${TRAVIS_BUILD_DIR}
-  - kcov --exclude-path=/usr/ --exclude-pattern=moc_ . bin/tests
-  # Uploading report to CodeCov
-  - bash <(curl -s https://codecov.io/bash) || echo "Codecov did not collect coverage reports"
 
 notifications:
   email:

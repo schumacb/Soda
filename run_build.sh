@@ -60,4 +60,19 @@ if [ $? -ne 0 ]; then
 else
   success "Successfully built GCC Debug"
 fi
-info "Running tests on GCC Debug build"
+
+cd ${SOURCE_DIR}
+if [ ${GENERATE_COVERAGE} ]; then
+    info "Running tests and Generate coverage"
+    kcov --exclude-path=/usr/ --exclude-pattern=moc_ . bin/tests
+    if [ ${UPLOAD_COVERAGE} ]; then
+        info "Uploading report to CodeCov"
+        bash <(curl -s https://codecov.io/bash) || error "Codecov did not collect coverage reports"
+    fi
+else 
+    if [ ${RUN_TESTS} ] ; then
+        info "Running tests on GCC Debug build"
+        ./bin/tests
+    fi
+fi
+
