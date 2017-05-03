@@ -1,3 +1,5 @@
+#include <QDir>
+
 #include "catch.hpp"
 
 #include "pluginmanager.hpp"
@@ -10,7 +12,7 @@ TEST_CASE("Plugin Loading"
           "[pluginManager]") {
   PluginManager pm;
   QStringList dirs;
-  dirs.append("../lib");
+  dirs.append(QDir::currentPath() + "/../lib");
   pm.loadPlugins(dirs);
   size_t pluginCount = pm.countRegisteredPlugins();
   REQUIRE(pluginCount > 0);
