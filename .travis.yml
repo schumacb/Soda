@@ -16,6 +16,7 @@ branches:
 
 arch:
   packages:
+    - wget
     - gcc
     - cmake
     - ninja
