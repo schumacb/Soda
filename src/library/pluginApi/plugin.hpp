@@ -13,10 +13,6 @@ class Plugin {
 protected:
   Plugin() {}
 
-  constexpr static Version interface_version{PluginApi_VERSION_MAJOR,
-                                             PluginApi_VERSION_MINOR,
-                                             PluginApi_VERSION_PATCH};
-
 public:
   // no copy operations
   Plugin(const Plugin &) = delete;
@@ -29,7 +25,8 @@ public:
   inline virtual ~Plugin() {}
 
   inline static constexpr Version getInterfaceVersion() {
-    return interface_version;
+    return Version{PluginApi_VERSION_MAJOR, PluginApi_VERSION_MINOR,
+                   PluginApi_VERSION_PATCH};
   }
 
   virtual const std::string getName() const = 0;
