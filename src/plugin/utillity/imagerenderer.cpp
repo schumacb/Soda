@@ -9,15 +9,18 @@ namespace soda {
 namespace plugin {
 namespace utillity {
 
-ImageRenderer::ImageRenderer(QObject *t_parent) {
-  cv::namedWindow("Raw Frame");
-}
+ImageRenderer::ImageRenderer(QObject *t_parent) {}
 
 void ImageRenderer::setConfiguration(const QJsonObject t_config) {}
 
 void ImageRenderer::run() {}
 
 void ImageRenderer::process(cv::Mat t_frame) {
+  static bool initialized = false;
+  if (!initialized) {
+    cv::namedWindow("Raw Frame");
+  }
+
   cv::imshow("Raw Frame", t_frame);
 }
 
