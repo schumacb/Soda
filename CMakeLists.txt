@@ -5,11 +5,17 @@
 
 CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
 
+CMAKE_POLICY(SET CMP0053 NEW)
+
 PROJECT(Soda)
 
 # Options
 OPTION(SODA_BUILD_GUI "Build Graphical User Interface." ON)
-OPTION(SODA_BUILD_TESTS "Build Tests." OFF)
+IF(CMAKE_BUILD_TYPE STREQUAL "Debug")
+  OPTION(SODA_BUILD_TESTS "Build Tests." OFF)
+ELSE()
+  OPTION(SODA_BUILD_TESTS "Build Tests." ON)
+ENDIF()
 OPTION(SODA_GENERATE_COVERAGE "Generate coverage information for Tests." OFF)
 
 # Core dependencies
