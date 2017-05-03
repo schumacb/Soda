@@ -71,16 +71,6 @@ SET(CMAKE_CXX_FLAGS " \
     # -Weverything
 )
 
-# Ceck build environment
-IF($ENV{TRAVIS})
-  IF($ENV{TRAVIS} STREQUAL "true")
-    MESSAGE(STATUS "This is a Travis CI build.")
-    SET(IS_TRAVIS_BUILD ON)
-    SET(SODA_BUILD_TESTS ON)
-    SET(SODA_GNERATE_COVERAGE ON)
-  ENDIF()
-ENDIF()
-
 IF(SODA_BUILD_TESTS AND SODA_GENERATE_COVERAGE)
   SET(CMAKE_CXX_FLAGS "-g -O0 -fprofile-arcs -ftest-coverage")
   SET(CMAKE_C_FLAGS "-g -O0 -fprofile-arcs -ftest-coverage")
