@@ -1,6 +1,7 @@
 dist: trusty
 
-language: cpp
+# to avoid exporting gcc4.8
+language: none
 
 sudo: required
 

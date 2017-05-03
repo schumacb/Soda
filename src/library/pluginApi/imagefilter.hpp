@@ -1,5 +1,4 @@
-#ifndef IMAGEFILTER_HPP
-#define IMAGEFILTER_HPP
+#pragma once
 
 #include "imageprocessor.hpp"
 #include "imagesource.hpp"
@@ -20,5 +19,3 @@ public:
 } // namespace pluginapi
 
 } // namespace soda
-
-#endif // IMAGEFILTER_HPP

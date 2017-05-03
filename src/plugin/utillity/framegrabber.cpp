@@ -1,6 +1,6 @@
-#include "framegrabber.h"
+#include "framegrabber.hpp"
 
-#include <QJsonDocument>
+#include <QJsonObject>
 
 namespace soda {
 
@@ -8,9 +8,12 @@ namespace plugin {
 
 namespace utillity {
 
-FrameGrabber::FrameGrabber(QObject *parent) : ImageSource(parent) {}
+FrameGrabber::FrameGrabber(QObject *t_parent) : ImageSource(t_parent) {}
 
-void FrameGrabber::setConfiguration(QJsonDocument configuration) {}
+void FrameGrabber::setConfiguration(const QJsonObject t_config) {
+}
+
+void FrameGrabber::getConfiguration(QJsonObject &t_config) const {}
 
 void FrameGrabber::run() {
 

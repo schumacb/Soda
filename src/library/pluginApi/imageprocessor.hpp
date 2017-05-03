@@ -1,5 +1,4 @@
-#ifndef IMAGEPROCESSOR_HPP
-#define IMAGEPROCESSOR_HPP
+#pragma once
 
 #include "algorithm.hpp"
 
@@ -12,10 +11,10 @@ namespace soda {
 
 namespace pluginapi {
 
-class ImageProcessor : public Algorithm {
+class ImageProcessor : public AlgorithmNode {
 
 protected:
-  explicit ImageProcessor(QObject *parent = 0) : Algorithm(parent) {}
+  explicit ImageProcessor(QObject *parent = 0) : AlgorithmNode(parent) {}
 
 public:
   virtual ~ImageProcessor() {}
@@ -27,5 +26,3 @@ public slots:
 } // pluginapi
 
 } // soda
-
-#endif // IMAGEPORCESSOR_HPP

@@ -1,5 +1,4 @@
-#ifndef PLUGINREGISTRY_HPP
-#define PLUGINREGISTRY_HPP
+#pragma once
 
 #include <vector>
 
@@ -26,5 +25,3 @@ public:
   virtual Plugin *findPlugin(const std::string t_pid,
                              const Version t_version) = 0;
 };
-
-#endif // PLUGINREGISTRY_HPP

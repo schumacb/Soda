@@ -1,5 +1,4 @@
-#ifndef FRAMERENDERER_HPP
-#define FRAMERENDERER_HPP
+#pragma once
 
 #include <QtCore/qglobal.h>
 
@@ -14,17 +13,16 @@ class ImageRenderer : public pluginapi::ImageProcessor {
 public:
   ImageRenderer(QObject *parent = 0);
 
-  // Algorithm interface
-public:
-  void setConfiguration(QJsonDocument configuration);
-
 public slots:
   void run();
   void process(cv::Mat);
+
+  // Algorithm interface
+public:
+  void setConfiguration(const QJsonObject);
+  void getConfiguration(QJsonObject &) const;
 };
 
 } // namespace utilltiy
 } // namespace plugin
 } // namespace soda
-
-#endif // FRAMERENDERER_HPP

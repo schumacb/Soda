@@ -12,16 +12,29 @@ OPTION(SODA_BUILD_GUI "Build Graphical User Interface." ON)
 OPTION(SODA_BUILD_TESTS "Build Tests." OFF)
 OPTION(SODA_GENERATE_COVERAGE "Generate coverage information for Tests." OFF)
 
-# Dependencies
+# Core dependencies
 FIND_PACKAGE(OpenCV REQUIRED)
-FIND_PACKAGE(Qt5Core REQUIRED)
-FIND_PACKAGE(Qt5Network REQUIRED)
+FIND_PACKAGE(Qt5 COMPONENTS
+             Core Network
+             REQUIRED)
+# GUI dependencies
 IF(SODA_BUILD_GUI)
-  FIND_PACKAGE(Qt5Widgets REQUIRED)
+  FIND_PACKAGE(Qt5 COMPONENTS
+    Widgets
+    REQUIRED)
+  ADD_DEFINITIONS(${Qt5Widgets_DEFINITIONS})
+  SET(CMAKE_CXX_FLAGS "${Qt5Widgets_EXECUTABLE_COMPILE_FLAGS}")
 ENDIF()
+# Test dependencies
 IF(SODA_BUILD_TESTS)
-  FIND_PACKAGE(Qt5Test REQUIRED)
+  FIND_PACKAGE(Qt5 COMPONENTS
+      Test
+      REQUIRED)
 ENDIF()
+
+
+# Find includes in corresponding build directories
+SET(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 # Run moc automatically when needed
 SET(CMAKE_AUTOMOC ON)

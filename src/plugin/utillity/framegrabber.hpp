@@ -1,5 +1,4 @@
-#ifndef FRAMEGRABBER_H
-#define FRAMEGRABBER_H
+#pragma once
 
 #include <opencv2/videoio.hpp>
 
@@ -22,7 +21,8 @@ public:
 
   // Algorithm interface
 public:
-  void setConfiguration(QJsonDocument);
+  void setConfiguration(const QJsonObject t_config);
+  void getConfiguration(QJsonObject &t_config) const;
   void run();
   // ImageSource interface
 
@@ -35,5 +35,3 @@ signals:
 } // namespace Plugin
 
 } // namespace Soda
-
-#endif // FRAMEGRABBER_H

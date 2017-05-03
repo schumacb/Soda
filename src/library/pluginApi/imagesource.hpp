@@ -1,5 +1,4 @@
-#ifndef IMAGESOURCE_HPP
-#define IMAGESOURCE_HPP
+#pragma once
 
 #include "algorithm.hpp"
 
@@ -12,10 +11,10 @@ namespace soda {
 
 namespace pluginapi {
 
-class ImageSource : public Algorithm {
+class ImageSource : public AlgorithmNode {
 
 protected:
-  explicit ImageSource(QObject *parent = 0) : Algorithm(parent) {}
+  explicit ImageSource(QObject *parent = 0) : AlgorithmNode(parent) {}
 
 public:
   virtual ~ImageSource() {}
@@ -27,5 +26,3 @@ signals:
 } // namespace pluginapi
 
 } // namespace soda
-
-#endif // IMAGESOURCE_HPP

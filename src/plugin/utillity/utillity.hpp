@@ -1,5 +1,4 @@
-#ifndef UTILLITY_HPP
-#define UTILLITY_HPP
+#pragma once
 
 #include <QObject>
 #include <QtPlugin>
@@ -11,7 +10,7 @@
 #include "pluginconfig.hpp"
 
 // TODO: begin remove
-#include "framegrabber.h"
+#include "framegrabber.hpp"
 #include "imagerenderer.hpp"
 // TODO: end remove
 
@@ -59,5 +58,3 @@ public:
 } // namespace Plugin
 
 } // namespace Soda
-
-#endif // UTILLITY_HPP

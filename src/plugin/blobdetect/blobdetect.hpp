@@ -1,5 +1,4 @@
-#ifndef FRAMEGRABBER_HPP
-#define FRAMEGRABBER_HPP
+#pragma once
 
 #include <QObject>
 #include <QtPlugin>
@@ -46,5 +45,3 @@ public:
 } // namespace Plugin
 
 } // namespace Soda
-
-#endif // FRAMEGRABBER_HPP

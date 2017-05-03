@@ -1,17 +1,13 @@
-#ifndef TCPSERVER_HPP
-#define TCPSERVER_HPP
+#pragma once
 
 #include <QObject>
 #include <QTcpServer>
 
-class TcpServer : public QTcpServer
-{
+class TcpServer : public QTcpServer {
 public:
-    TcpServer();
+  TcpServer();
 
 signals:
 
 public slots:
 };
-
-#endif // TCPSERVER_HPP

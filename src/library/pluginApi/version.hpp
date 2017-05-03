@@ -1,5 +1,4 @@
-#ifndef VERSION_HPP
-#define VERSION_HPP
+#pragma once
 
 #include <iostream>
 
@@ -45,5 +44,3 @@ inline bool operator>=(const Version &v1, const Version &v2) {
          (v1.major == v2.major && v1.minor > v2.minor) ||
          (v1.major == v2.major && v1.minor == v2.minor && v1.patch >= v2.patch);
 }
-
-#endif // VERSION_HPP

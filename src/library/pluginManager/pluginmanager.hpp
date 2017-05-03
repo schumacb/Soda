@@ -1,5 +1,4 @@
-#ifndef PLUGINMANAGER_H
-#define PLUGINMANAGER_H
+#pragma once
 
 #include <QCoreApplication>
 #include <QObject>
@@ -30,5 +29,3 @@ signals:
 
 public slots:
 };
-
-#endif // PLUGINMANAGER_H

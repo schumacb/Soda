@@ -1,5 +1,4 @@
-#ifndef ALGORITHM_HPP
-#define ALGORITHM_HPP
+#pragma once
 
 #include <QObject>
 #include <QRunnable>
@@ -8,14 +7,17 @@ namespace soda {
 
 namespace pluginapi {
 
-class Algorithm : public QObject {
+class AlgorithmNode : public QObject {
 
 protected:
-  Algorithm(QObject *parent = 0) : QObject(parent) {}
+  AlgorithmNode(QObject *parent = 0) : QObject(parent) {}
 
 public:
-  virtual ~Algorithm() {}
-  virtual void setConfiguration(QJsonDocument configuration) = 0;
+  virtual ~AlgorithmNode() {}
+  virtual void setConfiguration(const QJsonObject) = 0;
+  virtual void getConfiguration(QJsonObject &) const = 0;
+  // Exceptions
+  class InvalidConfiguration {};
 
 public slots:
   virtual void run() = 0;
@@ -24,5 +26,3 @@ public slots:
 } // namespace pluginapi
 
 } // namespace soda
-
-#endif // ALGORITHM_HPP

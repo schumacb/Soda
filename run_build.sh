@@ -51,7 +51,7 @@ cd ${BUILD_DIR}/gcc/debug
 cmake -DCMAKE_CXX_COMPILER=g++ -DCMAKE_C_COMPILER=gcc \
   -DCMAKE_BUILD_TYPE=Debug \
   -G Ninja -DCMAKE_MAKE_PROGRAM=ninja  \
-  -DSODA_BUILD_TESTS=ON -DSODA_GENERATE_COVERAGE=OFF \
+  -DSODA_BUILD_TESTS=ON \
   ${SOURCE_DIR}
 ninja -j8
 if [ $? -ne 0 ]; then

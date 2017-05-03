@@ -1,5 +1,4 @@
-#ifndef PLUGININTERFACE_HPP
-#define PLUGININTERFACE_HPP
+#pragma once
 
 #include <string>
 
@@ -40,12 +39,8 @@ public:
 
   virtual void onLoad() = 0;
   virtual void onUnload() = 0;
-
-  template <typename Feature> Feature getFeature(std::string fid);
 };
 
 #define PluginInterface_IID "de.hochschule-trier.soda.PluginInterface"
 
 Q_DECLARE_INTERFACE(Plugin, PluginInterface_IID)
-
-#endif // PLUGININTERFACE_HPP
