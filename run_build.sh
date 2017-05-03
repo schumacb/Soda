@@ -100,7 +100,7 @@ if [ ${GENERATE_COVERAGE} ]; then
   # filter result
   lcov --remove coverage.info '/usr/*' --output-file coverage.info
   lcov --remove coverage.info 'moc_*' --output-file coverage.info
-  lcov --remove coverage.info 'test/' --output-file coverage.info
+  lcov --remove coverage.info "${SOURCE_DIR}/test/*" --output-file coverage.info
   # display results
   lcov --list coverage.info
   if [ ${UPLOAD_COVERAGE} ]; then
