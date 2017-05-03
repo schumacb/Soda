@@ -1,24 +1,3 @@
-#include <QCoreApplication>
-#include <QtTest/QTest>
+#define CATCH_CONFIG_MAIN  // This tells Catch to provide a main()
 
-#include "library/pluginApi/pluginapitest.hpp"
-#include "library/pluginManager/pluginmanagertest.hpp"
-
-int main(int argc, char **argv) {
-  QCoreApplication app(argc, argv);
-  int result;
-  // QtTest
-
-  PluginApiTest pluginApiTest;
-  result = QTest::qExec(&pluginApiTest, argc, argv);
-  if (result != 0) {
-    return result;
-  }
-
-  PluginManagerTest pluginManagerTest;
-  pluginManagerTest.current_dir = app.applicationDirPath();
-  result = QTest::qExec(&pluginManagerTest, argc, argv);
-  if (result != 0) {
-    return result;
-  }
-}
+#include <catch.hpp>

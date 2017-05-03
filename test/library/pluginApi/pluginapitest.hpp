@@ -1,12 +1,8 @@
-#ifndef PLUGINAPITEST_HPP
-#define PLUGINAPITEST_HPP
+#pragma once
 
 #include <functional>
-#include <sstream>
 
-#include <QDebug>
 #include <QObject>
-#include <QtTest/qtest.h>
 
 #include "plugin.hpp"
 #include "pluginregistry.hpp"
@@ -55,74 +51,3 @@ public:
     throw std::bad_function_call();
   }
 };
-
-class PluginApiTest : public QObject {
-  Q_OBJECT
-
-  Version v000{0, 0, 0};
-  Version v000_2{0, 0, 0};
-  Version v001{0, 0, 1};
-  Version v010{0, 1, 0};
-  Version v100{1, 0, 0};
-
-private slots:
-  void initTestCase() {}
-
-  void pluginApi() {
-    TestPlugin p;
-    QVERIFY(Plugin::getInterfaceVersion() == TestPlugin_Version);
-  }
-
-  void destructors() {
-    PluginRegistry *pr = new TestPluginRegistry();
-    delete pr;
-
-    Plugin *pi = new TestPlugin();
-    delete pi;
-  }
-
-  void equalVersions() {
-    QVERIFY(v000 == v000_2);
-    QVERIFY(!(v000 != v000_2));
-  }
-
-  void unequalVersions() {
-    QVERIFY(v000 != v001);
-    QVERIFY(!(v000 == v001));
-  }
-
-  void majorVersionComparison() {
-    QVERIFY(v000 < v100);
-    QVERIFY(v000 <= v100);
-    QVERIFY(v100 > v000);
-    QVERIFY(v100 >= v000);
-  }
-
-  void minorVersionComparison() {
-    QVERIFY(v000 < v010);
-    QVERIFY(v000 <= v010);
-    QVERIFY(v010 > v000);
-    QVERIFY(v010 >= v000);
-  }
-
-  void patchVersionComparison() {
-    QVERIFY(v000 < v001);
-    QVERIFY(v000 <= v001);
-    QVERIFY(v001 > v000);
-    QVERIFY(v001 >= v000);
-  }
-
-  void streamingOperator() {
-
-    std::stringstream ss;
-    Version v{1, 2, 3};
-
-    ss << v;
-
-    QVERIFY(ss.str() == "1.2.3");
-  }
-
-  void cleanupTestCase() {}
-};
-
-#endif // PLUGINAPITEST_HPP
