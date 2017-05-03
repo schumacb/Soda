@@ -19,9 +19,15 @@ arch:
     - gcc
     - cmake
     - ninja
-    - kcov
     - qt5-base
     - opencv
+  install:
+  # Installing lcov
+   - cd ${HOME}
+   - wget http://ftp.de.debian.org/debian/pool/main/l/lcov/lcov_1.13.orig.tar.gz
+   - tar xf lcov_1.13.orig.tar.gz
+   - cd lcov-1.13/
+   - sudo make install
   script: ./run_build.sh
 
 before_install:
