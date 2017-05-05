@@ -39,7 +39,7 @@ fi
 info "Setting up build directories"
 mkdir -p ${BUILD_DIR}
 cd ${BUILD_DIR}
-mkdir -p gcc/release && mkdir -p gcc/debug
+mkdir -p gcc/release
 if [ $? -ne 0 ]; then
   error "Could not setup build directories!"
   exit 1
@@ -61,55 +61,37 @@ else
   success "Successfully built Release"
 fi
 
-info "Building Debug"
-cd ${BUILD_DIR}/${CC}/debug
-cmake -DCMAKE_BUILD_TYPE=Debug \
-  -G Ninja -DCMAKE_MAKE_PROGRAM=ninja  \
-  -DSODA_BUILD_TESTS=OFF \
-  ${SOURCE_DIR}
-ninja -j8
-if [ $? -ne 0 ]; then
-  error "There are compile errors!"
-  exit 3
-else
-  success "Successfully built GCC Debug"
-fi
-
 cd ${SOURCE_DIR}
 if [ ${GENERATE_COVERAGE} ]; then
-  info "Building GCC Release with debug info and --coverage"
+  info "Building for Code Coverage"
   mkdir -p ${BUILD_DIR}/gcc/coverage
   cd ${BUILD_DIR}/gcc/coverage
   cmake  -DCMAKE_C_COMPILER=gcc -DCMAKE_CXX_COMPILER=g++\
-    -DCMAKE_CXX_FLAGS=--coverage \
     -DCMAKE_BUILD_TYPE=RelWithDebInfo \
     -G Ninja -DCMAKE_MAKE_PROGRAM=ninja \
     -DSODA_BUILD_TESTS=ON -DSODA_GENERATE_COVERAGE=ON\
     ${SOURCE_DIR}
-  ninja -j8 TestCoverage
+  ninja -j8
   if [ $? -ne 0 ]; then
     error "There are compile errors!"
     exit 2
   else
-    success "Successfully built clang Release for Test coverage"
+    success "Successfully built for Test coverage"
   fi
-
-  info "Running tests and Generate coverage"
-  # capture coverage info
-  lcov --directory . --capture --output-file coverage.info
-  # filter result
-  lcov --remove coverage.info '/usr/*' --output-file coverage.info
-  lcov --remove coverage.info 'moc_*' --output-file coverage.info
-  lcov --remove coverage.info "${SOURCE_DIR}/test/*" --output-file coverage.info
-  # display results
-  lcov --list coverage.info
-  if [ ${UPLOAD_COVERAGE} ]; then
-    info "Uploading report to CodeCov"
-    bash <(curl -s https://codecov.io/bash) || error "Codecov did not collect coverage reports"
+  info "Running Tests and collecting Coverage"
+  ninja -j8 TestCoverage
+  if [ $? -ne 0 ]; then
+    error "There are Tests failing!"
+    exit 2
+  else
+    if [ ${UPLOAD_COVERAGE} ]; then
+      info "Uploading report to CodeCov"
+      bash <(curl -s https://codecov.io/bash) || error "Codecov did not collect coverage reports"
+    fi
   fi
 else 
   if [ ${RUN_TESTS} ] ; then
-    info "Running tests on GCC Debug build"
-    ${SOURCE_DIR}/bin/tests
+    info "Running tests on GCC Release build"
+    ${BUILD_DIR}/gcc/release/bin/tests
   fi
 fi
