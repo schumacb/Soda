@@ -2,27 +2,23 @@
 
 #include "algorithm.hpp"
 
-// Forward declaration
+#include <QtCore>
+
+// Forward declarations
 namespace cv {
 class Mat;
 }
 
 namespace soda {
-
 namespace pluginapi {
 
 class ImageSource : public AlgorithmNode {
 
-protected:
-  explicit ImageSource(QObject *parent = 0) : AlgorithmNode(parent) {}
-
 public:
   virtual ~ImageSource() {}
-
 signals:
-  void imageReady(cv::Mat){};
+  virtual void signal_imageReady(cv::Mat mat) = 0;
 };
 
 } // namespace pluginapi
-
 } // namespace soda

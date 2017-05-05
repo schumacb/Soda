@@ -8,10 +8,9 @@ namespace plugin {
 
 namespace utillity {
 
-FrameGrabber::FrameGrabber(QObject *t_parent) : ImageSource(t_parent) {}
+FrameGrabber::FrameGrabber(QObject *t_parent) : QObject(t_parent) {}
 
-void FrameGrabber::setConfiguration(const QJsonObject t_config) {
-}
+void FrameGrabber::setConfiguration(const QJsonObject t_config) {}
 
 void FrameGrabber::getConfiguration(QJsonObject &t_config) const {}
 
@@ -20,7 +19,7 @@ void FrameGrabber::run() {
   if (m_capture.isOpened()) {
     cv::Mat frame;
     m_capture >> frame;
-    emit imageReady(frame);
+    emit signal_imageReady(frame);
 
   } else {
     bool open;

@@ -1,26 +1,21 @@
 #pragma once
 
-#include <QObject>
-#include <QRunnable>
+#include <QJsonObject>
 
 namespace soda {
 
 namespace pluginapi {
 
-class AlgorithmNode : public QObject {
-
-protected:
-  AlgorithmNode(QObject *parent = 0) : QObject(parent) {}
+class AlgorithmNode {
 
 public:
   virtual ~AlgorithmNode() {}
   virtual void setConfiguration(const QJsonObject) = 0;
   virtual void getConfiguration(QJsonObject &) const = 0;
+  virtual void run() = 0;
+
   // Exceptions
   class InvalidConfiguration {};
-
-public slots:
-  virtual void run() = 0;
 };
 
 } // namespace pluginapi

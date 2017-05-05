@@ -10,6 +10,8 @@ static Version v001{0, 0, 1};
 static Version v010{0, 1, 0};
 static Version v100{1, 0, 0};
 
+using namespace soda::pluginapi;
+
 TEST_CASE("Interface version", "[pluginApi]") {
   TestPlugin p;
   REQUIRE(Plugin::getInterfaceVersion() == (TestPlugin_Version));
@@ -21,6 +23,9 @@ TEST_CASE("Destructors", "[pluginApi]") {
 
   Plugin *pi = new TestPlugin();
   delete pi;
+
+  TestAlgorithm *algo = new TestAlgorithm();
+  delete algo;
 }
 
 TEST_CASE("Compare equal versions", "[pluginApi]") {

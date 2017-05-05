@@ -4,6 +4,9 @@
 
 #include <QObject>
 
+#include <opencv2/opencv.hpp>
+
+#include "imagefilter.hpp"
 #include "plugin.hpp"
 #include "pluginregistry.hpp"
 #include "version.hpp"
@@ -13,6 +16,28 @@
   Version {                                                                    \
     PluginApi_VERSION_MAJOR, PluginApi_VERSION_MINOR, PluginApi_VERSION_PATCH  \
   }
+
+namespace soda {
+namespace pluginapi {
+
+class TestAlgorithm : public QObject, public ImageFilter {
+  Q_OBJECT
+
+public:
+  // AlgorithmNode interface
+  void setConfiguration(const QJsonObject) override {}
+  void getConfiguration(QJsonObject &) const override {}
+public slots:
+  void run() override {}
+  // ImageSource interface
+signals:
+  void signal_imageReady(cv::Mat) override;
+  // ImageProcessor interface
+public slots:
+  void slot_process(cv::Mat) override {}
+};
+}
+}
 
 class TestPlugin : public QObject, public Plugin {
   Q_OBJECT

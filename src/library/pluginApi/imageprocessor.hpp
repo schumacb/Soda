@@ -1,28 +1,25 @@
 #pragma once
 
+#include <QtCore>
+
 #include "algorithm.hpp"
 
-// forward declaration
+// forward declarations
 namespace cv {
 class Mat;
 }
 
 namespace soda {
-
 namespace pluginapi {
 
 class ImageProcessor : public AlgorithmNode {
-
-protected:
-  explicit ImageProcessor(QObject *parent = 0) : AlgorithmNode(parent) {}
 
 public:
   virtual ~ImageProcessor() {}
 
 public slots:
-  void process(cv::Mat);
+  virtual void slot_process(cv::Mat mat) = 0;
 };
 
 } // pluginapi
-
 } // soda

@@ -32,8 +32,8 @@ protected:
   ImageRenderer m_imageRenderer{};
 
 public:
-  FrameGrabber &getFrameGrabber() { return m_frameGrabber; }
-  ImageRenderer &getImageRenderer() { return m_imageRenderer; }
+  pluginapi::ImageSource &getFrameGrabber() { return m_frameGrabber; }
+  pluginapi::ImageProcessor &getImageRenderer() { return m_imageRenderer; }
   // TODO: end remove
   Utillity(QObject *parent = 0);
   ~Utillity() {}

@@ -8,6 +8,7 @@
 #include "utillity.hpp"
 
 using namespace soda::plugin::utillity;
+using namespace soda::pluginapi;
 
 int main(int argc, char **argv) {
 
@@ -25,14 +26,15 @@ int main(int argc, char **argv) {
   if (pi) {
     Utillity *ut = dynamic_cast<Utillity *>(pi);
     // Utillity* ut = (Utillity*)pi;
-    FrameGrabber &fg = ut->getFrameGrabber();
-    ImageRenderer &ir = ut->getImageRenderer();
+    QObject *iso = dynamic_cast<QObject *>(&ut->getFrameGrabber());
+    QObject *ipo = dynamic_cast<QObject *>(&ut->getImageRenderer());
+    ImageSource *is = &ut->getFrameGrabber();
 
-    QObject::connect(&fg, SIGNAL(imageReady(cv::Mat)), &ir,
-                     SLOT(process(cv::Mat)));
+    QObject::connect(iso, SIGNAL(signal_imageReady(cv::Mat)), ipo,
+                     SLOT(slot_process(cv::Mat)));
 
     while (true) {
-      fg.run();
+      is->run();
       cv::waitKey(20);
     }
   }

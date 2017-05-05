@@ -9,13 +9,13 @@ namespace soda {
 namespace plugin {
 namespace utillity {
 
-ImageRenderer::ImageRenderer(QObject *t_parent) {}
+ImageRenderer::ImageRenderer(QObject *t_parent) : QObject(t_parent) {}
 
 void ImageRenderer::setConfiguration(const QJsonObject t_config) {}
 
 void ImageRenderer::run() {}
 
-void ImageRenderer::process(cv::Mat t_frame) {
+void ImageRenderer::slot_process(cv::Mat t_frame) {
   static bool initialized = false;
   if (!initialized) {
     cv::namedWindow("Raw Frame");

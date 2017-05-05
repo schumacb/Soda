@@ -1,5 +1,7 @@
 #pragma once
 
+#include <QObject>
+
 #include <opencv2/videoio.hpp>
 
 #include "imagesource.hpp"
@@ -10,7 +12,7 @@ namespace plugin {
 
 namespace utillity {
 
-class FrameGrabber : public pluginapi::ImageSource {
+class FrameGrabber : public QObject, public pluginapi::ImageSource {
   Q_OBJECT
 protected:
   cv::VideoCapture m_capture{};
@@ -25,9 +27,8 @@ public:
   void getConfiguration(QJsonObject &t_config) const;
   void run();
   // ImageSource interface
-
 signals:
-  void imageReady(cv::Mat);
+  void signal_imageReady(cv::Mat);
 };
 
 } // namespace Utillity
