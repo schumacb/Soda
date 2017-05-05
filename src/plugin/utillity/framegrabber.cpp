@@ -10,7 +10,20 @@ namespace utillity {
 
 FrameGrabber::FrameGrabber(QObject *t_parent) : QObject(t_parent) {}
 
-void FrameGrabber::setConfiguration(const QJsonObject t_config) {}
+void FrameGrabber::setConfiguration(const QJsonObject t_config) {
+  if (!t_config.contains("sourceType")) {
+    throw AlgorithmNode::InvalidConfiguration();
+  }
+  SourceType sourceType = SourceType(t_config["sourceType"].toDouble());
+  switch (sourceType) {
+  case SourceType::Device:
+    break;
+  case SourceType::Stream:
+    break;
+  default:
+    throw AlgorithmNode::InvalidConfiguration();
+  }
+}
 
 void FrameGrabber::getConfiguration(QJsonObject &t_config) const {}
 

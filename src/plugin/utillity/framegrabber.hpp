@@ -18,6 +18,8 @@ protected:
   cv::VideoCapture m_capture{};
 
 public:
+  enum SourceType { Device, Stream };
+
   FrameGrabber(QObject *parent = 0);
   bool isOpened();
 

@@ -6,5 +6,5 @@
 
 PROJECT(plugin)
 
-ADD_SUBDIRECTORY(utillity)
+ADD_SUBDIRECTORY(framegrabber)
 ADD_SUBDIRECTORY(blobdetect)
