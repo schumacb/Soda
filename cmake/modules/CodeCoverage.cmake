@@ -35,6 +35,9 @@
 # - Added support for Clang.
 # - Some additional usage instructions.
 #
+# 2017-05-04, Bastian Schumacher
+# - Added support for CodeCov.
+#
 # USAGE:
 
 # 0. (Mac only) If you use Xcode 5.1 make sure to patch geninfo as described here:
@@ -167,6 +170,50 @@ FUNCTION(SETUP_TARGET_FOR_COVERAGE _targetname _testrunner _outputname)
         )
 
 ENDFUNCTION() # SETUP_TARGET_FOR_COVERAGE
+
+# Param _targetname     The name of new the custom make target
+# Param _testrunner     The name of the target which runs the tests.
+#						MUST return ZERO always, even on errors.
+#						If not, no coverage report will be created!
+# Param _outputname     lcov output is generated as _outputname.info
+# Optional fourth parameter is passed as arguments to _testrunner
+#   Pass them in list form, e.g.: "-j;2" for -j 2
+FUNCTION(SETUP_TARGET_FOR_COVERAGE_CODECOV _targetname _testrunner _outputname)
+
+        IF(NOT LCOV_PATH)
+                MESSAGE(FATAL_ERROR "lcov not found! Aborting...")
+        ENDIF() # NOT LCOV_PATH
+
+        SET(coverage_info "${CMAKE_BINARY_DIR}/${_outputname}.info")
+
+        SEPARATE_ARGUMENTS(test_command UNIX_COMMAND "${_testrunner}")
+
+        # Setup target
+        ADD_CUSTOM_TARGET(${_targetname}
+
+                # Cleanup lcov
+                ${LCOV_PATH} --directory . --zerocounters
+
+                # Run tests
+                COMMAND ${test_command} ${ARGV3}
+
+                # Capturing lcov counters and generating report
+                COMMAND ${LCOV_PATH} --directory . --capture --output-file ${coverage_info}
+                COMMAND ${LCOV_PATH} --remove ${coverage_info} '/usr/*' ${LCOV_REMOVE_EXTRA} --output-file ${coverage_info}
+                # Display results
+                COMMAND ${LCOV_PATH} --list ${coverage_info}
+
+                WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+                COMMENT "Resetting code coverage counters to zero.\nProcessing code coverage counters and generating report."
+        )
+
+    # Show info where to find the report
+    ADD_CUSTOM_COMMAND(TARGET ${_targetname} POST_BUILD
+            COMMAND ;
+            COMMENT "Code coverage report saved in ${_outputname}.info."
+    )
+
+ENDFUNCTION() # SETUP_TARGET_FOR_COVERAGE_CODECOV
 
 # Param _targetname     The name of new the custom make target
 # Param _testrunner     The name of the target which runs the tests
