@@ -90,6 +90,7 @@ QWidget *FrameGrabberDataModel::embeddedWidget() { return m_widget; }
 QJsonObject FrameGrabberDataModel::save() const {
 
   QJsonObject object{{"name", name()},
+                     {"PID", ""},
                      {"device", m_device},
                      {"availableDevices", m_availableDevices},
                      {"url", m_url}};

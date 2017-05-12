@@ -4,13 +4,15 @@
 
 #include "pluginapitest.hpp"
 
+#include <QJsonObject>
+
+using namespace soda::pluginapi;
+
 static Version v000{0, 0, 0};
 static Version v000_2{0, 0, 0};
 static Version v001{0, 0, 1};
 static Version v010{0, 1, 0};
 static Version v100{1, 0, 0};
-
-using namespace soda::pluginapi;
 
 TEST_CASE("Interface version", "[pluginApi]") {
   TestPlugin p;
@@ -64,4 +66,55 @@ TEST_CASE("Streaming operator", "[pluginApi]") {
   Version v{1, 2, 3};
   ss << v;
   REQUIRE(ss.str() == "1.2.3");
+}
+
+const QJsonObject &TestAlgorithm::getConfiguration() const {
+  std::cerr << "Error: This is only a test stub without functionallity! "
+               "TestAlgorithm::getConfiguration() was called. \""
+            << std::endl;
+  throw std::bad_function_call();
+}
+
+void TestAlgorithm::setConfiguration(const QJsonObject &t_configuration) {
+  Q_UNUSED(t_configuration)
+}
+
+QString TestAlgorithm::getID() { return ""; }
+
+void TestAlgorithm::run() {}
+
+void TestAlgorithm::slot_process(cv::Mat) {}
+
+const QString TestPlugin::getName() const { return "TestPlugin"; }
+
+const QString TestPlugin::getDescription() const { return ""; }
+
+const std::string TestPlugin::getPid() const { return TestPlugin_PID; }
+
+const Version TestPlugin::getVersion() const { return m_version; }
+
+void TestPlugin::onLoad(PluginRegistry &t_registry) { Q_UNUSED(t_registry) }
+
+void TestPlugin::onUnload(PluginRegistry &t_registry) { Q_UNUSED(t_registry) }
+
+void TestPlugin::setVersion(Version t_version) { m_version = t_version; }
+
+void TestPluginRegistry::registerPlugin(Plugin &t_plugin) {
+  std::cerr << "Error: This is only a test stub without functionallity! "
+               "TestPluginRegistry::registerPlugin() was called with plugin \""
+            << t_plugin.getName().toStdString() << "(" << t_plugin.getPid()
+            << ")\"." << std::endl;
+  throw std::bad_function_call();
+}
+
+Plugin *TestPluginRegistry::findPlugin(const std::string &t_pid,
+                                       const Version &t_version) {
+  std::cerr << "Error: This is only a test stub without functionallity! "
+               "TestPluginRegistry::findPlugin() was called with PID \""
+            << t_pid << "\" and version \"" << t_version << "\"!" << std::endl;
+  throw std::bad_function_call();
+}
+
+void TestPluginRegistry::registerAlgorithm(AlgorithmFactory &t_factory) {
+  Q_UNUSED(t_factory)
 }

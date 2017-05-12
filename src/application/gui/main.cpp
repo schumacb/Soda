@@ -1,4 +1,6 @@
 
+#include <QCoreApplication>
+#include <QDir>
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QMenuBar>
 #include <QtWidgets/QVBoxLayout>
@@ -11,8 +13,11 @@
 #include <nodes/NodeData>
 #include <nodes/NodeStyle>
 
+#include "framegrabber.hpp"
 #include "framegrabberdatamodel.hpp"
+#include "mainwindow.hpp"
 #include "models.hpp"
+#include "pluginmanager.hpp"
 
 using QtNodes::DataModelRegistry;
 using QtNodes::FlowScene;
@@ -20,6 +25,10 @@ using QtNodes::FlowView;
 using QtNodes::FlowViewStyle;
 using QtNodes::NodeStyle;
 using QtNodes::ConnectionStyle;
+
+using namespace soda::plugin::framegrabber;
+using namespace soda::pluginapi;
+using namespace soda::pluginmanager;
 
 static std::shared_ptr<DataModelRegistry> registerDataModels() {
   auto ret = std::make_shared<DataModelRegistry>();
@@ -91,13 +100,13 @@ int main(int argc, char **argv) {
 
   setStyle();
 
-  QWidget mainWidget;
+  MainWindow mainWidget;
 
   auto menuBar = new QMenuBar();
   auto saveAction = menuBar->addAction("Save..");
   auto loadAction = menuBar->addAction("Load..");
 
-  QVBoxLayout *l = new QVBoxLayout(&mainWidget);
+  QVBoxLayout *l = new QVBoxLayout(mainWidget.centralWidget());
 
   l->addWidget(menuBar);
   auto scene = new FlowScene(registerDataModels());
@@ -109,9 +118,34 @@ int main(int argc, char **argv) {
 
   QObject::connect(loadAction, &QAction::triggered, scene, &FlowScene::load);
 
-  mainWidget.setWindowTitle("Dataflow tools: simplest calculator");
+  mainWidget.setWindowTitle("Soda - Simple Object Detection Application");
   mainWidget.resize(800, 600);
   mainWidget.showNormal();
+
+  app.addLibraryPath(QCoreApplication::applicationDirPath() + "/../lib");
+  PluginManager pm;
+
+  auto libPaths = app.libraryPaths();
+
+  pm.loadPlugins(libPaths);
+
+  Plugin *pi = pm.findPlugin("de.hochschule-trier.soda.plugin.utillity",
+                             Version{0, 1, 0});
+  if (pi) {
+    FrameGrabberPlugin *ut = dynamic_cast<FrameGrabberPlugin *>(pi);
+    // Utillity* ut = (Utillity*)pi;
+    QObject *iso = dynamic_cast<QObject *>(&ut->getFrameGrabber());
+    QObject *ipo = dynamic_cast<QObject *>(&ut->getImageRenderer());
+    ImageSource *is = &ut->getFrameGrabber();
+
+    QObject::connect(iso, SIGNAL(signal_imageReady(cv::Mat)), ipo,
+                     SLOT(slot_process(cv::Mat)));
+
+    while (true) {
+      is->run();
+      cv::waitKey(20);
+    }
+  }
 
   return app.exec();
 }

@@ -1,19 +1,37 @@
 #include "blobdetect.hpp"
 
+#include "exception.hpp"
+
 namespace soda {
-
 namespace plugin {
-
 namespace blobdetect {
 
-BlobDetect::BlobDetect(QObject *parent) : QObject(parent) {}
+using namespace pluginapi;
 
-void BlobDetect::onLoad() {}
+BlobDetectPlugin::BlobDetectPlugin(QObject *parent) : QObject(parent) {}
 
-void BlobDetect::onUnload() {}
+const std::string BlobDetectPlugin::getPid() const { return m_pid; }
 
-} // namespace BlobDetect
+const QString BlobDetectPlugin::getName() const { return "BlobDetect"; }
 
-} // namespace Plugin
+const QString BlobDetectPlugin::getDescription() const {
+  // TODO: description
+  return "";
+}
 
-} // namespace Soda
+const Version BlobDetectPlugin::getVersion() const {
+  return BlobDetectPlugin::m_api_version;
+}
+
+void BlobDetectPlugin::onLoad(PluginRegistry &t_registry) {}
+
+void BlobDetectPlugin::onUnload(PluginRegistry &t_registry) {}
+
+BlobDetect::BlobDetect(QString t_id, QObject *t_parent)
+    : QObject(t_parent), m_id{t_id} {}
+
+QString BlobDetect::getID() { return m_id; }
+
+} // namespace blobdetect
+} // namespace plugin
+} // namespace soda

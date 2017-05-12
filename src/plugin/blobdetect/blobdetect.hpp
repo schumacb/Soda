@@ -5,6 +5,7 @@
 
 #include <opencv2/opencv.hpp>
 
+#include "algorithm.hpp"
 #include "plugin.hpp"
 
 #include "pluginconfig.hpp"
@@ -12,36 +13,49 @@
 #define BlobDetectPluginID "de.hochschule-trier.soda.plugin.blobdetect"
 
 namespace soda {
-
 namespace plugin {
-
 namespace blobdetect {
 
-class BlobDetect : public QObject, public Plugin {
-  Q_OBJECT
-  Q_PLUGIN_METADATA(IID BlobDetectPluginID FILE "blobdetect.json")
-  Q_INTERFACES(Plugin)
-protected:
-  const std::string PID = BlobDetectPluginID;
-  static constexpr Version VERSION = {
-      PLUGIN_VERSION_MAJOR, PLUGIN_VERSION_MINOR, PLUGIN_VERSION_PATCH};
-  const std::string NAME = "BlobDetect";
-  const std::string DESCRIPTION = "TODO"; // TODO: Describe Plugin.
+class BlobDetect : public QObject, public pluginapi::AlgorithmNode {
+
+private:
+  const QString m_id{};
 
 public:
-  explicit BlobDetect(QObject *parent = 0);
+  explicit BlobDetect(QString id, QObject *parent = 0);
 
-  const std::string getPid() const override { return PID; }
-  const Version getVersion() const override { return BlobDetect::VERSION; }
-  const std::string getName() const override { return NAME; }
-  const std::string getDescription() const override { return DESCRIPTION; }
-
-  void onLoad() override;
-  void onUnload() override;
+  // AlgorithmNode interface
+public:
+  QString getID() override;
+  void setConfiguration(const QJsonObject &configuration) override;
+  const QJsonObject &getConfiguration() const override;
+  void run() override;
 };
 
-} // namespace BlobDetect
+class BlobDetectPlugin : public QObject, public pluginapi::Plugin {
+  Q_OBJECT
+  Q_PLUGIN_METADATA(IID BlobDetectPluginID FILE "blobdetect.json")
+  Q_INTERFACES(soda::pluginapi::Plugin)
 
-} // namespace Plugin
+private:
+  const std::string m_pid = BlobDetectPluginID;
+  static constexpr pluginapi::Version m_api_version = {
+      PLUGIN_VERSION_MAJOR, PLUGIN_VERSION_MINOR, PLUGIN_VERSION_PATCH};
+  const pluginapi::AlgorithmType m_blobdetect_type{"BlobDetect", "", ""};
 
-} // namespace Soda
+public:
+  explicit BlobDetectPlugin(QObject *parent = 0);
+
+  // Plugin interface
+public:
+  const std::string getPid() const override;
+  const QString getName() const override;
+  const QString getDescription() const override;
+  const pluginapi::Version getVersion() const override;
+  void onLoad(pluginapi::PluginRegistry &registry) override;
+  void onUnload(pluginapi::PluginRegistry &registry) override;
+};
+
+} // namespace blobdetect
+} // namespace plugin
+} // namespace soda

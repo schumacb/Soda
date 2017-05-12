@@ -9,21 +9,25 @@
 
 namespace soda {
 namespace plugin {
-namespace utillity {
+namespace framegrabber {
 
 class ImageRenderer : public QObject, public pluginapi::ImageProcessor {
   Q_OBJECT
+private:
+  QString m_id;
+
 public:
-  ImageRenderer(QObject *parent = 0);
+  ImageRenderer(QString id, QObject *parent = 0);
 
   // Algorithm interface
-  void getConfiguration(QJsonObject &) const;
-  void run();
-  void setConfiguration(const QJsonObject);
+  const QJsonObject &getConfiguration() const override;
+  QString getID() override;
+  void run() override;
+  void setConfiguration(const QJsonObject &configuration) override;
 
   // ImageProcessor interface
 public slots:
-  void slot_process(cv::Mat mat);
+  void slot_process(cv::Mat mat) override;
 };
 
 } // namespace utilltiy

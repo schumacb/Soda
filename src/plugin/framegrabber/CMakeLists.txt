@@ -40,6 +40,10 @@ LIST(APPEND LIBRARIES Qt5::Core)
 LIST(APPEND INCLUDES ${PluginApi_INCLUDES})
 LIST(APPEND LIBRARIES ${PluginApi_LIBS})
 
+# core
+LIST(APPEND INCLUDES ${Core_INCLUDES})
+LIST(APPEND LIBRARIES ${Core_LIBS})
+
 # ----------------------------------------------------------------------------
 
 # Cleanup lists

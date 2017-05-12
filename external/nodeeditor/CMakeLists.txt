@@ -6,7 +6,7 @@ FIND_PACKAGE(Git REQUIRED)
 ExternalProject_add(
     nodeeditor
     PREFIX ${CMAKE_BINARY_DIR}/nodeeditor
-    GIT_REPOSITORY https://github.com/paceholder/nodeeditor.git
+    GIT_REPOSITORY https://github.com/schumacb/nodeeditor.git
     TIMEOUT 10
     BUILD_COMMAND ninja -j 8
     CMAKE_ARGS

@@ -5,10 +5,11 @@
 
 #include "pluginmanager.hpp"
 
-#include "utillity.hpp"
+#include "framegrabber.hpp"
 
-using namespace soda::plugin::utillity;
+using namespace soda::plugin::framegrabber;
 using namespace soda::pluginapi;
+using namespace soda::pluginmanager;
 
 int main(int argc, char **argv) {
 
@@ -24,7 +25,7 @@ int main(int argc, char **argv) {
   Plugin *pi = pm.findPlugin("de.hochschule-trier.soda.plugin.utillity",
                              Version{0, 1, 0});
   if (pi) {
-    Utillity *ut = dynamic_cast<Utillity *>(pi);
+    FrameGrabberPlugin *ut = dynamic_cast<FrameGrabberPlugin *>(pi);
     // Utillity* ut = (Utillity*)pi;
     QObject *iso = dynamic_cast<QObject *>(&ut->getFrameGrabber());
     QObject *ipo = dynamic_cast<QObject *>(&ut->getImageRenderer());

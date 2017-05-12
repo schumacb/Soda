@@ -1,12 +1,18 @@
 #pragma once
 
+#include <memory>
 #include <string>
 
 #include <QObject>
 #include <QtPlugin>
 
+#include "algorithm.hpp"
 #include "pluginapiconfig.hpp"
+#include "pluginregistry.hpp"
 #include "version.hpp"
+
+namespace soda {
+namespace pluginapi {
 
 class Plugin {
 
@@ -29,15 +35,18 @@ public:
                    PluginApi_VERSION_PATCH};
   }
 
-  virtual const std::string getName() const = 0;
-  virtual const std::string getDescription() const = 0;
+  virtual const QString getName() const = 0;
+  virtual const QString getDescription() const = 0;
   virtual const std::string getPid() const = 0;
   virtual const Version getVersion() const = 0;
 
-  virtual void onLoad() = 0;
-  virtual void onUnload() = 0;
+  virtual void onLoad(PluginRegistry &registry) = 0;
+  virtual void onUnload(PluginRegistry &registry) = 0;
 };
+
+} // pluginapi
+} // soda
 
 #define PluginInterface_IID "de.hochschule-trier.soda.PluginInterface"
 
-Q_DECLARE_INTERFACE(Plugin, PluginInterface_IID)
+Q_DECLARE_INTERFACE(soda::pluginapi::Plugin, PluginInterface_IID)

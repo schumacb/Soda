@@ -5,13 +5,19 @@
 // TODO:Remove
 #include <opencv2/highgui.hpp>
 
+#include "exception.hpp"
+
 namespace soda {
 namespace plugin {
-namespace utillity {
+namespace framegrabber {
 
-ImageRenderer::ImageRenderer(QObject *t_parent) : QObject(t_parent) {}
+ImageRenderer::ImageRenderer(QString id, QObject *t_parent)
+    : QObject(t_parent), m_id{id} {}
 
-void ImageRenderer::setConfiguration(const QJsonObject t_config) {}
+void ImageRenderer::setConfiguration(const QJsonObject &t_config) {
+  // TODO: implement
+  Q_UNUSED(t_config)
+}
 
 void ImageRenderer::run() {}
 
@@ -24,7 +30,12 @@ void ImageRenderer::slot_process(cv::Mat t_frame) {
   cv::imshow("Raw Frame", t_frame);
 }
 
-void ImageRenderer::getConfiguration(QJsonObject &t_config) const {}
+const QJsonObject &ImageRenderer::getConfiguration() const {
+  // TODO: implement
+  throw NotYetImplemented();
+}
+
+QString ImageRenderer::getID() { return m_id; }
 
 } // namespace utillity
 } // namespace plugin

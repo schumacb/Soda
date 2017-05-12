@@ -22,57 +22,44 @@ namespace pluginapi {
 
 class TestAlgorithm : public QObject, public ImageFilter {
   Q_OBJECT
-
-public:
   // AlgorithmNode interface
-  void setConfiguration(const QJsonObject) override {}
-  void getConfiguration(QJsonObject &) const override {}
+public:
+  const QJsonObject &getConfiguration() const override;
+  void setConfiguration(const QJsonObject &configuration) override;
+  QString getID() override;
 public slots:
-  void run() override {}
+  void run() override;
   // ImageSource interface
 signals:
   void signal_imageReady(cv::Mat) override;
   // ImageProcessor interface
 public slots:
-  void slot_process(cv::Mat) override {}
+  void slot_process(cv::Mat) override;
 };
-}
-}
 
 class TestPlugin : public QObject, public Plugin {
   Q_OBJECT
-  Q_INTERFACES(Plugin)
+  Q_INTERFACES(soda::pluginapi::Plugin)
   Version m_version = TestPlugin_Version;
 
 public:
-  virtual const std::string getName() const override { return "TestPlugin"; }
-  virtual const std::string getDescription() const override { return ""; }
-  virtual const std::string getPid() const override { return TestPlugin_PID; }
-  virtual const Version getVersion() const override { return m_version; }
-
-  virtual void onLoad() override {}
-  virtual void onUnload() override {}
-
-  void setVersion(Version t_version) { m_version = t_version; }
+  virtual const QString getName() const override;
+  virtual const QString getDescription() const override;
+  virtual const std::string getPid() const override;
+  virtual const Version getVersion() const override;
+  virtual void onLoad(pluginapi::PluginRegistry &t_registry) override;
+  virtual void onUnload(pluginapi::PluginRegistry &t_registry) override;
+  void setVersion(Version t_version);
 };
 
 class TestPluginRegistry : public PluginRegistry {
+  // PluginRegistry interface
 public:
-  virtual void registerPlugin(Plugin &t_plugin) override {
-    std::cerr
-        << "Error: This is only a test stub without functionallity! "
-           "TestPluginRegistry::registerPlugin() was called with plugin \""
-        << t_plugin.getName() << "(" << t_plugin.getPid() << ")\"."
-        << std::endl;
-    throw std::bad_function_call();
-  }
-
-  virtual Plugin *findPlugin(const std::string t_pid,
-                             const Version t_version) override {
-    std::cerr << "Error: This is only a test stub without functionallity! "
-                 "TestPluginRegistry::findPlugin() was called with PID \""
-              << t_pid << "\" and version \"" << t_version << "\"!"
-              << std::endl;
-    throw std::bad_function_call();
-  }
+  virtual void registerPlugin(Plugin &t_plugin) override;
+  virtual Plugin *findPlugin(const std::string &t_pid,
+                             const Version &t_version) override;
+  void registerAlgorithm(AlgorithmFactory &factory) override;
 };
+
+} // pluginapi
+} // soda

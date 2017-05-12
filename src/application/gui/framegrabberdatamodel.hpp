@@ -8,10 +8,13 @@
 #include <nodes/NodeDataModel>
 
 class FrameGrabberDataModel : public QtNodes::NodeDataModel {
-  Q_OBJECT
 public:
   FrameGrabberDataModel();
   virtual ~FrameGrabberDataModel();
+
+  // No copy or assignment
+  FrameGrabberDataModel(const FrameGrabberDataModel &other) = delete;
+  FrameGrabberDataModel operator=(const FrameGrabberDataModel &other) = delete;
 
   // NodeDataModel interface
   QString caption() const override;

@@ -2,7 +2,11 @@
 
 #include <iostream>
 
-struct Version {
+namespace soda {
+namespace pluginapi {
+
+class Version {
+public:
   unsigned short major;
   unsigned short minor;
   unsigned short patch;
@@ -44,3 +48,6 @@ inline bool operator>=(const Version &v1, const Version &v2) {
          (v1.major == v2.major && v1.minor > v2.minor) ||
          (v1.major == v2.major && v1.minor == v2.minor && v1.patch >= v2.patch);
 }
+
+} // namespace pluginapi
+} // namespace soda
