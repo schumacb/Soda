@@ -10,20 +10,17 @@ namespace soda {
 namespace plugin {
 namespace framegrabber {
 
-FrameGrabber::FrameGrabber(QString id, QObject *t_parent)
-    : QObject(t_parent), m_id{id} {}
+FrameGrabber::FrameGrabber(QObject *t_parent) : QObject(t_parent) {}
 
 void FrameGrabber::setConfiguration(const QJsonObject &t_config) {
-  if (!t_config.contains("sourceType")) {
+  if (!t_config.contains("device")) {
     throw AlgorithmNode::InvalidConfiguration();
   }
-  SourceType sourceType = SourceType(t_config["sourceType"].toDouble());
-  switch (sourceType) {
-  case SourceType::Device:
-    break;
-  case SourceType::Stream:
-    break;
+  if (!t_config.contains("url")) {
+    throw AlgorithmNode::InvalidConfiguration();
   }
+  m_device = t_config["device"].toInt();
+  m_url = t_config["url"].toString().toStdString();
 }
 
 const QJsonObject &FrameGrabber::getConfiguration() const {
@@ -43,7 +40,11 @@ void FrameGrabber::run() {
   } else {
     bool open;
     do {
-      open = m_capture.open(0);
+      if (m_device == -1) { // use stream
+        open = m_capture.open(m_url);
+      } else { // use device
+        open = m_capture.open(m_device);
+      }
     } while (!open);
   }
 }
@@ -53,7 +54,7 @@ using namespace pluginapi;
 FrameGrabberPlugin::FrameGrabberPlugin(QObject *parent) : QObject(parent) {}
 
 void FrameGrabberPlugin::onLoad(PluginRegistry &t_registry) {
-  t_registry.registerAlgorithm(m_frameGrabberFactory);
+  t_registry.registerAlgorithm(m_frame_grabber_factory);
 }
 
 void FrameGrabberPlugin::onUnload(PluginRegistry &t_registry) {
@@ -61,10 +62,8 @@ void FrameGrabberPlugin::onUnload(PluginRegistry &t_registry) {
   Q_UNUSED(t_registry)
 }
 
-std::unique_ptr<AlgorithmNode>
-FrameGrabberFactory::createAlgorithm(const QString t_id,
-                                     QObject *t_parent) const {
-  return std::make_unique<FrameGrabber>(t_id, t_parent);
+AlgorithmNode *FrameGrabberFactory::createAlgorithm(QObject *t_parent) const {
+  return new FrameGrabber(t_parent);
 }
 
 AlgorithmType FrameGrabberFactory::getAlgorithmType() const {

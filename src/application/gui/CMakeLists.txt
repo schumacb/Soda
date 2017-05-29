@@ -31,13 +31,9 @@ LINK_DIRECTORIES(${NODEEDITOR_LIB_DIR})
 # ----------------------------------------------------------------------------
 # Add internal libraries
 
-# PluginManager
-LIST(APPEND INCLUDES ${PluginManager_INCLUDES})
-LIST(APPEND LIBRARIES ${PluginManager_LIBS})
-
-# Requiredplugins
-LIST(APPEND INCLUDES ${Utillity_INCLUDES})
-LIST(APPEND LIBRARIES ${Utillity_LIBS})
+# Core
+LIST(APPEND INCLUDES ${Core_INCLUDES})
+LIST(APPEND LIBRARIES ${Core_LIBS})
 
 # ----------------------------------------------------------------------------
 # Cleanup lists

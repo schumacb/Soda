@@ -29,7 +29,7 @@ public:
   std::shared_ptr<QtNodes::NodeData> outData(QtNodes::PortIndex) override;
   QWidget *embeddedWidget() override;
 
-protected:
+private:
   QWidget *m_widget{new QWidget()};
   QComboBox *m_urlEditor{new QComboBox(m_widget)};
   QComboBox *m_deviceSelector{new QComboBox(m_widget)};

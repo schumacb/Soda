@@ -13,10 +13,11 @@
 #include <nodes/NodeData>
 #include <nodes/NodeStyle>
 
-#include "framegrabber.hpp"
+#include "applicationmodel.hpp"
+
 #include "framegrabberdatamodel.hpp"
+#include "imagepreviewdatamodel.hpp"
 #include "mainwindow.hpp"
-#include "models.hpp"
 #include "pluginmanager.hpp"
 
 using QtNodes::DataModelRegistry;
@@ -26,16 +27,15 @@ using QtNodes::FlowViewStyle;
 using QtNodes::NodeStyle;
 using QtNodes::ConnectionStyle;
 
-using namespace soda::plugin::framegrabber;
+using namespace soda;
+
 using namespace soda::pluginapi;
-using namespace soda::pluginmanager;
 
 static std::shared_ptr<DataModelRegistry> registerDataModels() {
   auto ret = std::make_shared<DataModelRegistry>();
 
   ret->registerModel<FrameGrabberDataModel>();
-  ret->registerModel<ImageSourceModel>();
-  ret->registerModel<ImageSinkModel>();
+  ret->registerModel<ImagePreviewDataModel>();
 
   return ret;
 }
@@ -98,10 +98,11 @@ int main(int argc, char **argv) {
 
   QApplication app(argc, argv);
 
+  ApplicationModel model(&app);
+  model.initialize();
   setStyle();
 
   MainWindow mainWidget;
-
   auto menuBar = new QMenuBar();
   auto saveAction = menuBar->addAction("Save..");
   auto loadAction = menuBar->addAction("Load..");
@@ -121,31 +122,6 @@ int main(int argc, char **argv) {
   mainWidget.setWindowTitle("Soda - Simple Object Detection Application");
   mainWidget.resize(800, 600);
   mainWidget.showNormal();
-
-  app.addLibraryPath(QCoreApplication::applicationDirPath() + "/../lib");
-  PluginManager pm;
-
-  auto libPaths = app.libraryPaths();
-
-  pm.loadPlugins(libPaths);
-
-  Plugin *pi = pm.findPlugin("de.hochschule-trier.soda.plugin.utillity",
-                             Version{0, 1, 0});
-  if (pi) {
-    FrameGrabberPlugin *ut = dynamic_cast<FrameGrabberPlugin *>(pi);
-    // Utillity* ut = (Utillity*)pi;
-    QObject *iso = dynamic_cast<QObject *>(&ut->getFrameGrabber());
-    QObject *ipo = dynamic_cast<QObject *>(&ut->getImageRenderer());
-    ImageSource *is = &ut->getFrameGrabber();
-
-    QObject::connect(iso, SIGNAL(signal_imageReady(cv::Mat)), ipo,
-                     SLOT(slot_process(cv::Mat)));
-
-    while (true) {
-      is->run();
-      cv::waitKey(20);
-    }
-  }
 
   return app.exec();
 }

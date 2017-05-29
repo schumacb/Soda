@@ -4,7 +4,7 @@
 #
 # ----------------------------------------------------------------------------
 
-PROJECT(Utillity)
+PROJECT(FrameGrabber)
 
 # Set plugin version
 SET (PLUGIN_VERSION_MAJOR 0)

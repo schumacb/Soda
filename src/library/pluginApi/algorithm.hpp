@@ -4,6 +4,7 @@
 #include <string>
 
 #include <QString>
+#include <QUuid>
 
 QT_BEGIN_NAMESPACE
 class QObject;
@@ -39,8 +40,7 @@ public:
 class AlgorithmFactory {
 public:
   virtual ~AlgorithmFactory() {}
-  virtual std::unique_ptr<AlgorithmNode>
-  createAlgorithm(const QString id, QObject *parent = 0) const = 0;
+  virtual AlgorithmNode *createAlgorithm(QObject *parent = 0) const = 0;
   virtual AlgorithmType getAlgorithmType() const = 0;
 };
 

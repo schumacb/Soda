@@ -8,7 +8,7 @@
 
 #include "pluginmanagertest.hpp"
 
-using namespace soda::pluginmanager;
+using namespace soda;
 using namespace soda::pluginapi;
 
 TEST_CASE("Destructor"

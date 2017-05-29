@@ -22,6 +22,13 @@ LIST(APPEND INCLUDES ${QT_INCLUDES})
 LIST(APPEND LIBRARIES Qt5::Core)
 
 # ----------------------------------------------------------------------------
+# Add internal libraries
+
+# PluginApi
+LIST(APPEND INCLUDES ${PluginApi_INCLUDES})
+LIST(APPEND LIBRARIES ${PluginApi_LIBS})
+
+# ----------------------------------------------------------------------------
 
 # Cleanup lists
 LIST(REMOVE_DUPLICATES INCLUDES)

@@ -10,10 +10,6 @@
 #include "plugin.hpp"
 #include "pluginconfig.hpp"
 
-// TODO: begin remove
-#include "imagerenderer.hpp"
-// TODO: end remove
-
 namespace soda {
 namespace plugin {
 namespace framegrabber {
@@ -25,12 +21,14 @@ class FrameGrabber : public QObject, public pluginapi::ImageSource {
 
 private:
   cv::VideoCapture m_capture{};
-  QString m_id{};
+  QString m_id{FrameGrabberPluginID};
+  int m_device{0};
+  cv::String m_url{""};
 
 public:
   enum SourceType { Device, Stream };
 
-  FrameGrabber(QString id, QObject *parent = 0);
+  FrameGrabber(QObject *parent = 0);
   bool isOpened();
 
   // Algorithm interface
@@ -51,8 +49,7 @@ private:
 
   // AlgorithmFactory interface
 public:
-  std::unique_ptr<pluginapi::AlgorithmNode>
-  createAlgorithm(const QString id, QObject *parent) const override;
+  pluginapi::AlgorithmNode *createAlgorithm(QObject *parent) const override;
   pluginapi::AlgorithmType getAlgorithmType() const override;
 };
 
@@ -62,15 +59,13 @@ class FrameGrabberPlugin : public QObject, public pluginapi::Plugin {
   Q_INTERFACES(soda::pluginapi::Plugin)
 
 private:
-  FrameGrabberFactory m_frameGrabberFactory{};
+  FrameGrabberFactory m_frame_grabber_factory{};
 
   // TODO: begin remove
-  FrameGrabber m_frameGrabber{""};
-  ImageRenderer m_imageRenderer{""};
+  FrameGrabber m_frame_grabber{};
 
 public:
-  pluginapi::ImageSource &getFrameGrabber() { return m_frameGrabber; }
-  pluginapi::ImageProcessor &getImageRenderer() { return m_imageRenderer; }
+  pluginapi::ImageSource &getFrameGrabber() { return m_frame_grabber; }
   // TODO: end remove
   FrameGrabberPlugin(QObject *parent = 0);
   ~FrameGrabberPlugin() {}
