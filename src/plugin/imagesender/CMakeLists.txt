@@ -4,7 +4,7 @@
 #
 # ----------------------------------------------------------------------------
 
-PROJECT(Utillity)
+PROJECT(ImageSender)
 
 # Set plugin version
 SET (PLUGIN_VERSION_MAJOR 0)
@@ -39,6 +39,10 @@ LIST(APPEND LIBRARIES Qt5::Core)
 # pluginApi
 LIST(APPEND INCLUDES ${PluginApi_INCLUDES})
 LIST(APPEND LIBRARIES ${PluginApi_LIBS})
+
+# core
+LIST(APPEND INCLUDES ${Core_INCLUDES})
+LIST(APPEND LIBRARIES ${Core_LIBS})
 
 # ----------------------------------------------------------------------------
 

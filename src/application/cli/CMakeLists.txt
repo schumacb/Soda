@@ -19,13 +19,15 @@ LIST(APPEND LIBRARIES Qt5::Core)
 # ----------------------------------------------------------------------------
 # Add internal libraries
 
-# PluginManager
-LIST(APPEND INCLUDES ${PluginManager_INCLUDES})
-LIST(APPEND LIBRARIES ${PluginManager_LIBS})
+# Core
+LIST(APPEND INCLUDES ${Core_INCLUDES})
+LIST(APPEND LIBRARIES ${Core_LIBS})
 
 # Requiredplugins
-LIST(APPEND INCLUDES ${Utillity_INCLUDES})
-LIST(APPEND LIBRARIES ${Utillity_LIBS})
+LIST(APPEND INCLUDES ${FrameGrabber_INCLUDES})
+LIST(APPEND LIBRARIES ${FrameGrabber_LIBS})
+LIST(APPEND INCLUDES ${ImageSender_INCLUDES})
+LIST(APPEND LIBRARIES ${ImageSender_LIBS})
 
 # ----------------------------------------------------------------------------
 

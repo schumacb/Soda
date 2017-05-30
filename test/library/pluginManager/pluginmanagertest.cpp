@@ -8,6 +8,9 @@
 
 #include "pluginmanagertest.hpp"
 
+using namespace soda;
+using namespace soda::pluginapi;
+
 TEST_CASE("Destructor"
           "[pluginManager]") {
   PluginManager *pm = new PluginManager();
@@ -43,54 +46,54 @@ TEST_CASE("Plugin registration", "[pluginRegistry]") {
 TEST_CASE("Plugin search", "[pluginRegistry]") {
 
   PluginManager pm;
-  Plugin *findResult;
-  TestPlugin tp_old, tp, tp_new;
+  Plugin *findResult, *noResult;
+  TestPlugin tp_old, tp;
 
   Version oldVersion{0, 0, 0};
   Version currentVersion{1, 0, 0};
-  Version newVersion{2, 0, 0};
 
   tp_old.setVersion(oldVersion);
   tp.setVersion(currentVersion);
-  tp_new.setVersion(newVersion);
 
   pm.registerPlugin(tp_old);
   pm.registerPlugin(tp);
-  pm.registerPlugin(tp_new);
 
   findResult = pm.findPlugin(TestPlugin_PID, currentVersion);
   REQUIRE(findResult != nullptr);
   REQUIRE(&tp == findResult);
+
+  noResult = pm.findPlugin(TestPlugin_PID, oldVersion);
+  REQUIRE(noResult == nullptr);
 
   oldVersion = Version{0, 0, 0};
   currentVersion = Version{0, 1, 0};
-  newVersion = Version{0, 2, 0};
 
   tp_old.setVersion(oldVersion);
   tp.setVersion(currentVersion);
-  tp_new.setVersion(newVersion);
 
   pm.registerPlugin(tp_old);
   pm.registerPlugin(tp);
-  pm.registerPlugin(tp_new);
 
   findResult = pm.findPlugin(TestPlugin_PID, currentVersion);
   REQUIRE(findResult != nullptr);
   REQUIRE(&tp == findResult);
+
+  noResult = pm.findPlugin(TestPlugin_PID, oldVersion);
+  REQUIRE(noResult == nullptr);
 
   oldVersion = Version{0, 0, 0};
   currentVersion = Version{0, 0, 1};
-  newVersion = Version{0, 0, 2};
 
   tp_old.setVersion(oldVersion);
   tp.setVersion(currentVersion);
-  tp_new.setVersion(newVersion);
 
   pm.registerPlugin(tp_old);
   pm.registerPlugin(tp);
-  pm.registerPlugin(tp_new);
 
   findResult = pm.findPlugin(TestPlugin_PID, currentVersion);
   REQUIRE(findResult != nullptr);
   REQUIRE(&tp == findResult);
+
+  noResult = pm.findPlugin(TestPlugin_PID, oldVersion);
+  REQUIRE(noResult == nullptr);
 }

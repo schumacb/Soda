@@ -24,6 +24,8 @@ FIND_PACKAGE(Qt5 COMPONENTS
 IF(SODA_BUILD_GUI)
   FIND_PACKAGE(Qt5 COMPONENTS
     Widgets
+    Gui OpenGL
+    Multimedia
     REQUIRED)
   ADD_DEFINITIONS(${Qt5Widgets_DEFINITIONS})
   SET(CMAKE_CXX_FLAGS "${Qt5Widgets_EXECUTABLE_COMPILE_FLAGS}")
@@ -32,8 +34,9 @@ ENDIF()
 # Find includes in corresponding build directories
 SET(CMAKE_INCLUDE_CURRENT_DIR ON)
 
-# Run moc automatically when needed
+# Run moc amd rcc automatically when needed
 SET(CMAKE_AUTOMOC ON)
+set(CMAKE_AUTORCC ON)
 
 #CMake Modules
 LIST(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/modules")
@@ -88,6 +91,10 @@ ADD_SUBDIRECTORY(test)
 # This target only serves to show CMake modules in IDEs.
 FILE(GLOB_RECURSE CMAKE_MODULES "cmake/modules/*" )
 ADD_CUSTOM_TARGET(CMakeModules SOURCES ${CMAKE_MODULES})
+
+# This target only serves to show Plugin Metadata in IDEs.
+FILE(GLOB_RECURSE JSON_FILES "*.json" )
+ADD_CUSTOM_TARGET(JsonFiles SOURCES ${JSON_FILES})
 
 FILE(GLOB RESOURCE_FILES ".gitignore" ".travis.yml" "INSTALL" "LICENCE"
     "*.txt" "*.md" "*.sh")

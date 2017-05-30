@@ -3,43 +3,47 @@
 
 #include <QDir>
 
+#include "applicationmodel.hpp"
+#include "flowsceneparser.hpp"
+#include "framegrabber.hpp"
+#include "imagesender.hpp"
 #include "pluginmanager.hpp"
 
-#include "utillity.hpp"
-
-using namespace soda::plugin::utillity;
+using namespace soda;
 using namespace soda::pluginapi;
+using namespace soda::plugin::framegrabber;
+using namespace soda::plugin::imagesender;
 
 int main(int argc, char **argv) {
 
   QCoreApplication app(argc, argv);
+  ApplicationModel model(&app);
+  model.initialize();
+  PluginManager &pm = *model.pluginManager();
 
-  app.addLibraryPath(QCoreApplication::applicationDirPath() + "/../lib");
-  PluginManager pm;
+  if (argc == 3) {
+    auto file_name = argv[1];
+    auto start_node_id = QUuid(argv[2]);
+    QFile f(file_name);
+    if (!f.open(QFile::ReadOnly | QFile::Text)) {
+      qDebug() << "Can't read file \"" << file_name << "\"!";
+      return -1;
+    }
+    QJsonDocument doc = QJsonDocument::fromJson(f.readAll());
+    QJsonObject flowScene{doc.object()};
+    FlowSceneParser parser(&pm);
+    parser.parse(flowScene);
 
-  auto libPaths = app.libraryPaths();
-
-  pm.loadPlugins(libPaths);
-
-  Plugin *pi = pm.findPlugin("de.hochschule-trier.soda.plugin.utillity",
-                             Version{0, 1, 0});
-  if (pi) {
-    Utillity *ut = dynamic_cast<Utillity *>(pi);
-    // Utillity* ut = (Utillity*)pi;
-    QObject *iso = dynamic_cast<QObject *>(&ut->getFrameGrabber());
-    QObject *ipo = dynamic_cast<QObject *>(&ut->getImageRenderer());
-    ImageSource *is = &ut->getFrameGrabber();
-
-    QObject::connect(iso, SIGNAL(signal_imageReady(cv::Mat)), ipo,
-                     SLOT(slot_process(cv::Mat)));
+    AlgorithmNode *fg = pm.getNode(start_node_id);
 
     while (true) {
-      is->run();
+      fg->run();
       cv::waitKey(20);
     }
+  } else {
+    qDebug() << "Usage: soda-cli <path-to-config.flow> <start-node-id> \n Use "
+                "soda to create config.flow.";
   }
-
-  // app.exec();
 
   return 0;
 }

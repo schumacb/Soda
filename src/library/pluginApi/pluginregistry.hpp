@@ -1,8 +1,14 @@
 #pragma once
 
-#include <vector>
+#include <string>
 
-#include "plugin.hpp"
+namespace soda {
+namespace pluginapi {
+
+// forward declarations
+class Plugin;
+class Version;
+class AlgorithmFactory;
 
 class PluginRegistry {
 
@@ -21,7 +27,11 @@ public:
   virtual ~PluginRegistry() {}
 
   virtual void registerPlugin(Plugin &t_plugin) = 0;
+  virtual void registerAlgorithm(AlgorithmFactory &factory) = 0;
 
-  virtual Plugin *findPlugin(const std::string t_pid,
-                             const Version t_version) = 0;
+  virtual Plugin *findPlugin(const std::string &t_pid,
+                             const Version &t_version) = 0;
 };
+
+} // pluginapi
+} // soda
