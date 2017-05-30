@@ -1,8 +1,8 @@
 #include "catch.hpp"
 
-#include "pluginmanager.hpp"
-
 #include "pluginapitest.hpp"
+#include "pluginmanager.hpp"
+#include "sodaconfig.hpp"
 
 #include <QJsonObject>
 
@@ -79,7 +79,23 @@ void TestAlgorithm::setConfiguration(const QJsonObject &t_configuration) {
   Q_UNUSED(t_configuration)
 }
 
-QString TestAlgorithm::getID() { return ""; }
+const QString TestAlgorithm::getID() const { return ""; }
+
+Plugin *TestAlgorithm::getPlugin() const { return m_plugin; }
+
+const char *TestAlgorithm::getSignal(int t_index) const {
+  if (t_index == 0) {
+    return SIGNAL(signal_imageReady(cv::Mat));
+  }
+  return "";
+}
+
+const char *TestAlgorithm::getSlot(int t_index) const {
+  if (t_index == 0) {
+    return SLOT(slot_process(cv::Mat));
+  }
+  return "";
+}
 
 void TestAlgorithm::run() {}
 
@@ -89,7 +105,13 @@ const QString TestPlugin::getName() const { return "TestPlugin"; }
 
 const QString TestPlugin::getDescription() const { return ""; }
 
-const std::string TestPlugin::getPid() const { return TestPlugin_PID; }
+const QString TestPlugin::getAuthor() const { return Soda_AUTHOR_SCHUMACB; }
+
+const QString TestPlugin::getMaintainer() const { return Soda_AUTHOR_SCHUMACB; }
+
+const QString TestPlugin::getURL() const { return Soda_URL; }
+
+const std::string TestPlugin::getID() const { return TestPlugin_PID; }
 
 const Version TestPlugin::getVersion() const { return m_version; }
 
@@ -102,7 +124,7 @@ void TestPlugin::setVersion(Version t_version) { m_version = t_version; }
 void TestPluginRegistry::registerPlugin(Plugin &t_plugin) {
   std::cerr << "Error: This is only a test stub without functionallity! "
                "TestPluginRegistry::registerPlugin() was called with plugin \""
-            << t_plugin.getName().toStdString() << "(" << t_plugin.getPid()
+            << t_plugin.getName().toStdString() << "(" << t_plugin.getID()
             << ")\"." << std::endl;
   throw std::bad_function_call();
 }

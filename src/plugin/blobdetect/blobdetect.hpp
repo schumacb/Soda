@@ -26,7 +26,7 @@ public:
 
   // AlgorithmNode interface
 public:
-  QString getID() override;
+  const QString getID() const override;
   void setConfiguration(const QJsonObject &configuration) override;
   const QJsonObject &getConfiguration() const override;
   void run() override;
@@ -48,9 +48,12 @@ public:
 
   // Plugin interface
 public:
-  const std::string getPid() const override;
+  const std::string getID() const override;
   const QString getName() const override;
   const QString getDescription() const override;
+  const QString getAuthor() const override;
+  const QString getMaintainer() const override;
+  const QString getURL() const override;
   const pluginapi::Version getVersion() const override;
   void onLoad(pluginapi::PluginRegistry &registry) override;
   void onUnload(pluginapi::PluginRegistry &registry) override;

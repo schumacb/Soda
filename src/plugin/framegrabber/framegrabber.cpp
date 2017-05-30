@@ -5,9 +5,14 @@
 #include <QJsonObject>
 
 #include "exception.hpp"
+#include "plugin.hpp"
+#include "sodaconfig.hpp"
 
 namespace soda {
 namespace plugin {
+
+using namespace pluginapi;
+
 namespace framegrabber {
 
 FrameGrabber::FrameGrabber(QObject *t_parent) : QObject(t_parent) {}
@@ -28,7 +33,9 @@ const QJsonObject &FrameGrabber::getConfiguration() const {
   throw NotYetImplemented();
 }
 
-QString FrameGrabber::getID() { return m_id; }
+const QString FrameGrabber::getID() const { return m_id; }
+
+Plugin *FrameGrabber::getPlugin() const { return m_plugin; }
 
 void FrameGrabber::run() {
 
@@ -49,6 +56,18 @@ void FrameGrabber::run() {
   }
 }
 
+const char *FrameGrabber::getSignal(int t_index) const {
+  if (t_index == 0) {
+    return SIGNAL(signal_imageReady(cv::Mat));
+  }
+  return "";
+}
+
+const char *FrameGrabber::getSlot(int t_index) const {
+  Q_UNUSED(t_index)
+  return "";
+}
+
 using namespace pluginapi;
 
 FrameGrabberPlugin::FrameGrabberPlugin(QObject *parent) : QObject(parent) {}
@@ -61,6 +80,16 @@ void FrameGrabberPlugin::onUnload(PluginRegistry &t_registry) {
   // TODO: implement
   Q_UNUSED(t_registry)
 }
+
+const QString FrameGrabberPlugin::getAuthor() const {
+  return Soda_AUTHOR_SCHUMACB;
+}
+
+const QString FrameGrabberPlugin::getMaintainer() const {
+  return Soda_AUTHOR_SCHUMACB;
+}
+
+const QString FrameGrabberPlugin::getURL() const { return Soda_URL; }
 
 AlgorithmNode *FrameGrabberFactory::createAlgorithm(QObject *t_parent) const {
   return new FrameGrabber(t_parent);

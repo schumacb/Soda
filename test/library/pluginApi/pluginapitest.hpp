@@ -22,11 +22,15 @@ namespace pluginapi {
 
 class TestAlgorithm : public QObject, public ImageFilter {
   Q_OBJECT
-  // AlgorithmNode interface
 public:
+  Plugin *m_plugin;
+  // AlgorithmNode interface
   const QJsonObject &getConfiguration() const override;
   void setConfiguration(const QJsonObject &configuration) override;
-  QString getID() override;
+  const QString getID() const override;
+  pluginapi::Plugin *getPlugin() const override;
+  const char *getSignal(int index) const override;
+  const char *getSlot(int index) const override;
 public slots:
   void run() override;
   // ImageSource interface
@@ -43,12 +47,15 @@ class TestPlugin : public QObject, public Plugin {
   Version m_version = TestPlugin_Version;
 
 public:
-  virtual const QString getName() const override;
-  virtual const QString getDescription() const override;
-  virtual const std::string getPid() const override;
-  virtual const Version getVersion() const override;
-  virtual void onLoad(pluginapi::PluginRegistry &t_registry) override;
-  virtual void onUnload(pluginapi::PluginRegistry &t_registry) override;
+  const QString getName() const override;
+  const QString getDescription() const override;
+  const QString getAuthor() const override;
+  const QString getMaintainer() const override;
+  const QString getURL() const override;
+  const std::string getID() const override;
+  const Version getVersion() const override;
+  void onLoad(pluginapi::PluginRegistry &t_registry) override;
+  void onUnload(pluginapi::PluginRegistry &t_registry) override;
   void setVersion(Version t_version);
 };
 

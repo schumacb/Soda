@@ -8,7 +8,7 @@ PROJECT(PluginApi)
 
 # Set API version
 SET (PluginApi_VERSION_MAJOR 0)
-SET (PluginApi_VERSION_MINOR 3)
+SET (PluginApi_VERSION_MINOR 4)
 SET (PluginApi_VERSION_PATCH 0)
 CONFIGURE_FILE (
   "${PROJECT_SOURCE_DIR}/pluginapiconfig.hpp.in"

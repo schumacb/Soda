@@ -21,8 +21,9 @@ int main(int argc, char **argv) {
   model.initialize();
   PluginManager &pm = *model.pluginManager();
 
-  if (argc == 2) {
+  if (argc == 3) {
     auto file_name = argv[1];
+    auto start_node_id = QUuid(argv[2]);
     QFile f(file_name);
     if (!f.open(QFile::ReadOnly | QFile::Text)) {
       qDebug() << "Can't read file \"" << file_name << "\"!";
@@ -33,24 +34,16 @@ int main(int argc, char **argv) {
     FlowSceneParser parser(&pm);
     parser.parse(flowScene);
 
-    // TODO: parse connection
-    AlgorithmNode *fg =
-        pm.getNode(QUuid("{a64a093c-5128-481f-abf0-5652244e9c69}"));
-    AlgorithmNode *ip =
-        pm.getNode(QUuid("{610d6ff3-d403-4773-9f23-b26e5790e559}"));
-    QObject *fgo = dynamic_cast<QObject *>(fg);
-    QObject *ipo = dynamic_cast<QObject *>(ip);
-    QObject::connect(fgo, SIGNAL(signal_imageReady(cv::Mat)), ipo,
-                     SLOT(slot_process(cv::Mat)));
-    // TODO: end
+    AlgorithmNode *fg = pm.getNode(start_node_id);
 
     while (true) {
       fg->run();
       cv::waitKey(20);
     }
+  } else {
+    qDebug() << "Usage: soda-cli <path-to-config.flow> <start-node-id> \n Use "
+                "soda to create config.flow.";
   }
-
-  // app.exec();
 
   return 0;
 }

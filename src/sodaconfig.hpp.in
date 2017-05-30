@@ -6,3 +6,6 @@
 #define Soda_VERSION_MAJOR @Soda_VERSION_MAJOR@
 #define Soda_VERSION_MINOR @Soda_VERSION_MINOR@
 #define Soda_VERSION_PATCH @Soda_VERSION_PATCH@
+
+#define Soda_AUTHOR_SCHUMACB "Bastian Schumacher <Bastian.Schumacher@gmx.de>"
+#define Soda_URL "https://github.com/schumacb/Soda"

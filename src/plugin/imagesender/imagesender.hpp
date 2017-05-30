@@ -15,22 +15,31 @@ namespace imagesender {
 
 #define ImageSenderPluginID "de.hochschule-trier.soda.plugin.imagesender"
 
+class ImageSenderPlugin;
+
 class ImageSender : public QObject, public pluginapi::ImageProcessor {
   Q_OBJECT
 private:
   QString m_id{ImageSenderPluginID};
+  pluginapi::Plugin *m_plugin;
 
 public:
   ImageSender(QObject *parent = 0);
-  // Algorithm interface
+  // AlgorithmNode interface
+public:
   const QJsonObject &getConfiguration() const override;
-  QString getID() override;
+  const QString getID() const override;
+  pluginapi::Plugin *getPlugin() const override;
   void run() override;
   void setConfiguration(const QJsonObject &configuration) override;
+  const char *getSignal(int index) const override;
+  const char *getSlot(int index) const override;
 
   // ImageProcessor interface
 public slots:
   void slot_process(cv::Mat mat) override;
+
+  friend ImageSenderPlugin;
 };
 
 class ImageSenderFactory : public QObject, public pluginapi::AlgorithmFactory {
@@ -61,16 +70,16 @@ public:
   ImageSenderPlugin(QObject *parent = 0);
   ~ImageSenderPlugin() {}
 
-  const std::string getPid() const override { return ImageSenderPluginID; }
+  const std::string getID() const override { return ImageSenderPluginID; }
   const pluginapi::Version getVersion() const override {
     return pluginapi::Version{PLUGIN_VERSION_MAJOR, PLUGIN_VERSION_MINOR,
                               PLUGIN_VERSION_PATCH};
   }
-  const QString getName() const override { return "ImageSender"; }
-  const QString getDescription() const override {
-    return "DESCRIPTION";
-  } // TODO: Describe Plugin.
-
+  const QString getName() const override;
+  const QString getDescription() const override;
+  const QString getAuthor() const override;
+  const QString getMaintainer() const override;
+  const QString getURL() const override;
   void onLoad(pluginapi::PluginRegistry &registry) override;
   void onUnload(pluginapi::PluginRegistry &registry) override;
 };

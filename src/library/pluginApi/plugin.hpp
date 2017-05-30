@@ -37,7 +37,10 @@ public:
 
   virtual const QString getName() const = 0;
   virtual const QString getDescription() const = 0;
-  virtual const std::string getPid() const = 0;
+  virtual const QString getAuthor() const = 0;
+  virtual const QString getMaintainer() const = 0;
+  virtual const QString getURL() const = 0;
+  virtual const std::string getID() const = 0;
   virtual const Version getVersion() const = 0;
 
   virtual void onLoad(PluginRegistry &registry) = 0;

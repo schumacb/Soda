@@ -14,6 +14,8 @@ QT_END_NAMESPACE
 namespace soda {
 namespace pluginapi {
 
+class Plugin;
+
 class AlgorithmType {
 public:
   const std::string id;
@@ -28,10 +30,13 @@ public:
 class AlgorithmNode {
 public:
   virtual ~AlgorithmNode() {}
-  virtual QString getID() = 0;
+  virtual const QString getID() const = 0;
+  virtual Plugin *getPlugin() const = 0;
   virtual void setConfiguration(const QJsonObject &configuration) = 0;
   virtual const QJsonObject &getConfiguration() const = 0;
   virtual void run() = 0;
+  virtual const char *getSignal(int index) const = 0;
+  virtual const char *getSlot(int index) const = 0;
 
   // Exceptions
   class InvalidConfiguration {};

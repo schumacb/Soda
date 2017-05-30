@@ -2,6 +2,7 @@
 
 #include <QJsonArray>
 #include <QJsonObject>
+#include <QObject>
 #include <QUuid>
 
 #include <QDebug>
@@ -38,6 +39,23 @@ void FlowSceneParser::parse(const QJsonObject &t_json) {
 
     if (node != nullptr) {
       node->setConfiguration(nodeModel);
+    }
+  }
+
+  for (int i = 0; i < connections.size(); ++i) {
+    QJsonObject connectionObjcet = connections[i].toObject();
+    QUuid in_id{connectionObjcet["in_id"].toString()};
+    QUuid out_id{connectionObjcet["out_id"].toString()};
+    int in_index{connectionObjcet["in_index"].toInt()};
+    int out_index{connectionObjcet["out_index"].toInt()};
+    AlgorithmNode *in_node = m_plugin_manager->getNode(in_id);
+    AlgorithmNode *out_node = m_plugin_manager->getNode(out_id);
+    if (in_node != nullptr && out_node != nullptr) {
+      QObject *sender = dynamic_cast<QObject *>(out_node);
+      QObject *receiver = dynamic_cast<QObject *>(in_node);
+      const char *signal = out_node->getSignal(out_index);
+      const char *slot = in_node->getSlot(in_index);
+      QObject::connect(sender, signal, receiver, slot);
     }
   }
 }

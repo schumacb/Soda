@@ -68,7 +68,7 @@ AlgorithmNode *PluginManager::createNode(const QUuid t_uuid,
 }
 
 void PluginManager::registerPlugin(Plugin &t_plugin) {
-  auto pid = t_plugin.getPid();
+  auto pid = t_plugin.getID();
   auto iterator = m_plugins.find(pid);
   auto pair = std::make_pair(pid, &t_plugin);
   if (m_plugins.empty() ||

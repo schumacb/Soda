@@ -16,6 +16,8 @@ namespace framegrabber {
 
 #define FrameGrabberPluginID "de.hochschule-trier.soda.plugin.framegrabber"
 
+class FrameGrabberPlugin;
+
 class FrameGrabber : public QObject, public pluginapi::ImageSource {
   Q_OBJECT
 
@@ -24,6 +26,7 @@ private:
   QString m_id{FrameGrabberPluginID};
   int m_device{0};
   cv::String m_url{""};
+  pluginapi::Plugin *m_plugin;
 
 public:
   enum SourceType { Device, Stream };
@@ -31,12 +34,15 @@ public:
   FrameGrabber(QObject *parent = 0);
   bool isOpened();
 
-  // Algorithm interface
+  // AlgorithmNode interface
 public:
   void setConfiguration(const QJsonObject &t_config) override;
   const QJsonObject &getConfiguration() const override;
-  QString getID() override;
+  const QString getID() const override;
+  pluginapi::Plugin *getPlugin() const override;
   void run() override;
+  const char *getSignal(int index) const override;
+  const char *getSlot(int index) const override;
   // ImageSource interface
 signals:
   void signal_imageReady(cv::Mat) override;
@@ -70,7 +76,7 @@ public:
   FrameGrabberPlugin(QObject *parent = 0);
   ~FrameGrabberPlugin() {}
 
-  const std::string getPid() const override { return FrameGrabberPluginID; }
+  const std::string getID() const override { return FrameGrabberPluginID; }
   const pluginapi::Version getVersion() const override {
     return pluginapi::Version{PLUGIN_VERSION_MAJOR, PLUGIN_VERSION_MINOR,
                               PLUGIN_VERSION_PATCH};
@@ -82,6 +88,12 @@ public:
 
   void onLoad(pluginapi::PluginRegistry &registry) override;
   void onUnload(pluginapi::PluginRegistry &registry) override;
+
+  // Plugin interface
+public:
+  const QString getAuthor() const override;
+  const QString getMaintainer() const override;
+  const QString getURL() const override;
 };
 
 } // namespace framegrabber
