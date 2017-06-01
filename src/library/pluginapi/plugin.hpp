@@ -6,29 +6,18 @@
 #include <QObject>
 #include <QtPlugin>
 
-#include "algorithm.hpp"
 #include "pluginapiconfig.hpp"
-#include "pluginregistry.hpp"
 #include "version.hpp"
 
 namespace soda {
 namespace pluginapi {
 
+class PluginRegistry;
+
 class Plugin {
 
-protected:
-  Plugin() {}
-
 public:
-  // no copy operations
-  Plugin(const Plugin &) = delete;
-  Plugin &operator=(const Plugin &) = delete;
-
-  // no move operations
-  Plugin(const Plugin &&) = delete;
-  Plugin &operator=(const Plugin &&) = delete;
-
-  inline virtual ~Plugin() {}
+  virtual ~Plugin() = default;
 
   inline static constexpr Version getInterfaceVersion() {
     return Version{PluginApi_VERSION_MAJOR, PluginApi_VERSION_MINOR,
@@ -50,6 +39,5 @@ public:
 } // pluginapi
 } // soda
 
-#define PluginInterface_IID "de.hochschule-trier.soda.PluginInterface"
-
-Q_DECLARE_INTERFACE(soda::pluginapi::Plugin, PluginInterface_IID)
+#define Plugin_IID "de.hochschule-trier.soda.pluginapi.plugin"
+Q_DECLARE_INTERFACE(soda::pluginapi::Plugin, Plugin_IID)

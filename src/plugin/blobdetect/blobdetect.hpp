@@ -5,31 +5,36 @@
 
 #include <opencv2/opencv.hpp>
 
-#include "algorithm.hpp"
+#include "node.hpp"
+#include "nodetype.hpp"
 #include "plugin.hpp"
-
 #include "pluginconfig.hpp"
 
 #define BlobDetectPluginID "de.hochschule-trier.soda.plugin.blobdetect"
+#define BlobDetectNodeID "de.hochschule-trier.soda.node.blobdetect"
 
 namespace soda {
 namespace plugin {
 namespace blobdetect {
 
-class BlobDetect : public QObject, public pluginapi::AlgorithmNode {
-
-private:
-  const QString m_id{};
-
+class BlobDetect : public QObject, public pluginapi::Node {
+  Q_OBJECT
 public:
-  explicit BlobDetect(QString id, QObject *parent = 0);
+  static const NodeType TYPE;
+  explicit BlobDetect(QObject *parent = 0);
 
-  // AlgorithmNode interface
+  // Node interface
 public:
-  const QString getID() const override;
   void setConfiguration(const QJsonObject &configuration) override;
-  const QJsonObject &getConfiguration() const override;
+  const QJsonObject getConfiguration() const override;
+
   void run() override;
+
+  // Node interface
+public:
+  const NodeType &getType() const override;
+  const char *getSignal(int index) const override;
+  const char *getSlot(int index) const override;
 };
 
 class BlobDetectPlugin : public QObject, public pluginapi::Plugin {
@@ -41,7 +46,6 @@ private:
   const std::string m_pid = BlobDetectPluginID;
   static constexpr pluginapi::Version m_api_version = {
       PLUGIN_VERSION_MAJOR, PLUGIN_VERSION_MINOR, PLUGIN_VERSION_PATCH};
-  const pluginapi::AlgorithmType m_blobdetect_type{"BlobDetect", "", ""};
 
 public:
   explicit BlobDetectPlugin(QObject *parent = 0);

@@ -1,8 +1,9 @@
 #pragma once
 
-#include "algorithm.hpp"
+#include "node.hpp"
 
 #include <QtCore>
+#include <QtPlugin>
 
 // Forward declarations
 namespace cv {
@@ -12,10 +13,10 @@ class Mat;
 namespace soda {
 namespace pluginapi {
 
-class ImageSource : public AlgorithmNode {
+class ImageSource : public Node {
 
 public:
-  virtual ~ImageSource() {}
+  virtual ~ImageSource() = default;
 signals:
   virtual void signal_imageReady(cv::Mat mat) = 0;
 };

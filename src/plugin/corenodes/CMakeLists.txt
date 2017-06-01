@@ -4,7 +4,7 @@
 #
 # ----------------------------------------------------------------------------
 
-PROJECT(FrameGrabber)
+PROJECT(CoreNodes)
 
 # Set plugin version
 SET (PLUGIN_VERSION_MAJOR 0)

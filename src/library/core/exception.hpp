@@ -20,4 +20,13 @@ public:
   QException *clone() const;
 };
 
+// Exceptions
+class InvalidConfiguration : public QException {
+
+  // QException interface
+public:
+  void raise() const;
+  QException *clone() const;
+};
+
 } // namespace soda

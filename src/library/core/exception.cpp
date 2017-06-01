@@ -1,13 +1,17 @@
 #include "exception.hpp"
 
-void soda::NotYetImplemented::raise() const { throw * this; }
+using namespace soda;
 
-QException *soda::NotYetImplemented::clone() const {
-  return new NotYetImplemented();
-}
+void NotYetImplemented::raise() const { throw * this; }
 
-void soda::UnsupportedType::raise() const { throw * this; }
+QException *NotYetImplemented::clone() const { return new NotYetImplemented(); }
 
-QException *soda::UnsupportedType::clone() const {
-  return new UnsupportedType();
+void UnsupportedType::raise() const { throw * this; }
+
+QException *UnsupportedType::clone() const { return new UnsupportedType(); }
+
+void InvalidConfiguration::raise() const { throw * this; }
+
+QException *InvalidConfiguration::clone() const {
+  return new InvalidConfiguration();
 }

@@ -14,7 +14,6 @@ FILE(GLOB UI_FILES "${CMAKE_CURRENT_SOURCE_DIR}/*.ui")
 
 # add Qt resources
 qt5_add_resources(RESOURCES_RCC ${RESOURCE_FILES})
-qt5_wrap_ui(UI_RCC ${UI_FILES})
 
 # ----------------------------------------------------------------------------
 # Add external libraries
@@ -23,6 +22,7 @@ qt5_wrap_ui(UI_RCC ${UI_FILES})
 LIST(APPEND INCLUDES ${QT_INCLUDES})
 LIST(APPEND LIBRARIES Qt5::Core Qt5::Widgets Qt5::Gui Qt5::OpenGL Qt5::Multimedia)
 
+# Nodeeditor
 LIST(APPEND INCLUDES ${NODEEDITOR_INCLUDE_DIR})
 LIST(APPEND LIBRARIES ${NODEEDITOR_LIBS})
 ADD_DEFINITIONS(${NODEEDITOR_DEFINES})
@@ -35,6 +35,10 @@ LINK_DIRECTORIES(${NODEEDITOR_LIB_DIR})
 LIST(APPEND INCLUDES ${Core_INCLUDES})
 LIST(APPEND LIBRARIES ${Core_LIBS})
 
+# Ui
+LIST(APPEND INCLUDES ${Ui_INCLUDES})
+LIST(APPEND LIBRARIES ${Ui_LIBS})
+
 # ----------------------------------------------------------------------------
 # Cleanup lists
 LIST(REMOVE_DUPLICATES LIBRARIES)
@@ -42,6 +46,7 @@ LIST(REMOVE_DUPLICATES INCLUDES)
 
 IF(SODA_BUILD_GUI)
   # Build Application
+  qt5_wrap_ui(UI_RCC ${UI_FILES})
   INCLUDE_DIRECTORIES(${INCLUDES})
   ADD_EXECUTABLE(${PROJECT_NAME} ${SOURCE_FILES} ${RESOURCES_RCC} ${UI_RCC})
   TARGET_LINK_LIBRARIES(${PROJECT_NAME} ${LIBRARIES})

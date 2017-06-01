@@ -23,12 +23,6 @@ LIST(APPEND LIBRARIES Qt5::Core)
 LIST(APPEND INCLUDES ${Core_INCLUDES})
 LIST(APPEND LIBRARIES ${Core_LIBS})
 
-# Requiredplugins
-LIST(APPEND INCLUDES ${FrameGrabber_INCLUDES})
-LIST(APPEND LIBRARIES ${FrameGrabber_LIBS})
-LIST(APPEND INCLUDES ${ImageSender_INCLUDES})
-LIST(APPEND LIBRARIES ${ImageSender_LIBS})
-
 # ----------------------------------------------------------------------------
 
 # Cleanup lists

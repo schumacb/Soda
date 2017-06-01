@@ -1,9 +1,5 @@
 #include "tcpserver.hpp"
 
-namespace soda {
-namespace network {
+using namespace soda::network;
 
 TcpServer::TcpServer() {}
-
-} // namespace network
-} // namespace soda

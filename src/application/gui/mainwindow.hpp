@@ -13,6 +13,9 @@ public:
   explicit MainWindow(QWidget *parent = 0);
   ~MainWindow();
 
+  MainWindow(const MainWindow &other) = delete;
+  const MainWindow &operator=(const MainWindow &other) = delete;
+
 protected:
   void changeEvent(QEvent *e);
 

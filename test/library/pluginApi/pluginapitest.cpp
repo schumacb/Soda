@@ -1,11 +1,13 @@
 #include "catch.hpp"
 
+#include "nodetype.hpp"
 #include "pluginapitest.hpp"
 #include "pluginmanager.hpp"
 #include "sodaconfig.hpp"
 
 #include <QJsonObject>
 
+using namespace soda;
 using namespace soda::pluginapi;
 
 static Version v000{0, 0, 0};
@@ -68,7 +70,9 @@ TEST_CASE("Streaming operator", "[pluginApi]") {
   REQUIRE(ss.str() == "1.2.3");
 }
 
-const QJsonObject &TestAlgorithm::getConfiguration() const {
+const NodeType TestAlgorithm::TYPE = NodeType("", "", "");
+
+const QJsonObject TestAlgorithm::getConfiguration() const {
   std::cerr << "Error: This is only a test stub without functionallity! "
                "TestAlgorithm::getConfiguration() was called. \""
             << std::endl;
@@ -78,10 +82,6 @@ const QJsonObject &TestAlgorithm::getConfiguration() const {
 void TestAlgorithm::setConfiguration(const QJsonObject &t_configuration) {
   Q_UNUSED(t_configuration)
 }
-
-const QString TestAlgorithm::getID() const { return ""; }
-
-Plugin *TestAlgorithm::getPlugin() const { return m_plugin; }
 
 const char *TestAlgorithm::getSignal(int t_index) const {
   if (t_index == 0) {
@@ -100,6 +100,8 @@ const char *TestAlgorithm::getSlot(int t_index) const {
 void TestAlgorithm::run() {}
 
 void TestAlgorithm::slot_process(cv::Mat) {}
+
+const NodeType &TestAlgorithm::getType() const { return TYPE; }
 
 const QString TestPlugin::getName() const { return "TestPlugin"; }
 
@@ -137,6 +139,10 @@ Plugin *TestPluginRegistry::findPlugin(const std::string &t_pid,
   throw std::bad_function_call();
 }
 
-void TestPluginRegistry::registerAlgorithm(AlgorithmFactory &t_factory) {
+void TestPluginRegistry::registerNodeFactory(NodeFactory &t_factory) {
   Q_UNUSED(t_factory)
+}
+
+QtNodes::DataModelRegistry *TestPluginRegistry::getDataModelRegistry() {
+  return nullptr;
 }

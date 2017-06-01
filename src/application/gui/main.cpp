@@ -13,10 +13,8 @@
 #include <nodes/NodeData>
 #include <nodes/NodeStyle>
 
-#include "applicationmodel.hpp"
+#include "guiapplicationmodel.hpp"
 
-#include "framegrabberdatamodel.hpp"
-#include "imagepreviewdatamodel.hpp"
 #include "mainwindow.hpp"
 #include "pluginmanager.hpp"
 
@@ -28,17 +26,8 @@ using QtNodes::NodeStyle;
 using QtNodes::ConnectionStyle;
 
 using namespace soda;
-
+using namespace soda::ui;
 using namespace soda::pluginapi;
-
-static std::shared_ptr<DataModelRegistry> registerDataModels() {
-  auto ret = std::make_shared<DataModelRegistry>();
-
-  ret->registerModel<FrameGrabberDataModel>();
-  ret->registerModel<ImagePreviewDataModel>();
-
-  return ret;
-}
 
 static void setStyle() {
   FlowViewStyle::setStyle(
@@ -98,7 +87,7 @@ int main(int argc, char **argv) {
 
   QApplication app(argc, argv);
 
-  ApplicationModel model(&app);
+  GuiApplicationModel model(&app);
   model.initialize();
   setStyle();
 
@@ -110,7 +99,11 @@ int main(int argc, char **argv) {
   QVBoxLayout *l = new QVBoxLayout(mainWidget.centralWidget());
 
   l->addWidget(menuBar);
-  auto scene = new FlowScene(registerDataModels());
+
+  std::shared_ptr<DataModelRegistry> reg(
+      model.getPluginManager()->getDataModelRegistry());
+
+  auto scene = new FlowScene(reg);
   l->addWidget(new FlowView(scene));
   l->setContentsMargins(0, 0, 0, 0);
   l->setSpacing(0);
@@ -119,7 +112,6 @@ int main(int argc, char **argv) {
 
   QObject::connect(loadAction, &QAction::triggered, scene, &FlowScene::load);
 
-  mainWidget.setWindowTitle("Soda - Simple Object Detection Application");
   mainWidget.resize(800, 600);
   mainWidget.showNormal();
 

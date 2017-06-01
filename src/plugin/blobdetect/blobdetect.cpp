@@ -1,12 +1,11 @@
 #include "blobdetect.hpp"
 
 #include "exception.hpp"
+#include "sodaconfig.hpp"
 
-namespace soda {
-namespace plugin {
-namespace blobdetect {
-
-using namespace pluginapi;
+using namespace soda;
+using namespace soda::pluginapi;
+using namespace soda::plugin::blobdetect;
 
 BlobDetectPlugin::BlobDetectPlugin(QObject *parent) : QObject(parent) {}
 
@@ -20,8 +19,14 @@ const QString BlobDetectPlugin::getDescription() const {
 }
 
 const QString BlobDetectPlugin::getAuthor() const {
-  return "Bastian Schumacher";
+  return Soda_AUTHOR_SCHUMACB;
 }
+
+const QString BlobDetectPlugin::getMaintainer() const {
+  return Soda_AUTHOR_SCHUMACB;
+}
+
+const QString BlobDetectPlugin::getURL() const { return Soda_URL; }
 
 const Version BlobDetectPlugin::getVersion() const {
   return BlobDetectPlugin::m_api_version;
@@ -37,11 +42,33 @@ void BlobDetectPlugin::onUnload(PluginRegistry &t_registry) {
   Q_UNUSED(t_registry)
 }
 
-BlobDetect::BlobDetect(QString t_id, QObject *t_parent)
-    : QObject(t_parent), m_id{t_id} {}
+const NodeType BlobDetect::TYPE = NodeType(
+    "de.hochschule-trier.soda.plugin.node.blobdetect", "BlobDetect", "");
+// TODO: Describe Type
 
-const QString BlobDetect::getID() const { return m_id; }
+BlobDetect::BlobDetect(QObject *t_parent) : QObject(t_parent) {}
 
-} // namespace blobdetect
-} // namespace plugin
-} // namespace soda
+void BlobDetect::setConfiguration(const QJsonObject &t_configuration) {
+  Q_UNUSED(t_configuration)
+  // TODO: read config
+}
+
+const QJsonObject BlobDetect::getConfiguration() const {
+  QJsonObject config;
+  // TODO: write config
+  return config;
+}
+
+void BlobDetect::run() {}
+
+const NodeType &BlobDetect::getType() const { return BlobDetect::TYPE; }
+
+const char *BlobDetect::getSignal(int t_index) const {
+  Q_UNUSED(t_index)
+  return "";
+}
+
+const char *BlobDetect::getSlot(int t_index) const {
+  Q_UNUSED(t_index)
+  return "";
+}

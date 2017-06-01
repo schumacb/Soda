@@ -1,25 +1,25 @@
 
-#include <QCoreApplication>
+#include <opencv2/opencv.hpp>
 
+#include <QCoreApplication>
+#include <QDebug>
 #include <QDir>
+#include <QJsonDocument>
+#include <QJsonObject>
 
 #include "applicationmodel.hpp"
 #include "flowsceneparser.hpp"
-#include "framegrabber.hpp"
-#include "imagesender.hpp"
 #include "pluginmanager.hpp"
 
 using namespace soda;
 using namespace soda::pluginapi;
-using namespace soda::plugin::framegrabber;
-using namespace soda::plugin::imagesender;
 
 int main(int argc, char **argv) {
 
   QCoreApplication app(argc, argv);
   ApplicationModel model(&app);
   model.initialize();
-  PluginManager &pm = *model.pluginManager();
+  PluginManager &pm = *model.getPluginManager();
 
   if (argc == 3) {
     auto file_name = argv[1];
@@ -34,10 +34,10 @@ int main(int argc, char **argv) {
     FlowSceneParser parser(&pm);
     parser.parse(flowScene);
 
-    AlgorithmNode *fg = pm.getNode(start_node_id);
+    Node *start_node = pm.getNode(start_node_id);
 
     while (true) {
-      fg->run();
+      start_node->run();
       cv::waitKey(20);
     }
   } else {

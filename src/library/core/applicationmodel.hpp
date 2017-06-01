@@ -13,15 +13,19 @@ class PluginManager;
 
 class ApplicationModel : public QObject {
   Q_OBJECT
-private:
+protected:
   QCoreApplication *m_application;
   PluginManager *m_plugin_manager;
 
 public:
-  ApplicationModel(QCoreApplication *application, QObject *parent = 0);
+  ApplicationModel(QCoreApplication *getApplication, QObject *parent = 0);
+
+  ApplicationModel(const ApplicationModel &other) = delete;
+  ApplicationModel &operator=(const ApplicationModel &other) = delete;
 
   void initialize();
-  PluginManager *pluginManager() const;
-  QCoreApplication *application() const;
+
+  virtual PluginManager *getPluginManager() const;
+  QCoreApplication *getApplication() const;
 };
 }

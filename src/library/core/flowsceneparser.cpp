@@ -7,12 +7,11 @@
 
 #include <QDebug>
 
-#include "algorithm.hpp"
+#include "node.hpp"
 #include "pluginmanager.hpp"
 
-namespace soda {
-
-using namespace pluginapi;
+using namespace soda;
+using namespace soda::pluginapi;
 
 FlowSceneParser::FlowSceneParser(PluginManager *t_plugin_manager)
     : m_plugin_manager{t_plugin_manager} {}
@@ -32,7 +31,7 @@ void FlowSceneParser::parse(const QJsonObject &t_json) {
     QString pid = nodeModel["pid"].toString();
     qDebug() << "Found node " << name << " of type " << pid
              << " with UUID: " << uuid.toString();
-    AlgorithmNode *node = m_plugin_manager->getNode(uuid);
+    Node *node = m_plugin_manager->getNode(uuid);
     if (node == nullptr) {
       node = m_plugin_manager->createNode(uuid, pid);
     }
@@ -48,8 +47,8 @@ void FlowSceneParser::parse(const QJsonObject &t_json) {
     QUuid out_id{connectionObjcet["out_id"].toString()};
     int in_index{connectionObjcet["in_index"].toInt()};
     int out_index{connectionObjcet["out_index"].toInt()};
-    AlgorithmNode *in_node = m_plugin_manager->getNode(in_id);
-    AlgorithmNode *out_node = m_plugin_manager->getNode(out_id);
+    Node *in_node = m_plugin_manager->getNode(in_id);
+    Node *out_node = m_plugin_manager->getNode(out_id);
     if (in_node != nullptr && out_node != nullptr) {
       QObject *sender = dynamic_cast<QObject *>(out_node);
       QObject *receiver = dynamic_cast<QObject *>(in_node);
@@ -59,5 +58,3 @@ void FlowSceneParser::parse(const QJsonObject &t_json) {
     }
   }
 }
-
-} // namespace soda

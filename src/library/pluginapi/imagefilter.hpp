@@ -1,5 +1,7 @@
 #pragma once
 
+#include <QtPlugin>
+
 #include "imageprocessor.hpp"
 #include "imagesource.hpp"
 
@@ -9,7 +11,7 @@ namespace pluginapi {
 class ImageFilter : public ImageSource, public ImageProcessor {
 
 public:
-  virtual ~ImageFilter() {}
+  virtual ~ImageFilter() = default;
 };
 
 } // namespace pluginapi

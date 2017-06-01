@@ -23,15 +23,14 @@ namespace pluginapi {
 class TestAlgorithm : public QObject, public ImageFilter {
   Q_OBJECT
 public:
-  Plugin *m_plugin;
-  // AlgorithmNode interface
-  const QJsonObject &getConfiguration() const override;
+  static const NodeType TYPE;
+
+  // Node interface
+  const QJsonObject getConfiguration() const override;
   void setConfiguration(const QJsonObject &configuration) override;
-  const QString getID() const override;
-  pluginapi::Plugin *getPlugin() const override;
+
   const char *getSignal(int index) const override;
   const char *getSlot(int index) const override;
-public slots:
   void run() override;
   // ImageSource interface
 signals:
@@ -39,6 +38,10 @@ signals:
   // ImageProcessor interface
 public slots:
   void slot_process(cv::Mat) override;
+
+  // Node interface
+public:
+  const NodeType &getType() const override;
 };
 
 class TestPlugin : public QObject, public Plugin {
@@ -65,7 +68,8 @@ public:
   virtual void registerPlugin(Plugin &t_plugin) override;
   virtual Plugin *findPlugin(const std::string &t_pid,
                              const Version &t_version) override;
-  void registerAlgorithm(AlgorithmFactory &factory) override;
+  void registerNodeFactory(NodeFactory &factory) override;
+  QtNodes::DataModelRegistry *getDataModelRegistry() override;
 };
 
 } // pluginapi

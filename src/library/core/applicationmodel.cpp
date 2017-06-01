@@ -4,7 +4,7 @@
 
 #include "pluginmanager.hpp"
 
-namespace soda {
+using namespace soda;
 
 ApplicationModel::ApplicationModel(QCoreApplication *t_application,
                                    QObject *t_parent)
@@ -20,12 +20,10 @@ void ApplicationModel::initialize() {
   m_plugin_manager->loadPlugins(libPaths);
 }
 
-PluginManager *ApplicationModel::pluginManager() const {
+PluginManager *ApplicationModel::getPluginManager() const {
   return m_plugin_manager;
 }
 
-QCoreApplication *ApplicationModel::application() const {
+QCoreApplication *ApplicationModel::getApplication() const {
   return m_application;
 }
-
-} // namespace soda

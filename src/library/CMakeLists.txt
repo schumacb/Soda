@@ -5,5 +5,6 @@
 # ----------------------------------------------------------------------------
 
 ADD_SUBDIRECTORY(core)
-ADD_SUBDIRECTORY(pluginApi)
+ADD_SUBDIRECTORY(pluginapi)
 ADD_SUBDIRECTORY(network)
+ADD_SUBDIRECTORY(ui)

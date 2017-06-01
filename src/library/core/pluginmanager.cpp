@@ -5,15 +5,13 @@
 
 #include <QDebug> // TODO: Remove line
 
+#include "nodetype.hpp"
 #include "plugin.hpp"
 
-namespace soda {
-
+using namespace soda;
 using namespace pluginapi;
 
-PluginManager::PluginManager(QObject *parent) : QObject(parent) {}
-
-// TODO: Check interface version
+PluginManager::PluginManager(QObject *t_parent) : QObject(t_parent) {}
 
 void PluginManager::loadPlugins(QStringList plugin_directories) {
   for (QDir pluginsDir : plugin_directories) {
@@ -32,17 +30,23 @@ void PluginManager::loadPlugins(QStringList plugin_directories) {
       }
 
       if (Plugin *plugin = qobject_cast<Plugin *>(pluginLoaderInstance)) {
+        // TODO: Check interface version
+        qDebug() << "Plugin \"" << plugin->getName() << "\" loaded.";
         registerPlugin(*plugin);
       }
     }
   }
 
+  initializePlugins();
+}
+
+void PluginManager::initializePlugins() {
   for (auto plugin : m_plugins) {
     plugin.second->onLoad(*this);
   }
 }
 
-AlgorithmNode *PluginManager::getNode(const QUuid t_uuid) {
+Node *PluginManager::getNode(const QUuid t_uuid) {
   auto iterator = m_nodes.find(t_uuid);
   if (iterator != m_nodes.end()) {
     return iterator->second;
@@ -51,17 +55,16 @@ AlgorithmNode *PluginManager::getNode(const QUuid t_uuid) {
   }
 }
 
-AlgorithmNode *PluginManager::createNode(const QUuid t_uuid,
-                                         const QString t_pid) {
-  AlgorithmNode *node{nullptr};
+Node *PluginManager::createNode(const QUuid t_uuid, const QString t_pid) {
+  Node *node{nullptr};
 
   auto iterator = m_algorithms.find(t_pid.toStdString());
   if (iterator == m_algorithms.end()) {
     return nullptr;
   }
-  AlgorithmFactory *factory = iterator->second;
+  NodeFactory *factory = iterator->second;
   if (factory != nullptr) {
-    node = factory->createAlgorithm(this);
+    node = factory->createNode(this);
     m_nodes.insert(std::make_pair(t_uuid, node));
   }
   return node;
@@ -95,8 +98,8 @@ Plugin *PluginManager::findPlugin(const std::string &t_pid,
   return nullptr;
 }
 
-void PluginManager::registerAlgorithm(AlgorithmFactory &t_factory) {
-  auto id = t_factory.getAlgorithmType().id;
+void PluginManager::registerNodeFactory(NodeFactory &t_factory) {
+  auto id = t_factory.getType().getID();
   auto it = m_algorithms.find(id);
   auto pair = std::make_pair(id, &t_factory);
   // register only when algo not yet registered
@@ -105,4 +108,6 @@ void PluginManager::registerAlgorithm(AlgorithmFactory &t_factory) {
   }
 }
 
-} // namespace soda
+QtNodes::DataModelRegistry *PluginManager::getDataModelRegistry() {
+  return nullptr;
+}
