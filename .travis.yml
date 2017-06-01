@@ -21,6 +21,7 @@ arch:
     - cmake
     - ninja
     - qt5-base
+    - qt5-multimedia
     - opencv
   script:
    # Installing lcov
