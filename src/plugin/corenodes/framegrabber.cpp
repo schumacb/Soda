@@ -12,8 +12,10 @@ using namespace soda;
 using namespace soda::pluginapi;
 using namespace soda::plugin::corenodes;
 
-const NodeType FrameGrabber::TYPE = NodeType(
-    "de.hochschule-trier.soda.plugin.node.framegrabber", "FramGrabber", "");
+const NodeType FrameGrabber::TYPE =
+    NodeType{"de.hochschule-trier.soda.plugin.node.framegrabber", // ID
+             "FramGrabber",                                       // Name
+             ""};                                                 // Description
 // TODO: add Description
 
 FrameGrabber::FrameGrabber(QObject *t_parent) : QObject(t_parent) {}

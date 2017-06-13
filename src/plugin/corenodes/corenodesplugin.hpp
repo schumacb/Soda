@@ -20,6 +20,8 @@ class CoreNodesPlguin : public QObject, public pluginapi::Plugin {
 
 private:
   std::vector<pluginapi::NodeFactory *> m_node_factories;
+  Version m_version{PLUGIN_VERSION_MAJOR, PLUGIN_VERSION_MINOR,
+                    PLUGIN_VERSION_PATCH};
 
 public:
   // TODO: end remove
@@ -27,7 +29,7 @@ public:
   ~CoreNodesPlguin() {}
 
   const std::string getID() const override { return CoreNodesPluginID; }
-  const pluginapi::Version getVersion() const override;
+  const Version getVersion() const override;
   const QString getName() const override { return "CoreNodes"; }
   const QString getDescription() const override {
     return "DESCRIPTION";

@@ -9,6 +9,8 @@
 #include "nodetype.hpp"
 #include "plugin.hpp"
 #include "pluginconfig.hpp"
+#include "sodaconfig.hpp"
+#include "version.hpp"
 
 #define BlobDetectPluginID "de.hochschule-trier.soda.plugin.blobdetect"
 #define BlobDetectNodeID "de.hochschule-trier.soda.node.blobdetect"
@@ -43,8 +45,7 @@ class BlobDetectPlugin : public QObject, public pluginapi::Plugin {
   Q_INTERFACES(soda::pluginapi::Plugin)
 
 private:
-  const std::string m_pid = BlobDetectPluginID;
-  static constexpr pluginapi::Version m_api_version = {
+  static constexpr Version API_VERSION{
       PLUGIN_VERSION_MAJOR, PLUGIN_VERSION_MINOR, PLUGIN_VERSION_PATCH};
 
 public:
@@ -58,7 +59,7 @@ public:
   const QString getAuthor() const override;
   const QString getMaintainer() const override;
   const QString getURL() const override;
-  const pluginapi::Version getVersion() const override;
+  const Version getVersion() const override;
   void onLoad(pluginapi::PluginRegistry &registry) override;
   void onUnload(pluginapi::PluginRegistry &registry) override;
 };

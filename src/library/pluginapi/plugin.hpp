@@ -1,17 +1,13 @@
 #pragma once
 
-#include <memory>
-#include <string>
-
-#include <QObject>
 #include <QtPlugin>
+#include <string>
 
 #include "pluginapiconfig.hpp"
 #include "version.hpp"
 
 namespace soda {
 namespace pluginapi {
-
 class PluginRegistry;
 
 class Plugin {

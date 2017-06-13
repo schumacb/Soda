@@ -24,7 +24,7 @@ public:
   ~CoreNodesUiPlguin() {}
 
   const std::string getID() const override { return CoreNodesUiPluginID; }
-  const pluginapi::Version getVersion() const override;
+  const Version getVersion() const override;
   const QString getName() const override { return "CoreNodesUi"; }
   const QString getDescription() const override {
     return "DESCRIPTION";

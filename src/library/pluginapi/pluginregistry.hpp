@@ -10,10 +10,10 @@ class DataModelRegistry;
 }
 
 namespace soda {
+class Version;
 namespace pluginapi {
 
 class Plugin;
-class Version;
 class NodeFactory;
 
 class PluginRegistry {

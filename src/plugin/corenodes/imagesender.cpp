@@ -12,8 +12,10 @@ using namespace soda;
 using namespace soda::pluginapi;
 using namespace soda::plugin::corenodes;
 
-const NodeType ImageSender::TYPE = NodeType(
-    "de.hochschule-trier.soda.plugin.node.imagesender", "ImageSender", "");
+const NodeType ImageSender::TYPE =
+    NodeType{"de.hochschule-trier.soda.plugin.node.imagesender", // ID
+             "ImageSender",                                      // Name
+             ""};                                                // Description
 // TODO: add Description
 
 int ImageSender::instance_count = 0;

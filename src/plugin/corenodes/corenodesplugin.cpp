@@ -5,7 +5,9 @@
 #include "node.hpp"
 #include "pluginregistry.hpp"
 #include "sodaconfig.hpp"
+#include "version.hpp"
 
+using namespace soda;
 using namespace soda::pluginapi;
 using namespace soda::plugin::corenodes;
 
@@ -14,10 +16,7 @@ CoreNodesPlguin::CoreNodesPlguin(QObject *parent)
       m_node_factories{new corenodes::FrameGrabberFactory(this),
                        new corenodes::ImageSenderFactory(this)} {}
 
-const soda::pluginapi::Version CoreNodesPlguin::getVersion() const {
-  return pluginapi::Version{PLUGIN_VERSION_MAJOR, PLUGIN_VERSION_MINOR,
-                            PLUGIN_VERSION_PATCH};
-}
+const Version CoreNodesPlguin::getVersion() const { return m_version; }
 
 void CoreNodesPlguin::onLoad(PluginRegistry &t_registry) {
   for (NodeFactory *factory : m_node_factories) {
@@ -31,11 +30,13 @@ void CoreNodesPlguin::onUnload(PluginRegistry &t_registry) {
 }
 
 const QString CoreNodesPlguin::getAuthor() const {
-  return Soda_AUTHOR_SCHUMACB;
+  return QStringLiteral(Soda_AUTHOR_SCHUMACB);
 }
 
 const QString CoreNodesPlguin::getMaintainer() const {
-  return Soda_AUTHOR_SCHUMACB;
+  return QStringLiteral(Soda_AUTHOR_SCHUMACB);
 }
 
-const QString CoreNodesPlguin::getURL() const { return Soda_URL; }
+const QString CoreNodesPlguin::getURL() const {
+  return QStringLiteral(Soda_URL);
+}

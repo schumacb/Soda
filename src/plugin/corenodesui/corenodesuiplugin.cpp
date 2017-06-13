@@ -7,14 +7,15 @@
 #include "pluginregistry.hpp"
 #include "sodaconfig.hpp"
 
+using namespace soda;
 using namespace soda::pluginapi;
 using namespace soda::plugin::corenodes;
 
 CoreNodesUiPlguin::CoreNodesUiPlguin(QObject *parent) : QObject(parent) {}
 
-const soda::pluginapi::Version CoreNodesUiPlguin::getVersion() const {
-  return pluginapi::Version{PLUGIN_VERSION_MAJOR, PLUGIN_VERSION_MINOR,
-                            PLUGIN_VERSION_PATCH};
+const Version CoreNodesUiPlguin::getVersion() const {
+  return Version{PLUGIN_VERSION_MAJOR, PLUGIN_VERSION_MINOR,
+                 PLUGIN_VERSION_PATCH};
 }
 
 void CoreNodesUiPlguin::onLoad(PluginRegistry &t_registry) {

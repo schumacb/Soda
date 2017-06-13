@@ -70,7 +70,7 @@ TEST_CASE("Streaming operator", "[pluginApi]") {
   REQUIRE(ss.str() == "1.2.3");
 }
 
-const NodeType TestAlgorithm::TYPE = NodeType("", "", "");
+const NodeType TestAlgorithm::TYPE = NodeType{"", "", ""};
 
 const QJsonObject TestAlgorithm::getConfiguration() const {
   std::cerr << "Error: This is only a test stub without functionallity! "

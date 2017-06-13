@@ -7,6 +7,7 @@
 
 #include "nodetype.hpp"
 #include "plugin.hpp"
+#include "version.hpp"
 
 using namespace soda;
 using namespace pluginapi;
@@ -99,7 +100,7 @@ Plugin *PluginManager::findPlugin(const std::string &t_pid,
 }
 
 void PluginManager::registerNodeFactory(NodeFactory &t_factory) {
-  auto id = t_factory.getType().getID();
+  auto id = t_factory.getType().ID;
   auto it = m_algorithms.find(id);
   auto pair = std::make_pair(id, &t_factory);
   // register only when algo not yet registered

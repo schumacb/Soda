@@ -29,7 +29,7 @@ public:
   // PluginRegistry Interface
   void registerPlugin(pluginapi::Plugin &t_plugin) override;
   pluginapi::Plugin *findPlugin(const std::string &t_pid,
-                                const pluginapi::Version &t_version) override;
+                                const Version &t_version) override;
   void registerNodeFactory(pluginapi::NodeFactory &factory) override;
 
   size_t countRegisteredPlugins() { return m_plugins.size(); }

@@ -1,7 +1,6 @@
 #include "blobdetect.hpp"
 
 #include "exception.hpp"
-#include "sodaconfig.hpp"
 
 using namespace soda;
 using namespace soda::pluginapi;
@@ -9,27 +8,31 @@ using namespace soda::plugin::blobdetect;
 
 BlobDetectPlugin::BlobDetectPlugin(QObject *parent) : QObject(parent) {}
 
-const std::string BlobDetectPlugin::getID() const { return m_pid; }
+const std::string BlobDetectPlugin::getID() const { return BlobDetectPluginID; }
 
-const QString BlobDetectPlugin::getName() const { return "BlobDetect"; }
+const QString BlobDetectPlugin::getName() const {
+  return QStringLiteral("BlobDetect");
+}
 
 const QString BlobDetectPlugin::getDescription() const {
-  // TODO: description
-  return "";
+  // TODO: Describe plugin
+  return QStringLiteral("");
 }
 
 const QString BlobDetectPlugin::getAuthor() const {
-  return Soda_AUTHOR_SCHUMACB;
+  return QStringLiteral(Soda_AUTHOR_SCHUMACB);
 }
 
 const QString BlobDetectPlugin::getMaintainer() const {
-  return Soda_AUTHOR_SCHUMACB;
+  return QStringLiteral(Soda_AUTHOR_SCHUMACB);
 }
 
-const QString BlobDetectPlugin::getURL() const { return Soda_URL; }
+const QString BlobDetectPlugin::getURL() const {
+  return QStringLiteral(Soda_URL);
+}
 
 const Version BlobDetectPlugin::getVersion() const {
-  return BlobDetectPlugin::m_api_version;
+  return BlobDetectPlugin::API_VERSION;
 }
 
 void BlobDetectPlugin::onLoad(PluginRegistry &t_registry) {
@@ -42,8 +45,8 @@ void BlobDetectPlugin::onUnload(PluginRegistry &t_registry) {
   Q_UNUSED(t_registry)
 }
 
-const NodeType BlobDetect::TYPE = NodeType(
-    "de.hochschule-trier.soda.plugin.node.blobdetect", "BlobDetect", "");
+const NodeType BlobDetect::TYPE{
+    "de.hochschule-trier.soda.plugin.node.blobdetect", "BlobDetect", ""};
 // TODO: Describe Type
 
 BlobDetect::BlobDetect(QObject *t_parent) : QObject(t_parent) {}
