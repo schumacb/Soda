@@ -101,3 +101,11 @@ FILE(GLOB RESOURCE_FILES ".gitignore" ".travis.yml" "INSTALL" "LICENCE"
 
 # This target only serves to show resources in IDEs.
 ADD_CUSTOM_TARGET(${PROJECT_NAME}Resources SOURCES ${RESOURCE_FILES})
+
+# Build Dependency Graph
+add_custom_target(BuildDependencyGraph ALL cpp-dependencies --graph ${PROJECT_BINARY_DIR}/dependencyGraph.dot
+    COMMAND dot -Tpng ${PROJECT_BINARY_DIR}/dependencyGraph.dot > ${PROJECT_BINARY_DIR}/dependencyGraph.png
+    WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/src
+    COMMENT "Generating dependency graph"
+    VERBATIM
+    )
