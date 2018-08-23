@@ -19,6 +19,10 @@ FILE(GLOB CONFIG_HEADER_FILES "${PROJECT_BINARY_DIR}/*.hpp")
 ADD_CUSTOM_TARGET(${PROJECT_NAME}ConfigHeaders SOURCES ${CONFIG_HEADER_FILES})
 
 # Add subdirectories
-ADD_SUBDIRECTORY(library)
-ADD_SUBDIRECTORY(plugin)
-ADD_SUBDIRECTORY(application)
+ADD_SUBDIRECTORY(soda_plugin_api)
+ADD_SUBDIRECTORY(soda_framegrabber)
+ADD_SUBDIRECTORY(soda_blob_detection)
+ADD_SUBDIRECTORY(soda_plugin_manager)
+ADD_SUBDIRECTORY(soda_networking)
+ADD_SUBDIRECTORY(soda_qt5_gui)
+ADD_SUBDIRECTORY(soda_cli)

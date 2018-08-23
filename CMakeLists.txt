@@ -14,33 +14,11 @@ OPTION(SODA_BUILD_GUI "Build Graphical User Interface." ON)
 OPTION(SODA_BUILD_TESTS "Build Tests." ON)
 OPTION(SODA_GENERATE_COVERAGE "Generate coverage information for Tests." OFF)
 
-# Core dependencies
-FIND_PACKAGE(OpenCV REQUIRED)
-FIND_PACKAGE(Qt5 COMPONENTS
-             Core Network
-             REQUIRED)
-
-# GUI dependencies
-IF(SODA_BUILD_GUI)
-  FIND_PACKAGE(Qt5 COMPONENTS
-    Widgets
-    REQUIRED)
-  ADD_DEFINITIONS(${Qt5Widgets_DEFINITIONS})
-  SET(CMAKE_CXX_FLAGS "${Qt5Widgets_EXECUTABLE_COMPILE_FLAGS}")
-ENDIF()
-
 # Find includes in corresponding build directories
 SET(CMAKE_INCLUDE_CURRENT_DIR ON)
 
-# Run moc automatically when needed
-SET(CMAKE_AUTOMOC ON)
-
 #CMake Modules
 LIST(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/modules")
-
-# Set C++ Standard
-SET(CMAKE_CXX_STANDARD 14)
-SET(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # Disable in source builds
 SET(CMAKE_DISABLE_IN_SOURCE_BUILD ON)
@@ -56,16 +34,20 @@ SET(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 SET(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
 # Compiler flaggs
-SET(CMAKE_CXX_FLAGS " \
-    -Wall -Wextra -Wshadow -Wnon-virtual-dtor -pedantic \
-    -Wold-style-cast -Wcast-align -Wunused -Woverloaded-virtual \
-    -Wconversion -Wsign-conversion \
-    -Weffc++ \
-    "
-    # unknown in clang 3.8.0
-    # -Wmisleading-indentation
-    # -Weverything
-)
+IF(WIN32)
+SET(CMAKE_CXX_FLAGS "-W4")
+ELSE()
+    SET(CMAKE_CXX_FLAGS " \
+        -Wall -Wextra -Wshadow -Wnon-virtual-dtor -pedantic \
+        -Wold-style-cast -Wcast-align -Wunused -Woverloaded-virtual \
+        -Wconversion -Wsign-conversion \
+        -Weffc++ \
+        "
+        # unknown in clang 3.8.0
+        # -Wmisleading-indentation
+        # -Weverything
+    )
+ENDIF()
 
 IF(SODA_GENERATE_COVERAGE)
   SET(CMAKE_CXX_FLAGS "-g -O0 -fprofile-arcs -ftest-coverage")

@@ -4,7 +4,7 @@
 
 #include <opencv2/videoio.hpp>
 
-#include "imagesource.hpp"
+#include <imagesource.hpp>
 
 namespace soda {
 
