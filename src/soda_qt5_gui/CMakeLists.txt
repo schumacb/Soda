@@ -3,31 +3,18 @@
 #
 #
 # ----------------------------------------------------------------------------
+cmake_minimum_required(VERSION 3.0 FATAL_ERROR)
 
-PROJECT(soda)
+project(soda)
 
 # Add source files
-AUX_SOURCE_DIRECTORY(${PROJECT_SOURCE_DIR} SOURCE_FILES)
-LIST(APPEND INCLUDES ${PROJECT_SOURCE_DIR})
+aux_source_directory(${PROJECT_SOURCE_DIR} SOURCE_FILES)
 
-# ----------------------------------------------------------------------------
-# Add external libraries
-
-# Qt
-LIST(APPEND INCLUDES ${QT_INCLUDES})
-LIST(APPEND LIBRARIES Qt5::Core Qt5::Widgets)
-
-# ----------------------------------------------------------------------------
-
-# Cleanup lists
-LIST(REMOVE_DUPLICATES LIBRARIES)
-LIST(REMOVE_DUPLICATES INCLUDES)
-
-IF(SODA_BUILD_GUI)
+if(SODA_BUILD_GUI)
   # Build Application
-  INCLUDE_DIRECTORIES(${INCLUDES})
-  ADD_EXECUTABLE(${PROJECT_NAME} ${SOURCE_FILES})
-  TARGET_LINK_LIBRARIES(${PROJECT_NAME} ${LIBRARIES})
-ELSE()
-  ADD_CUSTOM_TARGET(${PROJECT_NAME} ${SOURCE_FILES})
-ENDIF()
+  add_executable(${PROJECT_NAME} ${SOURCE_FILES})
+  find_package(Qt5 COMPONENTS Core Widgets REQUIRED)
+  target_link_libraries(${PROJECT_NAME} Qt5::Core Qt5::Widgets)
+else()
+  add_custom_target(${PROJECT_NAME} ${SOURCE_FILES})
+endif()

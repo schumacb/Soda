@@ -1,7 +1,7 @@
 #pragma once
 
-#include <QtCore/QObject>
-#include <QtCore/qglobal.h>
+#include <QObject>
+#include <qglobal.h>
 
 class Channel : public QObject {
   Q_OBJECT

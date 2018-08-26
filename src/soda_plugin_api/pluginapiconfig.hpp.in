@@ -1,8 +1,0 @@
-// If the name of this file ends with .in, this is a template to insert cmake
-// variables in a header file. The corresponding headerfile will be generated
-// in the build folder. Otherwise, this is the generated header file and should
-// not be modified.
-
-#define PluginApi_VERSION_MAJOR @PluginApi_VERSION_MAJOR@
-#define PluginApi_VERSION_MINOR @PluginApi_VERSION_MINOR@
-#define PluginApi_VERSION_PATCH @PluginApi_VERSION_PATCH@

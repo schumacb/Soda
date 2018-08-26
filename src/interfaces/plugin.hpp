@@ -1,11 +1,6 @@
 #pragma once
 
 #include <string>
-
-#include <QObject>
-#include <QtPlugin>
-
-#include "pluginapiconfig.hpp"
 #include "version.hpp"
 
 class Plugin {
@@ -25,8 +20,7 @@ public:
   inline virtual ~Plugin() {}
 
   inline static constexpr Version getInterfaceVersion() {
-    return Version{PluginApi_VERSION_MAJOR, PluginApi_VERSION_MINOR,
-                   PluginApi_VERSION_PATCH};
+    return Version{0, 3, 0};
   }
 
   virtual const std::string getName() const = 0;
@@ -37,7 +31,3 @@ public:
   virtual void onLoad() = 0;
   virtual void onUnload() = 0;
 };
-
-#define PluginInterface_IID "de.hochschule-trier.soda.PluginInterface"
-
-Q_DECLARE_INTERFACE(Plugin, PluginInterface_IID)

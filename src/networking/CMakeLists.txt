@@ -3,18 +3,19 @@
 #
 #
 # ----------------------------------------------------------------------------
+cmake_minimum_required(VERSION 3.0 FATAL_ERROR)
 
-PROJECT(Network)
+project(Network)
 
 # Add source files
-AUX_SOURCE_DIRECTORY(${PROJECT_SOURCE_DIR} SOURCE_FILES)
+aux_source_directory(${PROJECT_SOURCE_DIR} SOURCE_FILES)
 
 # Build library
 
-ADD_LIBRARY(${PROJECT_NAME} STATIC ${SOURCE_FILES})
+add_library(${PROJECT_NAME} STATIC ${SOURCE_FILES})
 
 # Dependencies --------------------------------------------------------------
 
 # Qt
-FIND_PACKAGE(Qt5 COMPONENTS Core Network)
-TARGET_LINK_LIBRARIES(${PROJECT_NAME} Qt5::Core Qt5::Network)
+find_package(Qt5 COMPONENTS Core Network)
+target_link_libraries(${PROJECT_NAME} Qt5::Core Qt5::Network)

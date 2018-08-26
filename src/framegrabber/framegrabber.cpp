@@ -4,15 +4,13 @@
 
 namespace soda {
 
-namespace plugin {
-
-namespace utillity {
-
 FrameGrabber::FrameGrabber(QObject *t_parent) : QObject(t_parent) {}
 
-void FrameGrabber::setConfiguration(const QJsonObject t_config) {}
+void FrameGrabber::setConfiguration(const QJsonObject t_config)
+{}
 
-void FrameGrabber::getConfiguration(QJsonObject &t_config) const {}
+void FrameGrabber::getConfiguration(QJsonObject& t_config) const
+{}
 
 void FrameGrabber::run() {
 
@@ -28,9 +26,5 @@ void FrameGrabber::run() {
     } while (!open);
   }
 }
-
-} // namespace Utillity
-
-} // namespace Plugin
 
 } // namespace Soda

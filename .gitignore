@@ -1,5 +1,8 @@
 ### Own .gitignore templates
 
+.vs/
+.vscode/
+CMakeSettings.json
 bin/
 lib/
 build/

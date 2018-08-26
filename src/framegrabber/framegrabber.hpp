@@ -8,11 +8,7 @@
 
 namespace soda {
 
-namespace plugin {
-
-namespace utillity {
-
-class FrameGrabber : public QObject, public pluginapi::ImageSource {
+class FrameGrabber : public QObject {
   Q_OBJECT
 protected:
   cv::VideoCapture m_capture{};
@@ -30,9 +26,5 @@ public:
 signals:
   void signal_imageReady(cv::Mat);
 };
-
-} // namespace Utillity
-
-} // namespace Plugin
 
 } // namespace Soda

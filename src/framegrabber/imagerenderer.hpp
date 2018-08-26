@@ -1,15 +1,11 @@
 #pragma once
 
-#include <opencv2/opencv.hpp>
-
 #include <QObject>
 #include <QtCore/qglobal.h>
-
-#include "imageprocessor.hpp"
+#include <opencv2/highgui.hpp>
+#include <imageprocessor.hpp>
 
 namespace soda {
-namespace plugin {
-namespace utillity {
 
 class ImageRenderer : public QObject, public pluginapi::ImageProcessor {
   Q_OBJECT
@@ -23,9 +19,7 @@ public:
 
   // ImageProcessor interface
 public slots:
-  void slot_process(cv::Mat mat);
+  void slot_process(cv::Mat matrix);
 };
 
-} // namespace utilltiy
-} // namespace plugin
 } // namespace soda
