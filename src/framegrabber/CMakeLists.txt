@@ -16,7 +16,6 @@ target_include_directories(${PROJECT_NAME} PUBLIC ${PROJECT_SOURCE_DIR})
 # Dependencies -----------------------------------------------------------------
 
 # Soda
-find_package(interfaces)
 target_link_libraries(${PROJECT_NAME} interfaces)
 
 # TODO: Remove Dependency to qt

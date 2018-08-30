@@ -5,7 +5,7 @@
 # ----------------------------------------------------------------------------
 cmake_minimum_required(VERSION 3.0 FATAL_ERROR)
 
-project(soda)
+project(soda_qt5_gui)
 
 # Add source files
 aux_source_directory(${PROJECT_SOURCE_DIR} SOURCE_FILES)

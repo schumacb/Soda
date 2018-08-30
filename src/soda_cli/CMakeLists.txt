@@ -16,6 +16,7 @@ add_executable(${PROJECT_NAME} ${SOURCE_FILES})
 find_package(Qt5 COMPONENTS Core)
 target_link_libraries(${PROJECT_NAME} Qt5::Core)
 
-find_package(framegrabber)
-target_link_libraries(${PROJECT_NAME} framegrabber)
+find_package(OpenCV REQUIRED)
+target_link_libraries(${PROJECT_NAME} ${OpenCV_LIBRARIES})
 
+target_link_libraries(${PROJECT_NAME} framegrabber)
