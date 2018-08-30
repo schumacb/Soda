@@ -11,7 +11,7 @@ class ImageSource {
 
 public:
   virtual ~ImageSource() {}
-  virtual void signal_imageReady(cv::Mat mat) = 0;
+  virtual void signal_imageReady(ImageSource &src) = 0;
 };
 
 } // namespace soda
