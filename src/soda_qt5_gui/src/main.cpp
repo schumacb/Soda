@@ -1,20 +1,13 @@
-
-#include <QApplication>
-#include <QDialog>
-
-#include "ui_aboutdialog.h"
+#include <QGuiApplication>
+#include <QQmlApplicationEngine>
 
 int main(int argc, char **argv) {
 
-  QApplication app(argc, argv);
+    auto app = new QGuiApplication(argc, argv);
 
-  QDialog* about_dialog = new QDialog(0);
-  Ui::AboutDialog ui_about_dialog = Ui::AboutDialog();
-  ui_about_dialog.setupUi(about_dialog);
+    QQmlApplicationEngine engine;
 
-  about_dialog.show();
+    engine.load(QUrl(QStringLiteral("qrc:/AboutDialog.qml")));
 
-  app.exec();
-
-  return 0;
+    return app->exec();
 }

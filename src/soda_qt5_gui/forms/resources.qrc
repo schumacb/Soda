@@ -1000,5 +1000,8 @@
         <file>icons/zoom.png</file>
         <file>icons/zoom_in.png</file>
         <file>icons/zoom_out.png</file>
+        <file>images/Logo_Hochschule_Trier.png</file>
+        <file>AboutDialog.qml</file>
+        <file>AboutDialogForm.ui.qml</file>
     </qresource>
 </RCC>
