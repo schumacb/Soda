@@ -3,16 +3,14 @@ import QtQuick.Window 2.3
 import QtQuick.Layouts 1.3
 import QtQuick.Controls 2.3
 
-Window {
+ApplicationWindow {
     id: aboutDialog
     flags: Qt.Dialog
-    width: 500
-    height: 500
-
     visible: true
     AboutDialogForm{
         id: aboutDialogForm
         anchors.fill: parent
+        anchors.centerIn: parent;
     }
 }
 

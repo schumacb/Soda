@@ -1,9 +1,11 @@
+#include <QApplication>
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
 
 int main(int argc, char **argv) {
 
-    auto app = new QGuiApplication(argc, argv);
+    auto app = new QApplication(argc, argv);
+
 
     QQmlApplicationEngine engine;
 
