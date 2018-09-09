@@ -9,7 +9,7 @@ project(soda_qt5_gui)
 
 # Add source files
 aux_source_directory(${PROJECT_SOURCE_DIR}/src SOURCE_FILES)
-set(SOURCE_FILES forms/resources.qrc forms/AboutDialog.qml forms/AboutDialogForm.ui.qml forms/ResourcePanel.ui.qml ${SOURCE_FILES})
+set(SOURCE_FILES forms/resources.qrc forms/MainWindow.qml forms/AboutDialogForm.ui.qml forms/ResourcePanel.ui.qml ${SOURCE_FILES})
 
 if(SODA_BUILD_GUI)
     set(CMAKE_INCLUDE_CURRENT_DIR ON)

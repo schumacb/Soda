@@ -1,15 +1,7 @@
-#include <QApplication>
-#include <QGuiApplication>
-#include <QQmlApplicationEngine>
+#include "qmlapplication.h"
 
 int main(int argc, char **argv) {
 
-    auto app = new QApplication(argc, argv);
-
-
-    QQmlApplicationEngine engine;
-
-    engine.load(QUrl(QStringLiteral("qrc:/AboutDialog.qml")));
-
+    auto app = new QmlApplication(argc, argv);
     return app->exec();
 }

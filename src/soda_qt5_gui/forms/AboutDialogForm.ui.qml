@@ -1,22 +1,16 @@
 import QtQuick 2.4
-import QtQuick.Layouts 1.3
-import QtQuick.Controls 2.3
+import QtQuick.Controls 2.4
 
-ScrollView {
-    property alias resourcePanel: resourcePanel
+Item {
     anchors.fill: parent
-    anchors.centerIn: parent
-    ColumnLayout {
-        id: columnLayout
-        x: -2
-        y: -2
+    Column {
         anchors.fill: parent
+        spacing: 10
         anchors.margins: 10
-        anchors.centerIn: parent
         Image {
             id: logo
-            Layout.fillWidth: true
-            Layout.alignment: Qt.AlignHCenter | Qt.AlignTop
+            anchors.left: parent.left
+            anchors.right: parent.right
             antialiasing: true
             smooth: true
             fillMode: Image.PreserveAspectFit
@@ -25,25 +19,28 @@ ScrollView {
 
         ToolSeparator {
             id: toolSeparator
-            Layout.fillWidth: true
+            anchors.left: parent.left
+            anchors.leftMargin: 0
+            anchors.right: parent.right
+            anchors.rightMargin: 0
             orientation: Qt.Horizontal
         }
 
-        ColumnLayout {
-            id: content
-            Layout.fillHeight: true
-            Layout.fillWidth: true
+        GroupBox {
+            id: applicationName
+            anchors.right: parent.right
+            anchors.rightMargin: 0
+            title: qsTr("Soda - Simple object detection application")
+            anchors.left: parent.left
+            anchors.leftMargin: 0
 
-            Text {
-                id: applicationName
-                text: qsTr("Soda - Simple object detection application")
-                font.bold: true
-                font.pixelSize: 18
-            }
-
-            GridLayout {
+            Grid {
                 id: info
-                Layout.fillWidth: true
+                anchors.right: parent.right
+                anchors.rightMargin: 10
+                anchors.left: parent.left
+                anchors.leftMargin: 10
+                spacing: 0
                 columns: 2
                 anchors.margins: 10
                 rowSpacing: 10
@@ -53,7 +50,7 @@ ScrollView {
                 }
                 Label {
                     id: versionLabel
-                    text: "1.0.0"
+                    text: "1.0.1"
                 }
                 Label {
                     text: "Licence:"
@@ -85,39 +82,49 @@ ScrollView {
                     text: "http://www.Hochschule-Trier.de"
                 }
             }
+        }
+        ToolSeparator {
+            id: toolSeparator1
+            anchors.right: parent.right
+            anchors.rightMargin: 0
+            anchors.left: parent.left
+            anchors.leftMargin: 0
+            orientation: Qt.Horizontal
+        }
 
-            ToolSeparator {
-                id: toolSeparator1
-                orientation: Qt.Horizontal
-                Layout.fillWidth: true
-            }
+        GroupBox {
+            id: resources
+            anchors.right: parent.right
+            anchors.rightMargin: 0
+            anchors.left: parent.left
+            anchors.leftMargin: 0
+            title: "Used Libraries and Resources:"
 
-            GroupBox{
-                id: resources
-                Layout.fillWidth: true
-                title: "Used Libraries and Resources:"
-
-                ColumnLayout {
-                    anchors.fill: parent
-                    ResourcePanel {
-                        id: resourcePanel
-                        Layout.fillWidth: true
-                        title: "OpenCV:"
-                        licence.text: "BSD"
-                        website.text: "http://opencv.org"
-                    }
-                    ResourcePanel {
-                        Layout.fillWidth: true
-                        title: "Qt:"
-                        licence.text: "LGPL"
-                        website.text: "http://qt.io"
-                    }
-                    ResourcePanel {
-                        Layout.fillWidth: true
-                        title: "Silk Icons:"
-                        licence.text: "Creative Commons Attribution 2.5"
-                        website.text: "http://www.famfamfam.com/lab/icons/silk"
-                    }
+            Column {
+                spacing: 5
+                anchors.fill: parent
+                ResourcePanel {
+                    id: resourcePanel
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                    title: "OpenCV:"
+                    licence.text: "BSD"
+                    website.text: "http://opencv.org"
+                }
+                ResourcePanel {
+                    id: resourcePanel1
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                    title: "Qt:"
+                    licence.text: "LGPL"
+                    website.text: "http://qt.io"
+                }
+                ResourcePanel {
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                    title: "Silk Icons:"
+                    licence.text: "Creative Commons Attribution 2.5"
+                    website.text: "http://www.famfamfam.com/lab/icons/silk"
                 }
             }
         }
@@ -125,6 +132,6 @@ ScrollView {
 }
 
 /*##^## Designer {
-    D{i:0;autoSize:true;height:480;width:640}
+    D{i:0;autoSize:true;height:550;width:400}
 }
  ##^##*/

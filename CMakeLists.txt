@@ -30,7 +30,7 @@ set(CMAKE_DISABLE_IN_SOURCE_BUILD ON)
 set(CMAKE_DISABLE_SOURCE_CHANGES  ON)
 
 if("${CMAKE_SOURCE_DIR}" STREQUAL "${CMAKE_BINARY_DIR}")
-	message(SEND_ERROR "In-source builds are not allowed.")
+        message(SEND_ERROR "In-source builds are not allowed.")
 endif()
 
 # Setting default folders
@@ -39,29 +39,29 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
 # Compiler flaggs
-if(MSVC)
-    set(CMAKE_CXX_FLAGS "-W4"
-        #" -WX"
-    )
-elseif(CMAKE_COMPILER_IS_GNUCC)
-    set(CMAKE_CXX_FLAGS " \
-        -Wall -Wextra -Wshadow -Wnon-virtual-dtor -pedantic \
-        -Wold-style-cast -Wcast-align -Wunused -Woverloaded-virtual \
-        -Wconversion -Wsign-conversion \
-        -Weffc++ -Wmisleading-indentation"
-        #"-Weverything"
-        #" -Werror"
-    )
-elseif(CMAKE_CXX_COMPILER EQUAL Clang)
-    set(CMAKE_CXX_FLAGS " \
-        -Wall -Wextra -Wshadow -Wnon-virtual-dtor -pedantic \
-        -Wold-style-cast -Wcast-align -Wunused -Woverloaded-virtual \
-        -Wconversion -Wsign-conversion \
-        -Weffc++ -Wmisleading-indentation -Weverything -Werror"
-    )
-else()
-    MESSAGE(FATAL_ERROR "No compiler flags defined for current compiler:" ${CMAKE_CXX_COMPILER})
-endif()
+#if(MSVC)
+#    set(CMAKE_CXX_FLAGS "-W4"
+#        #" -WX"
+#    )
+#elseif(CMAKE_COMPILER_IS_GNUCC)
+#    set(CMAKE_CXX_FLAGS " \
+#        -Wall -Wextra -Wshadow -Wnon-virtual-dtor -pedantic \
+#        -Wold-style-cast -Wcast-align -Wunused -Woverloaded-virtual \
+#        -Wconversion -Wsign-conversion \
+#        -Weffc++ -Wmisleading-indentation"
+#        #"-Weverything"
+#        #" -Werror"
+#    )
+#elseif(CMAKE_CXX_COMPILER EQUAL Clang)
+#    set(CMAKE_CXX_FLAGS " \
+#        -Wall -Wextra -Wshadow -Wnon-virtual-dtor -pedantic \
+#        -Wold-style-cast -Wcast-align -Wunused -Woverloaded-virtual \
+#        -Wconversion -Wsign-conversion \
+#        -Weffc++ -Wmisleading-indentation -Weverything -Werror"
+#    )
+#else()
+#    MESSAGE(FATAL_ERROR "No compiler flags defined for current compiler:" ${CMAKE_CXX_COMPILER})
+#endif()
 
 if(SODA_GENERATE_COVERAGE)
   set(CMAKE_CXX_FLAGS "-g -O0 -fprofile-arcs -ftest-coverage")
