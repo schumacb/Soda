@@ -1,43 +1,37 @@
 #pragma once
 
-#include <QThread>
-#include <QReadWriteLock>
-#include <opencv2/opencv.hpp>
-
 #include "imagesource.hpp"
+
+#include "image.hpp"
+#include "video_capture.hpp"
 
 namespace soda {
 
-class FrameGrabber : public QThread, public ImageSource
+class FrameGrabber
 {
-    Q_OBJECT
-
 private:
-    cv::VideoCapture _capture;
+    VideoCapture _capture;
     volatile bool _stopped;
-    cv::Mat _frontBuffer;
-    cv::Mat _backBuffer;
-    QReadWriteLock _lock;
+    Image _frontBuffer;
+    Image _backBuffer;
+//    QReadWriteLock _lock;
     int _targetFps;
 
-    void _switchBuffers();
+    void _switch_buffers();
 
 protected:
     void run();
 
 public:
-    FrameGrabber(QObject *parent, int fps = 10);
+    FrameGrabber(int fps = 10);
     ~FrameGrabber();
     bool open(int id);
-    bool open(QString name);
+    bool open(std::string& name);
     void close();
-    bool isOpened();
-    void setFPS(int fps);
-    void getImage(cv::Mat &dest);
+    bool is_open();
+    void set_fps(int fps);
+    void get_image(Image& dest);
     void stop();
-
-    signals:
-        void signal_imageReady(ImageSource &src);
 };
 
 } // namespace soda

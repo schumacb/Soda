@@ -5,19 +5,11 @@
 
 cmake_minimum_required(VERSION 3.5 FATAL_ERROR)
 project(Soda)
-include_directories(src/includes CACHE)
 
 # Options
 option(SODA_BUILD_GUI "Build Graphical User Interface." ON)
 option(SODA_BUILD_TESTS "Build Tests." ON)
 option(SODA_GENERATE_COVERAGE "Generate coverage information for Tests." OFF)
-
-# Find includes in corresponding build directories
-set(CMAKE_INCLUDE_CURRENT_DIR ON)
-# Instruct CMake to run moc automatically when needed
-set(CMAKE_AUTOMOC ON)
-# Create code from a list of Qt designer ui files
-set(CMAKE_AUTOUIC ON)
 
 # Find includes in corresponding build directories
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
@@ -78,6 +70,8 @@ set(CMAKE_VERBOSE_MAKEFILE ON)
 set(CMAKE_COLOR_MAKEFILE   ON)
 
 add_subdirectory(src/interfaces)
+add_subdirectory(src/core)
+add_subdirectory(src/opencv_adapter)
 add_subdirectory(src/framegrabber)
 add_subdirectory(src/blobdetect)
 add_subdirectory(src/networking)

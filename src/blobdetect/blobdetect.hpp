@@ -3,6 +3,8 @@
 #include "imageprocessor.hpp"
 #include "applicationmodel.hpp"
 
+#include <image.hpp>
+
 namespace soda {
 
 class BlobDetect : public ImageProcessor
@@ -10,18 +12,17 @@ class BlobDetect : public ImageProcessor
     Q_OBJECT
 private:
     ApplicationModel& _model;
+    Image erosion_element, dilation_element;
 
-    cv::Mat hsv, hue, sat, val;
-    cv::Mat thrash, hueThrash, satThrash, valThrash, tmp;
-    cv::Mat erosionElement, dilationElement;
-    cv::Mat mv[3];
-    std::vector<std::vector<cv::Point>> contours;
+    Image hsv, hue, sat, val;
+    Image thrash, hue_thrash, sat_thrash, val_thrash, tmp;
 
-    int dilation_type,
-        erosion_type,
-        dilation_size,
+    std::vector<std::vector<Point>> contours;
+
+    MorphShapes dilation_type,
+        erosion_type;
+    int dilation_size,
         erosion_size;
-
 public:
     BlobDetect(QObject *parent, ApplicationModel &model);
     ~BlobDetect();

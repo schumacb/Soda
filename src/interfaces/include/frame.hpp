@@ -1,23 +1,23 @@
 #pragma once
 
-#include <opencv2/opencv.hpp>
-#include <QVector>
-
+#include <vector>
 #include "blob.hpp"
 #include "channel.hpp"
+
+#include <image.hpp>
 
 namespace soda {
 
 struct ChannelData {
     chan_ptr chan;
-    cv::Mat threshold;
-    QVector<Blob> blobs;
+    Image threshold;
+    std::vector<Blob> blobs;
 };
 
 struct Frame
 {
-    cv::Mat img;
-    QVector<ChannelData> data;
+    Image img;
+    std::vector<ChannelData> data;
 };
 
 } // namespace soda

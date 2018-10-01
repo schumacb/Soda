@@ -31,5 +31,5 @@ target_link_libraries(${PROJECT_NAME} Qt5::Core)
 
 # OpenCV
 find_package(OpenCV REQUIRED)
-target_link_libraries(${PROJECT_NAME} ${OpenCV_LIBS})
+target_link_libraries(${PROJECT_NAME} ${OpenCV_LIBS} opencv_adapter)
 

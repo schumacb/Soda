@@ -1,14 +1,14 @@
 #include "blobdetect.hpp"
 
-#include <opencv2/calib3d/calib3d.hpp>
+#include <types.hpp>
 
 namespace soda
 {
 
 BlobDetect::BlobDetect(QObject *parent, ApplicationModel &model)
         : ImageProcessor(parent), _model(model), hsv(), hue(), sat(), val(),
-          thrash(), hueThrash(), satThrash(), valThrash(), tmp(),
-          erosionElement(), dilationElement(), contours(),
+          thrash(), hue_thrash(), sat_thrash(), val_thrash(), tmp(),
+          erosion_element(), dilation_element(), contours(),
           dilation_type(), erosion_type(), dilation_size(), erosion_size()
 {
 }
@@ -36,14 +36,10 @@ void BlobDetect::processImage() {
 
         erosion_size= 2;
         dilation_size = 3;
-        dilation_type = erosion_type = cv::MORPH_ELLIPSE;
+        dilation_type = erosion_type = MorphShapes::MORPH_ELLIPSE;
 
-        erosionElement = cv::getStructuringElement( erosion_type,
-                cv::Size( 2 * erosion_size + 1, 2 * erosion_size + 1 ),
-                cv::Point( erosion_size, erosion_size ));
-        dilationElement = cv::getStructuringElement( dilation_type,
-                cv::Size( 2 * dilation_size + 1, 2 * dilation_size + 1 ),
-                cv::Point( dilation_size, dilation_size ));
+        Image::get_structuring_element(erosion_element, erosion_type, dilation_size);
+        Image::get_structuring_element(dilation_element, dilation_type, dilation_size);
 
         Frame *frame = _model.requireFrame();
         _model.getImage(frame->img);
@@ -51,12 +47,12 @@ void BlobDetect::processImage() {
         frame->data.clear();
 
         for(int chanIdx = 0; chanIdx < channels->size() &&
-                (*frame->img.size) > 0; ++chanIdx) {
+                (*frame->img.get_size()) > 0; ++chanIdx) {
                 chan_ptr channel = channels->at(chanIdx);
                 ChannelData data;
                 data.chan = channel;
 
-                int minHue = channel->minHue(),
+                unsigned int minHue = channel->minHue(),
                         maxHue = channel->maxHue(),
                         minSat = channel->minSat(),
                         maxSat = channel->maxSat(),
@@ -70,7 +66,7 @@ void BlobDetect::processImage() {
                         invertValThrash = false;
 
                 if (minHue > maxHue) {
-                        int tmp = minHue;
+                        unsigned int tmp = minHue;
                         minHue = maxHue;
                         maxHue = tmp;
                         invertHueThrash = true;
@@ -90,48 +86,44 @@ void BlobDetect::processImage() {
                         invertValThrash = true;
                 }
 
-                cv::cvtColor(frame->img, hsv, CV_RGB2HSV);
+                frame->img.rgb_to_hsv(hsv);
 
-                cv::split(hsv, mv);
-                hue = mv[0];
-                sat = mv[1];
-                val = mv[2];
+                hsv.split(hue, sat, val);
 
-                cv::threshold(hue, thrash, maxHue, 255, cv::THRESH_TOZERO_INV);
-                cv::threshold(thrash, hueThrash, minHue, 255,
-                        (invertHueThrash ? cv::THRESH_BINARY_INV : cv::THRESH_BINARY));
+                hue.threshold(thrash, maxHue, 255, ThresholdTypes::ToZeroInverse);
+                thrash.threshold(hue_thrash, minHue, 255,
+                        (invertHueThrash ? ThresholdTypes::BinaryInverse: ThresholdTypes::Binary));
 
-                cv::threshold(sat, thrash, maxSat, 255, cv::THRESH_TOZERO_INV);
-                cv::threshold(thrash, satThrash, minSat, 255,
-                        (invertSatThrash ? cv::THRESH_BINARY_INV : cv::THRESH_BINARY));
+                sat.threshold(thrash, maxSat, 255, ThresholdTypes::ToZeroInverse);
+                thrash.threshold(sat_thrash, minSat, 255,
+                        (invertSatThrash ? ThresholdTypes::BinaryInverse : ThresholdTypes::Binary));
 
-                cv::threshold(val, thrash, maxVal, 255, cv::THRESH_TOZERO_INV);
-                cv::threshold(thrash, valThrash, minVal, 255,
-                        (invertValThrash ? cv::THRESH_BINARY_INV : cv::THRESH_BINARY));
+                val.threshold(thrash, maxVal, 255, ThresholdTypes::ToZeroInverse);
+                thrash.threshold(val_thrash, minVal, 255,
+                        (invertValThrash ? ThresholdTypes::BinaryInverse: ThresholdTypes::Binary));
 
-                cv::min(hueThrash, satThrash, thrash);
-                cv::min(thrash, valThrash, thrash);
+                Image::min(hue_thrash, sat_thrash, thrash);
+                Image::min(thrash, val_thrash, thrash);
 
                 // Apply the erosion operation to remove false positives from noise
-                erode( thrash, thrash, erosionElement );
+                thrash.erode(thrash, erosion_element);
 
                 // Apply the dilation operation to remove false negatives from noise
-                dilate( thrash, thrash, dilationElement );
+                thrash.dilate(thrash, dilation_element );
 
                 // Convert graysacle image to rgb to be used by qt
-                cv::cvtColor(thrash, tmp, CV_GRAY2RGB);
-                tmp.copyTo(data.threshold);
+                thrash.gray_to_rgb(tmp);
+                tmp.copy_to(data.threshold);
 
                 // Finds contours
-                findContours(thrash,contours,CV_RETR_EXTERNAL,CV_CHAIN_APPROX_NONE);
+                thrash.find_contours(contours, ContourRetrievalModes::External, ContourApproximationMethods::None);
 
                 // Extract blob information
-                int area = 0;
-                int idx = -1;
-                QVector<Blob> &blobs = data.blobs;
-                for(int i=0; i<contours.size();++i) {
+                unsigned int area = 0;
+                std::vector<Blob> &blobs = data.blobs;
+                for(size_t i=0; i<contours.size(); ++i) {
 
-                        area = cv::contourArea(contours[i]);
+                        area = static_cast<unsigned int>(contour_area(contours[i]));
 
                         if (area >= minArea) {
                                 Blob blob;
@@ -144,7 +136,7 @@ void BlobDetect::processImage() {
                                 blob.top = rect.y;
                                 blob.right = rect.x + rect.width;
                                 blob.bottom = rect.y + rect.height;
-                                blobs.append(blob);
+                                blobs.push_back(blob);
                         }
                 }
 
@@ -153,10 +145,10 @@ void BlobDetect::processImage() {
 
                 // remove small blobs (requires blobs to be sorted ascending)
                 while(blobs.size() > maxBlobs) {
-                        blobs.remove(0);
+                    blobs.erase(blobs.begin());
                 }
 
-                frame->data.append(data);
+                frame->data.push_back(data);
         }
         _model.releaseFrame();
 }

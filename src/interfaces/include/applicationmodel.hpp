@@ -16,19 +16,19 @@ class ApplicationModel : public DataModel
 
 private:
 	QReadWriteLock _imageLock;
-	cv::Mat _image;
+        Image _image;
 	QReadWriteLock _frameLock;
-        Frame &_backFrame;
-        Frame &_frontFrame;
+        Frame& _backFrame;
+        Frame& _frontFrame;
 
 public:
-	ApplicationModel(QObject *parent = 0);
+        ApplicationModel(QObject* parent = 0);
 	~ApplicationModel();
 		
-    void getImage(cv::Mat & dest);
-    void getChannelData(QVector<ChannelData> &data);
+    void getImage(Image& dest);
+    void getChannelData(QVector<ChannelData>& data);
 	
-	Frame *requireFrame();
+        Frame* requireFrame();
 	void releaseFrame();
 
 signals:
@@ -36,7 +36,7 @@ signals:
 	void imageReady();
 
 public slots:
-	void updateImage(ImageSource *);
+        void updateImage(ImageSource* imageSource);
 };
 
 }

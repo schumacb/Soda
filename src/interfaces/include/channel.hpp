@@ -50,18 +50,19 @@ public:
         void setMinArea(int minArea);
         void setMaxBlobs(int maxBlobs);
 
-        int minHue() const;
-        int maxHue() const;
-        int minSat() const;
-        int maxSat() const;
-        int minVal() const;
-        int maxVal() const;
+        unsigned int minHue() const;
+        unsigned int maxHue() const;
+        unsigned int minSat() const;
+        unsigned int maxSat() const;
+        unsigned int minVal() const;
+        unsigned int maxVal() const;
+
         Color color() const;
         QString name() const;
         bool isValid() const;
 
-        int minArea() const;
-        int maxBlobs() const;
+        unsigned int minArea() const;
+        unsigned int maxBlobs() const;
 
         bool read(QDataStream &in);
         void write(QDataStream &out) const;
