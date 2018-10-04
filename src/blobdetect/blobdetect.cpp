@@ -1,162 +1,114 @@
 #include "blobdetect.hpp"
 
-#include <types.hpp>
-
 namespace soda
 {
 
-BlobDetect::BlobDetect(QObject *parent, ApplicationModel &model)
-        : ImageProcessor(parent), _model(model), hsv(), hue(), sat(), val(),
-          thrash(), hue_thrash(), sat_thrash(), val_thrash(), tmp(),
-          erosion_element(), dilation_element(), contours(),
-          dilation_type(), erosion_type(), dilation_size(), erosion_size()
+BlobDetect::BlobDetect(BlobDetecSettings settings)
+        : _settings(settings) { }
+
+BlobDetect::~BlobDetect() { }
+
+BlobDetecResult BlobDetect::process(cv::InputArray inputImage)
 {
-}
+    BlobDetecResult result;
+    if(inputImage.empty())
+        return result;
 
-BlobDetect::~BlobDetect() {
-}
+        Channel& channel = _settings.channel;
+        ChannelRange& hue_range = channel.hue;
+        ChannelRange& value_range = channel.value;
+        ChannelRange& satuartion_range = channel.saturation;
 
-void BlobDetect::run() {
-        while (!_stopped) {
-                QMutexLocker locker(&_mutex);
-                processImage();
-                _imageReady.wait(&_mutex);
+        bool invertHueThrash = false,
+                invertSatThrash = false,
+                invertValThrash = false;
 
+        if (hue_range.min > hue_range.max) {
+            hue_range.swap();
+            invertHueThrash = true;
         }
-}
 
-void BlobDetect::stop() {
-        QMutexLocker locker(&_mutex);
-        _stopped = true;
-        _imageReady.wakeOne();
-}
+        if (satuartion_range.min > satuartion_range.max) {
+                satuartion_range.swap();
+                invertSatThrash = true;
+        }
 
-void BlobDetect::processImage() {
-        const QVector<chan_ptr> *channels = _model.getChannels();
+        if (value_range.min > value_range.max) {
+                value_range.swap();
+                invertValThrash = true;
+        }
 
-        erosion_size= 2;
-        dilation_size = 3;
-        dilation_type = erosion_type = MorphShapes::MORPH_ELLIPSE;
+        auto& hsv = result.hsv;
+        cv::cvtColor(inputImage, hsv, cv::COLOR_RGB2HSV);
+        auto& hue = result.hue;
+        auto& sat = result.sat;
+        auto& val = result.val;
+        cv::split(hsv, result.hsvComponents);
+        cv::Mat& thrash = result.thrash;
+        cv::Mat& hue_thrash = result.hue_thrash;
+        cv::Mat& sat_thrash = result.sat_thrash;
+        cv::Mat& val_thrash = result.val_thrash;
+        auto max_range = 255;
+        cv::threshold(hue, thrash, hue_range.max, max_range, cv::THRESH_TOZERO_INV);
+        cv::threshold(thrash ,hue_thrash, hue_range.min, max_range,
+                        (invertHueThrash ? cv::THRESH_BINARY_INV : cv::THRESH_BINARY));
 
-        Image::get_structuring_element(erosion_element, erosion_type, dilation_size);
-        Image::get_structuring_element(dilation_element, dilation_type, dilation_size);
+        cv::threshold(sat, thrash, satuartion_range.max, max_range, cv::THRESH_TOZERO_INV);
+        cv::threshold(thrash, sat_thrash, satuartion_range.min, max_range,
+                        (invertSatThrash ? cv::THRESH_BINARY_INV : cv::THRESH_BINARY));
 
-        Frame *frame = _model.requireFrame();
-        _model.getImage(frame->img);
+        cv::threshold(val, thrash, value_range.max, max_range, cv::THRESH_TOZERO_INV);
+        cv::threshold(thrash, val_thrash, value_range.min, max_range,
+                        (invertValThrash ? cv::THRESH_BINARY_INV : cv::THRESH_BINARY));
 
-        frame->data.clear();
+        cv::min(hue_thrash, sat_thrash, thrash);
+        cv::min(thrash, val_thrash, thrash);
 
-        for(int chanIdx = 0; chanIdx < channels->size() &&
-                (*frame->img.get_size()) > 0; ++chanIdx) {
-                chan_ptr channel = channels->at(chanIdx);
-                ChannelData data;
-                data.chan = channel;
+        // Apply the erosion operation to remove false positives from noise
+        cv::erode(thrash, thrash, _settings.erosion_element);
 
-                unsigned int minHue = channel->minHue(),
-                        maxHue = channel->maxHue(),
-                        minSat = channel->minSat(),
-                        maxSat = channel->maxSat(),
-                        minVal = channel->minVal(),
-                        maxVal = channel->maxVal(),
-                        minArea = channel->minArea(),
-                        maxBlobs = channel->maxBlobs();
-
-                bool invertHueThrash = false,
-                        invertSatThrash = false,
-                        invertValThrash = false;
-
-                if (minHue > maxHue) {
-                        unsigned int tmp = minHue;
-                        minHue = maxHue;
-                        maxHue = tmp;
-                        invertHueThrash = true;
-                }
-
-                if (minSat > maxSat) {
-                        int tmp = minSat;
-                        minSat = maxSat;
-                        maxSat = tmp;
-                        invertSatThrash = true;
-                }
-
-                if (minVal > maxVal) {
-                        int tmp = minVal;
-                        minVal = maxVal;
-                        maxVal = tmp;
-                        invertValThrash = true;
-                }
-
-                frame->img.rgb_to_hsv(hsv);
-
-                hsv.split(hue, sat, val);
-
-                hue.threshold(thrash, maxHue, 255, ThresholdTypes::ToZeroInverse);
-                thrash.threshold(hue_thrash, minHue, 255,
-                        (invertHueThrash ? ThresholdTypes::BinaryInverse: ThresholdTypes::Binary));
-
-                sat.threshold(thrash, maxSat, 255, ThresholdTypes::ToZeroInverse);
-                thrash.threshold(sat_thrash, minSat, 255,
-                        (invertSatThrash ? ThresholdTypes::BinaryInverse : ThresholdTypes::Binary));
-
-                val.threshold(thrash, maxVal, 255, ThresholdTypes::ToZeroInverse);
-                thrash.threshold(val_thrash, minVal, 255,
-                        (invertValThrash ? ThresholdTypes::BinaryInverse: ThresholdTypes::Binary));
-
-                Image::min(hue_thrash, sat_thrash, thrash);
-                Image::min(thrash, val_thrash, thrash);
-
-                // Apply the erosion operation to remove false positives from noise
-                thrash.erode(thrash, erosion_element);
-
-                // Apply the dilation operation to remove false negatives from noise
-                thrash.dilate(thrash, dilation_element );
+        // Apply the dilation operation to remove false negatives from noise
+        cv::dilate(thrash, thrash, _settings.dilation_element);
 
                 // Convert graysacle image to rgb to be used by qt
-                thrash.gray_to_rgb(tmp);
-                tmp.copy_to(data.threshold);
+        cv::cvtColor(thrash, thrash, cv::COLOR_GRAY2RGB);
+//                tmp.copy_to(data.threshold);
 
-                // Finds contours
-                thrash.find_contours(contours, ContourRetrievalModes::External, ContourApproximationMethods::None);
+//                // Finds contours
+//                thrash.find_contours(contours, ContourRetrievalModes::External, ContourApproximationMethods::None);
 
-                // Extract blob information
-                unsigned int area = 0;
-                std::vector<Blob> &blobs = data.blobs;
-                for(size_t i=0; i<contours.size(); ++i) {
+//                // Extract blob information
+//                unsigned int area = 0;
+//                std::vector<Blob> &blobs = data.blobs;
+//                for(size_t i=0; i<contours.size(); ++i) {
 
-                        area = static_cast<unsigned int>(contour_area(contours[i]));
+//                        area = static_cast<unsigned int>(contour_area(contours[i]));
+//                        if (area >= minArea) {
+//                                Blob blob;
+//                                blob.area = area;
 
-                        if (area >= minArea) {
-                                Blob blob;
-                                blob.area = area;
+//                                // Calculates the bounding rect of the area contour
+//                                cv::Rect rect = boundingRect(contours[i]);
 
-                                // Calculates the bounding rect of the area contour
-                                cv::Rect rect = boundingRect(contours[i]);
+//                                blob.left = rect.x;
+//                                blob.top = rect.y;
+//                                blob.right = rect.x + rect.width;
+//                                blob.bottom = rect.y + rect.height;
+//                                blobs.push_back(blob);
+//                     }
+//                }
 
-                                blob.left = rect.x;
-                                blob.top = rect.y;
-                                blob.right = rect.x + rect.width;
-                                blob.bottom = rect.y + rect.height;
-                                blobs.push_back(blob);
-                        }
-                }
+//                // sort blobs in ascending order
+//                qSort(blobs);
 
-                // sort blobs in ascending order
-                qSort(blobs);
+//                // remove small blobs (requires blobs to be sorted ascending)
+//                while(blobs.size() > maxBlobs) {
+//                    blobs.erase(blobs.begin());
+//                }
 
-                // remove small blobs (requires blobs to be sorted ascending)
-                while(blobs.size() > maxBlobs) {
-                    blobs.erase(blobs.begin());
-                }
-
-                frame->data.push_back(data);
-        }
-        _model.releaseFrame();
+//                frame->data.push_back(data);
+//        }
+//        _model.releaseFrame();
 }
-
-void BlobDetect::updateImage() {
-        QMutexLocker locker(&_mutex);
-        _imageReady.wakeOne();
-}
-
 
 }

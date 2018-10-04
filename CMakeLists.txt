@@ -2,8 +2,7 @@
 #  Root CMake file for Soda
 #
 # ----------------------------------------------------------------------------
-
-cmake_minimum_required(VERSION 3.5 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.0 FATAL_ERROR)
 project(Soda)
 
 # Options
@@ -69,12 +68,9 @@ endif(SODA_GENERATE_COVERAGE)
 set(CMAKE_VERBOSE_MAKEFILE ON)
 set(CMAKE_COLOR_MAKEFILE   ON)
 
-add_subdirectory(src/interfaces)
+include_directories(include)
 add_subdirectory(src/core)
-add_subdirectory(src/opencv_adapter)
-add_subdirectory(src/framegrabber)
 add_subdirectory(src/blobdetect)
-add_subdirectory(src/networking)
 add_subdirectory(src/soda_cli)
 add_subdirectory(src/soda_qt5_gui)
 
