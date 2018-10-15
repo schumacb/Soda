@@ -6,6 +6,19 @@
 
 namespace soda {
 
+struct Blob{
+    u32 area;
+    i32 top;
+    i32 left;
+    i32 right;
+    i32 bottom;
+
+    friend bool operator<(const Blob& left, const Blob& right)
+    {
+        return left.area < right.area;
+    }
+};
+
 struct ChannelRange{
     f64 min;
     f64 max;
@@ -29,6 +42,8 @@ struct BlobDetecSettings
     cv::Mat erosion_element,
             dilation_element;
     Channel channel;
+    u32 minArea;
+    u32 maxBlobs;
 };
 
 struct BlobDetecResult{
@@ -38,7 +53,8 @@ struct BlobDetecResult{
     cv::Mat& sat = hsvComponents[1];
     cv::Mat& val = hsvComponents[2];
     cv::Mat thrash, hue_thrash, sat_thrash, val_thrash;
-    //    std::vector<std::vector<Point>> contours;
+    std::vector<std::vector<cv::Point>> contours;
+    std::vector<Blob> blobs;
 };
 
 class BlobDetect
@@ -47,7 +63,7 @@ class BlobDetect
 public:
     BlobDetect(BlobDetecSettings settings);
     ~BlobDetect();
-    BlobDetecResult process(cv::InputArray image);
+    void process(cv::InputArray image, BlobDetecResult& result);
 };
 
 } // namespace soda

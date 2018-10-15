@@ -13,7 +13,7 @@ using namespace soda;
 
 struct NamedMat {
     cv::String name;
-    cv::Mat mat;
+    cv::Mat& mat;
 };
 
 void create_windows(vector<NamedMat> list) {
@@ -24,39 +24,39 @@ void create_windows(vector<NamedMat> list) {
 
 void show_images(vector<NamedMat> list)
 {
-    for(auto mat : list)
+    for(auto namedMat : list)
     {
-        cv::imshow(mat.name, mat.mat);
+        auto mat = namedMat.mat;
+        auto name = namedMat.name;
+        if(!mat.empty())
+        {
+            cv::imshow(name, mat);
+        }
     }
 }
 
-
-
 int main(int argc, char **argv) {
-
     QCoreApplication app(argc, argv);
-
     app.addLibraryPath(QCoreApplication::applicationDirPath() + "/../lib");
-
     cv::VideoCapture capture;
     if(!capture.open(0))
     {
         qDebug() << "Could not open Camera!";
         return -1;
     }
-
     qDebug() << "fps: " << capture.get(cv::CAP_PROP_FPS);
     qDebug() << "format: " << capture.get(cv::CAP_PROP_FORMAT);
     cv::Mat frame;
     BlobDetecResult blob_detect_result;
-    vector<NamedMat> window_names ={{"sourceImage", frame}};
+    vector<NamedMat> window_names = {
+        {"sourceImage", frame},
+        {"hsv", blob_detect_result.hsv},
+        {"hue", blob_detect_result.hue_thrash},
+        {"sat", blob_detect_result.sat_thrash},
+        {"val", blob_detect_result.val_thrash},
+        {"thrashhold", blob_detect_result.thrash}
+    };
     create_windows(window_names);
-    vector<cv::Mat&> images = {frame,
-                blob_detect_result.hsv,
-                blob_detect_result.hue_thrash,
-                blob_detect_result.sat_thrash,
-                blob_detect_result.val_thrash,
-                blob_detect_result.thrash };
     int erosion_size = 2;
     int dilation_size = 2;
     auto erosion_element = cv::getStructuringElement(cv::MORPH_ELLIPSE,
@@ -69,25 +69,25 @@ int main(int argc, char **argv) {
         {50,255},
         {50,255}
     };
+    u32 min_area = 10;
+    u32 max_blobs = 10;
     BlobDetecSettings blobdetect_settings
     {
         erosion_element,
         dilation_element,
-        channel
+        channel,
+        min_area,
+        max_blobs
     };
-
     BlobDetect blobDetect(blobdetect_settings);
-
-
 
     while(!app.closingDown())
     {
-
         capture >> frame;
         if(!frame.empty())
         {
+            blobDetect.process(frame, blob_detect_result);
             show_images(window_names);
-            auto result = blobDetect.process(frame);
             cv::waitKey(1);
         }
         else
@@ -96,6 +96,5 @@ int main(int argc, char **argv) {
         }
         app.processEvents();
     }
-
     return 0;
 }
