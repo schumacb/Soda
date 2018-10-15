@@ -46,13 +46,22 @@ struct BlobDetecSettings
     u32 maxBlobs;
 };
 
-struct BlobDetecResult{
+struct ThresholdResult
+{
     cv::Mat hsv;
-    cv::Mat hsvComponents[3];
-    cv::Mat& hue = hsvComponents[0];
-    cv::Mat& sat = hsvComponents[1];
-    cv::Mat& val = hsvComponents[2];
-    cv::Mat thrash, hue_thrash, sat_thrash, val_thrash;
+    cv::Mat hsv_components[3];
+    cv::Mat& hue = hsv_components[0];
+    cv::Mat& sat = hsv_components[1];
+    cv::Mat& val = hsv_components[2];
+    cv::Mat threshold;
+    cv::Mat hue_threshold;
+    cv::Mat sat_threshold;
+    cv::Mat val_threshold;
+};
+
+struct BlobDetecResult
+{
+    ThresholdResult threshold_result;
     std::vector<std::vector<cv::Point>> contours;
     std::vector<Blob> blobs;
 };
@@ -64,6 +73,7 @@ public:
     BlobDetect(BlobDetecSettings settings);
     ~BlobDetect();
     void process(cv::InputArray image, BlobDetecResult& result);
+    void calculate_threshold(cv::InputArray inputImage, ThresholdResult &result);
 };
 
 } // namespace soda

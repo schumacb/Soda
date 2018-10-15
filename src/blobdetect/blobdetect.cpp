@@ -8,13 +8,8 @@ BlobDetect::BlobDetect(BlobDetecSettings settings)
 
 BlobDetect::~BlobDetect() { }
 
-void BlobDetect::process(cv::InputArray inputImage, BlobDetecResult& result)
+void BlobDetect::calculate_threshold(cv::InputArray inputImage, ThresholdResult& result)
 {
-    if(inputImage.empty())
-    {
-        return;
-    }
-
     Channel& channel = _settings.channel;
     ChannelRange& hue_range = channel.hue;
     ChannelRange& value_range = channel.value;
@@ -44,11 +39,11 @@ void BlobDetect::process(cv::InputArray inputImage, BlobDetecResult& result)
     auto& hue = result.hue;
     auto& sat = result.sat;
     auto& val = result.val;
-    cv::split(hsv, result.hsvComponents);
-    cv::Mat& thrash = result.thrash;
-    cv::Mat& hue_thrash = result.hue_thrash;
-    cv::Mat& sat_thrash = result.sat_thrash;
-    cv::Mat& val_thrash = result.val_thrash;
+    cv::split(hsv, result.hsv_components);
+    cv::Mat& thrash = result.threshold;
+    cv::Mat& hue_thrash = result.hue_threshold;
+    cv::Mat& sat_thrash = result.sat_threshold;
+    cv::Mat& val_thrash = result.val_threshold;
     auto max_range = 255;
     cv::threshold(hue, thrash, hue_range.max, max_range, cv::THRESH_TOZERO_INV);
     cv::threshold(thrash ,hue_thrash, hue_range.min, max_range,
@@ -64,12 +59,24 @@ void BlobDetect::process(cv::InputArray inputImage, BlobDetecResult& result)
 
     cv::min(hue_thrash, sat_thrash, thrash);
     cv::min(thrash, val_thrash, thrash);
+}
+
+void BlobDetect::process(cv::InputArray inputImage, BlobDetecResult& result)
+{
+    if(inputImage.empty())
+    {
+        return;
+    }
+    auto & thrash = result.threshold_result.threshold;
+    calculate_threshold(inputImage, result.threshold_result);
 
     // Apply the erosion operation to remove false positives from noise
     cv::erode(thrash, thrash, _settings.erosion_element);
 
     // Apply the dilation operation to remove false negatives from noise
     cv::dilate(thrash, thrash, _settings.dilation_element);
+
+//                tmp.copy_to(data.threshold);
 
     // Finds contours
     auto & contours = result.contours;

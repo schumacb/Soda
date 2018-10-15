@@ -48,13 +48,14 @@ int main(int argc, char **argv) {
     qDebug() << "format: " << capture.get(cv::CAP_PROP_FORMAT);
     cv::Mat frame;
     BlobDetecResult blob_detect_result;
+    auto& threshold_result = blob_detect_result.threshold_result;
     vector<NamedMat> window_names = {
         {"sourceImage", frame},
-        {"hsv", blob_detect_result.hsv},
-        {"hue", blob_detect_result.hue_thrash},
-        {"sat", blob_detect_result.sat_thrash},
-        {"val", blob_detect_result.val_thrash},
-        {"thrashhold", blob_detect_result.thrash}
+        {"hsv", threshold_result.hsv},
+        {"hue", threshold_result.hue_threshold},
+        {"sat", threshold_result.sat_threshold},
+        {"val", threshold_result.val_threshold},
+        {"threshold", threshold_result.threshold}
     };
     create_windows(window_names);
     int erosion_size = 2;
