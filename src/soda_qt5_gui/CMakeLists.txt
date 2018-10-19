@@ -6,7 +6,6 @@
 cmake_minimum_required(VERSION 3.0 FATAL_ERROR)
 
 project(soda_qt5_gui)
-
 aux_source_directory(${PROJECT_SOURCE_DIR}/src SOURCE_FILES)
 set(SOURCE_FILES resources/resources.qrc ${SOURCE_FILES})
 

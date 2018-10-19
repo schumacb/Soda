@@ -1,8 +1,5 @@
 #include <vector>
 
-#include <QCoreApplication>
-#include <QDebug>
-
 #include <opencv2/imgproc.hpp>
 #include <opencv2/highgui.hpp>
 
@@ -11,67 +8,38 @@
 using namespace std;
 using namespace soda;
 
-struct NamedMat {
-    cv::String name;
-    cv::Mat& mat;
-};
-
-void create_windows(vector<NamedMat> list) {
-    for (auto mat : list) {
-        cv::namedWindow(mat.name);
-    }
-}
-
-void show_images(vector<NamedMat> list)
-{
-    for(auto namedMat : list)
-    {
-        auto mat = namedMat.mat;
-        auto name = namedMat.name;
-        if(!mat.empty())
-        {
-            cv::imshow(name, mat);
-        }
-    }
-}
-
 int main(int argc, char **argv) {
-    QCoreApplication app(argc, argv);
-    app.addLibraryPath(QCoreApplication::applicationDirPath() + "/../lib");
-    cv::VideoCapture capture;
-    if(!capture.open(0))
+
+    cv::Mat input_image;
+    input_image = cv::imread( "source.jpg");
+
+    if(input_image.empty())
     {
-        qDebug() << "Could not open Camera!";
+        cerr << "frame was empty!!!";
         return -1;
     }
-    qDebug() << "fps: " << capture.get(cv::CAP_PROP_FPS);
-    qDebug() << "format: " << capture.get(cv::CAP_PROP_FORMAT);
-    cv::Mat frame;
+
     BlobDetecResult blob_detect_result;
     auto& threshold_result = blob_detect_result.threshold_result;
-    vector<NamedMat> window_names = {
-        {"sourceImage", frame},
-        {"hsv", threshold_result.hsv},
-        {"hue", threshold_result.hue_threshold},
-        {"sat", threshold_result.sat_threshold},
-        {"val", threshold_result.val_threshold},
-        {"threshold", threshold_result.threshold}
-    };
-    create_windows(window_names);
-    int erosion_size = 2;
-    int dilation_size = 2;
+
+    int erosion_size = 3;
+    int dilation_size = 3;
+
     auto erosion_element = cv::getStructuringElement(cv::MORPH_ELLIPSE,
                                 cv::Size( 2 * erosion_size + 1, 2 * erosion_size + 1 ));
     auto dilation_element = cv::getStructuringElement(cv::MORPH_ELLIPSE,
                                 cv::Size( 2 * dilation_size + 1, 2 * dilation_size + 1 ));
+
     Channel channel
     {
-        {0,255},
-        {50,255},
-        {50,255}
+        {90,200},
+        {20,255},
+        {20,255}
     };
+
     u32 min_area = 10;
     u32 max_blobs = 10;
+
     BlobDetecSettings blobdetect_settings
     {
         erosion_element,
@@ -80,22 +48,39 @@ int main(int argc, char **argv) {
         min_area,
         max_blobs
     };
+
     BlobDetect blobDetect(blobdetect_settings);
 
-    while(!app.closingDown())
-    {
-        capture >> frame;
-        if(!frame.empty())
+    f64 min = 105;
+    f64 max = 135;
+//    for(f64 min=0;min < 255;++min)
+//    for(f64 max=0;max < 255;++max)
+//    {
+        channel.hue.min = min;
+        channel.hue.max = max;
+        blobDetect.process(input_image, blob_detect_result);
+
+        cout << "hue: [" << min << ", " << max << "]\nblobs: ";
+        for(auto blob : blob_detect_result.blobs)
         {
-            blobDetect.process(frame, blob_detect_result);
-            show_images(window_names);
-            cv::waitKey(1);
+            cout << blob.area << " ";
         }
-        else
-        {
-            qDebug() << "frame was empty!!!";
-        }
-        app.processEvents();
-    }
+        cout << "\n";
+//    }
+    imwrite( "000-source.jpg", input_image );
+    imwrite( "010-hue.jpg", threshold_result.hue );
+    imwrite( "011-hue-threshold.jpg", threshold_result.hue_threshold );
+    imwrite( "021-sat.jpg", threshold_result.sat );
+    imwrite( "021-sat-threshold.jpg", threshold_result.sat_threshold );
+    imwrite( "030-val.jpg", threshold_result.val );
+    imwrite( "031-val-threshold.jpg", threshold_result.val_threshold );
+    imwrite( "100-threshold.jpg", threshold_result.threshold );
+    imwrite( "101-threshold-denoised.jpg", blob_detect_result.denoised_result );
+
+    cv::Mat colored_threshold;
+    cv::cvtColor(blob_detect_result.denoised_result, colored_threshold, CV_GRAY2RGB);
+    cv::Mat tmp;
+    cv::multiply(input_image, colored_threshold, tmp, 1.0/255.0);
+    imwrite("200-colored-threshold.jpg", tmp);
     return 0;
 }

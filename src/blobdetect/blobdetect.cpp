@@ -3,7 +3,7 @@
 namespace soda
 {
 
-BlobDetect::BlobDetect(BlobDetecSettings settings)
+BlobDetect::BlobDetect(BlobDetecSettings &settings)
         : _settings(settings) { }
 
 BlobDetect::~BlobDetect() { }
@@ -40,6 +40,7 @@ void BlobDetect::calculate_threshold(cv::InputArray inputImage, ThresholdResult&
     auto& sat = result.sat;
     auto& val = result.val;
     cv::split(hsv, result.hsv_components);
+
     cv::Mat& thrash = result.threshold;
     cv::Mat& hue_thrash = result.hue_threshold;
     cv::Mat& sat_thrash = result.sat_threshold;
@@ -69,21 +70,20 @@ void BlobDetect::process(cv::InputArray inputImage, BlobDetecResult& result)
     }
     auto & thrash = result.threshold_result.threshold;
     calculate_threshold(inputImage, result.threshold_result);
+    result.denoised_result = thrash;
 
     // Apply the erosion operation to remove false positives from noise
-    cv::erode(thrash, thrash, _settings.erosion_element);
-
+    cv::erode(result.denoised_result, result.denoised_result, _settings.erosion_element);
+    // Apply the erosion operation to remove false positives from noise
+    cv::dilate(result.denoised_result, result.denoised_result, _settings.dilation_element);
     // Apply the dilation operation to remove false negatives from noise
-    cv::dilate(thrash, thrash, _settings.dilation_element);
-
-//                tmp.copy_to(data.threshold);
+    cv::dilate(result.denoised_result, result.denoised_result, _settings.dilation_element);
+    // Apply the erosion operation to remove false positives from noise
+    cv::erode(result.denoised_result, result.denoised_result, _settings.erosion_element);
 
     // Finds contours
     auto & contours = result.contours;
     cv::findContours(thrash, contours, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_NONE);
-
-    // Convert graysacle image to rgb to be used by qt
-    cv::cvtColor(thrash, thrash, cv::COLOR_GRAY2RGB);
 
     // Extract blob information
     unsigned int area = 0;

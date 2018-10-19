@@ -72,6 +72,7 @@ include_directories(include)
 add_subdirectory(src/core)
 add_subdirectory(src/blobdetect)
 add_subdirectory(src/soda_cli)
+add_subdirectory(src/soda_opencv_gui)
 add_subdirectory(src/soda_qt5_gui)
 
 # This target only serves to show CMake modules in IDEs.

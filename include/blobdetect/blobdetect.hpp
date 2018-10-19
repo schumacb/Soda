@@ -41,7 +41,7 @@ struct BlobDetecSettings
 {
     cv::Mat erosion_element,
             dilation_element;
-    Channel channel;
+    Channel& channel;
     u32 minArea;
     u32 maxBlobs;
 };
@@ -62,15 +62,16 @@ struct ThresholdResult
 struct BlobDetecResult
 {
     ThresholdResult threshold_result;
+    cv::Mat denoised_result;
     std::vector<std::vector<cv::Point>> contours;
     std::vector<Blob> blobs;
 };
 
 class BlobDetect
 {
-    BlobDetecSettings _settings;
+    BlobDetecSettings& _settings;
 public:
-    BlobDetect(BlobDetecSettings settings);
+    BlobDetect(BlobDetecSettings& settings);
     ~BlobDetect();
     void process(cv::InputArray image, BlobDetecResult& result);
     void calculate_threshold(cv::InputArray inputImage, ThresholdResult &result);
