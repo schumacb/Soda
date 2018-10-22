@@ -74,7 +74,10 @@ public:
     BlobDetect(BlobDetecSettings& settings);
     ~BlobDetect();
     void process(cv::InputArray image, BlobDetecResult& result);
-    void calculate_threshold(cv::InputArray inputImage, ThresholdResult &result);
+    void calculate_threshold(cv::InputArray input_image, ThresholdResult &result);
+    void denoise(cv::InputArray imput_image, cv::OutputArray result);
+    void extract_blob_information(std::vector<std::vector<cv::Point> > contours, std::vector<Blob> blobs);
+    void remove_small_blobs(std::vector<Blob>& blobs);
 };
 
 } // namespace soda

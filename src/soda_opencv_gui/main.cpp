@@ -63,9 +63,9 @@ int main(int argc, char **argv) {
                                 cv::Size( 2 * dilation_size + 1, 2 * dilation_size + 1 ));
     Channel channel
     {
-        {40,90},
-        {75,255},
-        {75,255}
+        {90,200},
+        {20,255},
+        {20,255}
     };
     u32 min_area = 10;
     u32 max_blobs = 10;

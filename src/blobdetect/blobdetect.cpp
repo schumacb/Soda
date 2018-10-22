@@ -8,7 +8,7 @@ BlobDetect::BlobDetect(BlobDetecSettings &settings)
 
 BlobDetect::~BlobDetect() { }
 
-void BlobDetect::calculate_threshold(cv::InputArray inputImage, ThresholdResult& result)
+void BlobDetect::calculate_threshold(cv::InputArray input_image, ThresholdResult& result)
 {
     Channel& channel = _settings.channel;
     ChannelRange& hue_range = channel.hue;
@@ -35,7 +35,7 @@ void BlobDetect::calculate_threshold(cv::InputArray inputImage, ThresholdResult&
     }
 
     auto& hsv = result.hsv;
-    cv::cvtColor(inputImage, hsv, cv::COLOR_RGB2HSV);
+    cv::cvtColor(input_image, hsv, cv::COLOR_RGB2HSV);
     auto& hue = result.hue;
     auto& sat = result.sat;
     auto& val = result.val;
@@ -62,32 +62,17 @@ void BlobDetect::calculate_threshold(cv::InputArray inputImage, ThresholdResult&
     cv::min(thrash, val_thrash, thrash);
 }
 
-void BlobDetect::process(cv::InputArray inputImage, BlobDetecResult& result)
+void BlobDetect::denoise(cv::InputArray imput_image, cv::OutputArray result)
 {
-    if(inputImage.empty())
-    {
-        return;
-    }
-    auto & thrash = result.threshold_result.threshold;
-    calculate_threshold(inputImage, result.threshold_result);
-    result.denoised_result = thrash;
+    cv::erode(imput_image, result, _settings.erosion_element);
+    cv::dilate(result, result, _settings.dilation_element);
+    cv::dilate(result, result, _settings.dilation_element);
+    cv::erode(result, result, _settings.erosion_element);
+}
 
-    // Apply the erosion operation to remove false positives from noise
-    cv::erode(result.denoised_result, result.denoised_result, _settings.erosion_element);
-    // Apply the erosion operation to remove false positives from noise
-    cv::dilate(result.denoised_result, result.denoised_result, _settings.dilation_element);
-    // Apply the dilation operation to remove false negatives from noise
-    cv::dilate(result.denoised_result, result.denoised_result, _settings.dilation_element);
-    // Apply the erosion operation to remove false positives from noise
-    cv::erode(result.denoised_result, result.denoised_result, _settings.erosion_element);
-
-    // Finds contours
-    auto & contours = result.contours;
-    cv::findContours(thrash, contours, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_NONE);
-
-    // Extract blob information
+void BlobDetect::extract_blob_information(std::vector<std::vector<cv::Point>> contours, std::vector<Blob> blobs)
+{
     unsigned int area = 0;
-    auto& blobs = result.blobs;
     for(size_t i=0; i<contours.size(); ++i) {
         area = static_cast<unsigned int>(cv::contourArea(contours[i]));
         if (area >= _settings.minArea) {
@@ -104,8 +89,10 @@ void BlobDetect::process(cv::InputArray inputImage, BlobDetecResult& result)
                 blobs.push_back(blob);
          }
     }
+}
 
-    // sort blobs in ascending order
+void BlobDetect::remove_small_blobs(std::vector<Blob>& blobs)
+{
     std::sort(blobs.begin(), blobs.end());
 
     // remove small blobs (requires blobs to be sorted ascending)
@@ -113,6 +100,25 @@ void BlobDetect::process(cv::InputArray inputImage, BlobDetecResult& result)
     {
         blobs.erase(blobs.begin());
     }
+}
+
+void BlobDetect::process(cv::InputArray inputImage, BlobDetecResult& result)
+{
+    if(inputImage.empty())
+    {
+        return;
+    }
+    auto & thrash = result.threshold_result.threshold;
+    calculate_threshold(inputImage, result.threshold_result);
+    denoise(result.threshold_result.threshold, result.denoised_result);
+
+    // Finds contours
+    auto & contours = result.contours;
+    cv::findContours(thrash, contours, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_NONE);
+
+    // Extract blob information
+    extract_blob_information(contours, result.blobs);
+    remove_small_blobs(result.blobs);
 }
 
 }

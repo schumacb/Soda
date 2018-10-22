@@ -1,4 +1,5 @@
-#include <vector>
+#include "core/types.hpp"
+#include "core/commandlineparser.hpp"
 
 #include <opencv2/imgproc.hpp>
 #include <opencv2/highgui.hpp>
@@ -8,7 +9,11 @@
 using namespace std;
 using namespace soda;
 
-int main(int argc, char **argv) {
+int main(int argc, char *argv[])
+{
+    CommandLineParser parser;
+    auto& helpOption = parser.add_help_flag();
+    parser.parse(argc, argv);
 
     cv::Mat input_image;
     input_image = cv::imread( "source.jpg");
@@ -53,20 +58,18 @@ int main(int argc, char **argv) {
 
     f64 min = 105;
     f64 max = 135;
-//    for(f64 min=0;min < 255;++min)
-//    for(f64 max=0;max < 255;++max)
-//    {
-        channel.hue.min = min;
-        channel.hue.max = max;
-        blobDetect.process(input_image, blob_detect_result);
 
-        cout << "hue: [" << min << ", " << max << "]\nblobs: ";
-        for(auto blob : blob_detect_result.blobs)
-        {
-            cout << blob.area << " ";
-        }
-        cout << "\n";
-//    }
+    channel.hue.min = min;
+    channel.hue.max = max;
+    blobDetect.process(input_image, blob_detect_result);
+
+    cout << "hue: [" << min << ", " << max << "]\nblobs: ";
+    for(auto blob : blob_detect_result.blobs)
+    {
+        cout << blob.area << " ";
+    }
+    cout << "\n";
+
     imwrite( "000-source.jpg", input_image );
     imwrite( "010-hue.jpg", threshold_result.hue );
     imwrite( "011-hue-threshold.jpg", threshold_result.hue_threshold );
