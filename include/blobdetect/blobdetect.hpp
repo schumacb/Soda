@@ -1,8 +1,8 @@
 #pragma once
 
-#include "core/image.hpp"
 #include "core/types.hpp"
-#include "opencv2/opencv.hpp"
+
+#include "image.hpp"
 
 namespace soda {
 
@@ -39,32 +39,32 @@ struct Channel {
 
 struct BlobDetecSettings
 {
-    cv::Mat erosion_element,
-            dilation_element;
+    f64 channel_range_max_value;
     Channel& channel;
+    Image erosion_element,
+          dilation_element;
     u32 minArea;
     u32 maxBlobs;
 };
 
 struct ThresholdResult
 {
-    cv::Mat hsv;
-    cv::Mat hsv_components[3];
-    cv::Mat& hue = hsv_components[0];
-    cv::Mat& sat = hsv_components[1];
-    cv::Mat& val = hsv_components[2];
-    cv::Mat threshold;
-    cv::Mat hue_threshold;
-    cv::Mat sat_threshold;
-    cv::Mat val_threshold;
+    Image hsv;
+    Image hue = hsv[0];
+    Image sat = hsv[1];
+    Image val = hsv[2];
+    Image threshold;
+    Image hue_threshold;
+    Image sat_threshold;
+    Image val_threshold;
 };
 
 struct BlobDetecResult
 {
     ThresholdResult threshold_result;
-    cv::Mat denoised_result;
-    std::vector<std::vector<cv::Point>> contours;
-    std::vector<Blob> blobs;
+    Image denoised_result;
+    Vector<Vector<Point>> contours;
+    Vector<Blob> blobs;
 };
 
 class BlobDetect
@@ -73,11 +73,12 @@ class BlobDetect
 public:
     BlobDetect(BlobDetecSettings& settings);
     ~BlobDetect();
-    void process(cv::InputArray image, BlobDetecResult& result);
-    void calculate_threshold(cv::InputArray input_image, ThresholdResult &result);
-    void denoise(cv::InputArray imput_image, cv::OutputArray result);
-    void extract_blob_information(std::vector<std::vector<cv::Point> > contours, std::vector<Blob> blobs);
-    void remove_small_blobs(std::vector<Blob>& blobs);
+    void process(Image input_image, BlobDetecResult& result);
+    void calculate_threshold(Image &input_image, ThresholdResult &result);
+    void denoise(Image imput_image, Image result);
+    void extract_blob_information(Vector<Vector<Point> > contours, Vector<Blob> blobs);
+    void remove_small_blobs(Vector<Blob>& blobs);
+    void threshold(const Image& input_image, Image& output_image, ChannelRange range, bool invert_binary);
 };
 
 } // namespace soda

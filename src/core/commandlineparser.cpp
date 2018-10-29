@@ -1,17 +1,19 @@
-#include "core/commandlineparser.hpp"
+#include "commandlineparser.hpp"
+#include "types.hpp"
+
+namespace soda {
 
 CommandLineParser::CommandLineParser()
 {
 
 }
 
-
 void CommandLineParser::parse(int argc, char* argv[])
 {
     Queue<String> args;
     for(int i = 0; i < argc; ++i)
     {
-        args.push(String(argv[i]));
+        args.push(argv[i]);
     }
     parse(args);
 }
@@ -22,7 +24,7 @@ void CommandLineParser::parse(Queue<String> args)
     {
         auto arg = args.front();
         args.pop();
-        if(starts_with(arg, "--"))
+        if(arg.starts_with("--"))
         {
             auto& option = get_option(arg);
             if(args.size() == 0) {
@@ -30,9 +32,8 @@ void CommandLineParser::parse(Queue<String> args)
             }
             option.value = args.front();
             args.pop();
-            option.was_given = true;
         }
-        if(starts_with(arg, "-"))
+        if(arg.starts_with("-"))
         {
             auto& flag = get_flag(arg);
             flag.was_given = true;
@@ -42,7 +43,7 @@ void CommandLineParser::parse(Queue<String> args)
 
 CommandLineOption& CommandLineParser::get_option(const String& name_or_alias)
 {
-    if(!contains_key(_optionDictionary, name_or_alias))
+    if(!_optionDictionary.contains_key(name_or_alias))
     {
         throw InvalidArgumentException("Unknown command line option: --" + name_or_alias);
     }
@@ -51,7 +52,7 @@ CommandLineOption& CommandLineParser::get_option(const String& name_or_alias)
 
 CommandLineFlag& CommandLineParser::get_flag(const String &name_or_alias)
 {
-    if(!contains_key(_flagDictionary, name_or_alias))
+    if(!_flagDictionary.contains_key(name_or_alias))
     {
         throw InvalidArgumentException("Unknown command line flag: -" + name_or_alias);
     }
@@ -66,24 +67,26 @@ CommandLineFlag& CommandLineParser::add_help_flag()
     return add_flag("Help", "This Message", alias_list);
 }
 
-CommandLineFlag& add_flag(String name, String description, Vector<String> alias_list)
+CommandLineFlag& CommandLineParser::add_flag(String name, String description, Vector<String> alias_list)
 {
     CommandLineFlag flag{ name, alias_list, description, false};
     _flagDictionary[flag.name] = flag;
     for(auto alias : flag.alias_list)
     {
-        _flagDictionary[alias] = flag;
+        _flagAliasDictionary[alias] = flag.name;
     }
-    _flags.push_back(flag);
+    return _flagDictionary[flag.name] = flag;
 }
 
-CommandLineOption& add_option(String name, String description, Vector<String> alias_list, String parameter_name)
+CommandLineOption& CommandLineParser::add_option(String name, String description, Vector<String> alias_list, String parameter_name)
 {
-    CommandLineOption option{name, alias_list, description, parameter_name };
+    CommandLineOption option{name, alias_list, description, parameter_name, ""};
     _optionDictionary[option.name] = option;
     for(auto alias : option.alias_list)
     {
-        _optionDictionary[alias] = option;
+        _optionAliasDictionary[alias] = option.name;
     }
-    _options.push_back(option);
+    return _optionDictionary[option.name] = option;
 }
+
+} // namespace soda

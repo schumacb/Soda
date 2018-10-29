@@ -10,7 +10,7 @@ using namespace soda;
 
 struct NamedMat {
     cv::String name;
-    cv::Mat& mat;
+    const cv::Mat& mat;
 };
 
 void create_windows(vector<NamedMat> list) {
@@ -43,24 +43,24 @@ int main(int argc, char **argv) {
     cv::Mat frame;
     BlobDetecResult blob_detect_result;
     auto& threshold_result = blob_detect_result.threshold_result;
-    vector<NamedMat> window_names = {
-        {"sourceImage", frame},
-        {"hsv", threshold_result.hsv},
-        {"hue", threshold_result.hue},
-        {"hue-threshold", threshold_result.hue_threshold},
-        {"sat", threshold_result.sat},
-        {"sat-threshold", threshold_result.sat_threshold},
-        {"val", threshold_result.val},
-        {"val-threshold", threshold_result.val_threshold},
-        {"threshold", threshold_result.threshold}
-    };
+    vector<NamedMat> window_names;
+    window_names.push_back(NamedMat{"sourceImage", frame});
+    window_names.push_back(NamedMat{"hsv", threshold_result.hsv});
+    window_names.push_back(NamedMat{"hue", threshold_result.hue});
+    window_names.push_back(NamedMat{"hue-threshold", threshold_result.hue_threshold});
+    window_names.push_back(NamedMat{"sat", threshold_result.sat});
+    window_names.push_back(NamedMat{"sat-threshold", threshold_result.sat_threshold});
+    window_names.push_back(NamedMat{"val", threshold_result.val});
+    window_names.push_back(NamedMat{"val-threshold", threshold_result.val_threshold});
+    window_names.push_back(NamedMat{"threshold", threshold_result.threshold});
+
     create_windows(window_names);
     int erosion_size = 2;
     int dilation_size = 2;
-    auto erosion_element = cv::getStructuringElement(cv::MORPH_ELLIPSE,
-                                cv::Size( 2 * erosion_size + 1, 2 * erosion_size + 1 ));
-    auto dilation_element = cv::getStructuringElement(cv::MORPH_ELLIPSE,
-                                cv::Size( 2 * dilation_size + 1, 2 * dilation_size + 1 ));
+
+    auto erosion_element = Image(MorphShape::Ellipse, erosion_size);
+    auto dilation_element = Image(MorphShape::Ellipse, dilation_size);
+
     Channel channel
     {
         {90,200},
@@ -71,9 +71,10 @@ int main(int argc, char **argv) {
     u32 max_blobs = 10;
     BlobDetecSettings blobdetect_settings
     {
+        255,
+        channel,
         erosion_element,
         dilation_element,
-        channel,
         min_area,
         max_blobs
     };
@@ -84,7 +85,7 @@ int main(int argc, char **argv) {
         capture >> frame;
         if(!frame.empty())
         {
-            blobDetect.process(frame, blob_detect_result);
+            blobDetect.process(Image(frame), blob_detect_result);
             show_images(window_names);
         }
         else

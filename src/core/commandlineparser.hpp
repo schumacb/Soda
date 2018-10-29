@@ -1,6 +1,9 @@
 #pragma once
 
 #include "core/types.hpp"
+#include "types.hpp"
+
+namespace soda {
 
 struct CommandLineFlag
 {
@@ -22,10 +25,10 @@ struct CommandLineOption
 class CommandLineParser
 {
 private:
-    Vector<CommandLineFlag> _flags;
-    Vector<CommandLineOption> _options;
-    Dictionary<String, CommandLineFlag&>  _flagDictionary;
-    Dictionary<String, CommandLineOption&>  _optionDictionary;
+    Dictionary<String, CommandLineFlag>  _flagDictionary;
+    Dictionary<String, String>  _flagAliasDictionary;
+    Dictionary<String, CommandLineOption>  _optionDictionary;
+    Dictionary<String, String>  _optionAliasDictionary;
 
 public:
     CommandLineParser();
@@ -38,3 +41,5 @@ public:
     void parse(int argc, char* argv[]);
     void parse(Queue<String> args);
 };
+
+} // namespace soda

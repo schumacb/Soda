@@ -23,6 +23,8 @@ add_library(${PROJECT_NAME} STATIC ${SOURCE_FILES})
 target_include_directories(${PROJECT_NAME} PUBLIC ${PROJECT_SOURCE_DIR}/../../include/${PROJECT_NAME})
 
 # Dependencies -----------------------------------------------------------------
+target_link_libraries(${PROJECT_NAME} core)
+
 # TODO: Remove Dependency to qt
 find_package(Qt5 COMPONENTS Core REQUIRED)
 target_link_libraries(${PROJECT_NAME} Qt5::Core)

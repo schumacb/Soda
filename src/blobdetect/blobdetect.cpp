@@ -8,7 +8,15 @@ BlobDetect::BlobDetect(BlobDetecSettings &settings)
 
 BlobDetect::~BlobDetect() { }
 
-void BlobDetect::calculate_threshold(cv::InputArray input_image, ThresholdResult& result)
+void BlobDetect::threshold(const Image& input_image, Image& output_image, ChannelRange range, bool invert_binary)
+{
+    auto max_value = _settings.channel_range_max_value;
+    input_image.threshold(output_image, range.max, max_value, ThresholdType::ToZeroInverse);
+    output_image.threshold(output_image, range.min, max_value,
+                           (invert_binary ? ThresholdType::BinaryInverse : ThresholdType::Binary));
+}
+
+void BlobDetect::calculate_threshold(Image& input_image, ThresholdResult& result)
 {
     Channel& channel = _settings.channel;
     ChannelRange& hue_range = channel.hue;
@@ -35,39 +43,32 @@ void BlobDetect::calculate_threshold(cv::InputArray input_image, ThresholdResult
     }
 
     auto& hsv = result.hsv;
-    cv::cvtColor(input_image, hsv, cv::COLOR_RGB2HSV);
+    input_image.convert_color(hsv, ColorSpace::HSV);
     auto& hue = result.hue;
     auto& sat = result.sat;
     auto& val = result.val;
-    cv::split(hsv, result.hsv_components);
 
-    cv::Mat& thrash = result.threshold;
-    cv::Mat& hue_thrash = result.hue_threshold;
-    cv::Mat& sat_thrash = result.sat_threshold;
-    cv::Mat& val_thrash = result.val_threshold;
-    auto max_range = 255;
-    cv::threshold(hue, thrash, hue_range.max, max_range, cv::THRESH_TOZERO_INV);
-    cv::threshold(thrash ,hue_thrash, hue_range.min, max_range,
-                    (invertHueThrash ? cv::THRESH_BINARY_INV : cv::THRESH_BINARY));
+    hsv.split();
 
-    cv::threshold(sat, thrash, satuartion_range.max, max_range, cv::THRESH_TOZERO_INV);
-    cv::threshold(thrash, sat_thrash, satuartion_range.min, max_range,
-                    (invertSatThrash ? cv::THRESH_BINARY_INV : cv::THRESH_BINARY));
+    auto& thrash = result.threshold;
+    auto& hue_thrash = result.hue_threshold;
+    auto& sat_thrash = result.sat_threshold;
+    auto& val_thrash = result.val_threshold;
 
-    cv::threshold(val, thrash, value_range.max, max_range, cv::THRESH_TOZERO_INV);
-    cv::threshold(thrash, val_thrash, value_range.min, max_range,
-                    (invertValThrash ? cv::THRESH_BINARY_INV : cv::THRESH_BINARY));
+    threshold(hue, hue_thrash, hue_range, invertHueThrash);
+    threshold(sat, sat_thrash, satuartion_range, invertSatThrash);
+    threshold(val, val_thrash, value_range, invertValThrash);
 
-    cv::min(hue_thrash, sat_thrash, thrash);
-    cv::min(thrash, val_thrash, thrash);
+    min(hue_thrash, sat_thrash, thrash);
+    min(thrash, val_thrash, thrash);
 }
 
-void BlobDetect::denoise(cv::InputArray imput_image, cv::OutputArray result)
+void BlobDetect::denoise(Image imput_image, Image result)
 {
-    cv::erode(imput_image, result, _settings.erosion_element);
-    cv::dilate(result, result, _settings.dilation_element);
-    cv::dilate(result, result, _settings.dilation_element);
-    cv::erode(result, result, _settings.erosion_element);
+    erode(imput_image, result, _settings.erosion_element);
+    dilate(result, result, _settings.dilation_element);
+    dilate(result, result, _settings.dilation_element);
+    erode(result, result, _settings.erosion_element);
 }
 
 void BlobDetect::extract_blob_information(std::vector<std::vector<cv::Point>> contours, std::vector<Blob> blobs)
@@ -91,7 +92,7 @@ void BlobDetect::extract_blob_information(std::vector<std::vector<cv::Point>> co
     }
 }
 
-void BlobDetect::remove_small_blobs(std::vector<Blob>& blobs)
+void BlobDetect::remove_small_blobs(Vector<Blob> &blobs)
 {
     std::sort(blobs.begin(), blobs.end());
 
@@ -102,19 +103,19 @@ void BlobDetect::remove_small_blobs(std::vector<Blob>& blobs)
     }
 }
 
-void BlobDetect::process(cv::InputArray inputImage, BlobDetecResult& result)
+void BlobDetect::process(Image input_image, BlobDetecResult& result)
 {
-    if(inputImage.empty())
+    if(input_image.is_empty())
     {
         return;
     }
     auto & thrash = result.threshold_result.threshold;
-    calculate_threshold(inputImage, result.threshold_result);
+    calculate_threshold(input_image, result.threshold_result);
     denoise(result.threshold_result.threshold, result.denoised_result);
 
     // Finds contours
     auto & contours = result.contours;
-    cv::findContours(thrash, contours, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_NONE);
+    thrash.find_contours(contours);
 
     // Extract blob information
     extract_blob_information(contours, result.blobs);

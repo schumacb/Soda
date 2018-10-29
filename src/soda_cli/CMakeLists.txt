@@ -12,7 +12,7 @@ add_executable(${PROJECT_NAME} ${SOURCE_FILES})
 cmake_minimum_required(VERSION 3.5 FATAL_ERROR)
 
 # Soda
-target_link_libraries(${PROJECT_NAME} blobdetect)
+target_link_libraries(${PROJECT_NAME} core blobdetect)
 
 # Qt
 find_package(Qt5 COMPONENTS Core)
