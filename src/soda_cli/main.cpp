@@ -11,11 +11,16 @@
 using namespace std;
 using namespace soda;
 
-int main(int argc, char *argv[])
+int inner_main(int argc, char *argv[])
 {
     CommandLineParser parser;
-    auto& helpOption = parser.add_help_flag();
+    auto& help_flag = parser.add_help_flag();
     parser.parse(argc, argv);
+
+    if(help_flag.was_given)
+    {
+        // TODO: print help
+    }
 
     Image input_image;
     input_image.read("source.jpg");
@@ -80,10 +85,37 @@ int main(int argc, char *argv[])
     threshold_result.threshold.write("100-threshold.jpg");
     blob_detect_result.denoised_result.write("101-threshold-denoised.jpg");
 
-    Image colored_threshold;
+    Image colored_threshold = threshold_result.hsv;
     blob_detect_result.denoised_result.convert_color(colored_threshold, ColorSpace::RGB);
     Image tmp;
     multiply(input_image, colored_threshold, tmp, 1.0/255.0);
     tmp.write("200-colored-threshold.jpg");
+
+    Image colored_hue= threshold_result.hsv;
+    colored_hue.split();
+    colored_hue[1] = Image(MorphShape::Rectangle, colored_threshold.width(), colored_threshold.height());
+    colored_hue[2] = Image(MorphShape::Rectangle, colored_threshold.width(), colored_threshold.height());
+    colored_hue.merge();
+    colored_hue.write("200-colored-hue.jpg");
     return 0;
+}
+
+int main(int argc, char *argv[])
+{
+    try
+    {
+        inner_main(argc, argv);
+    }
+    catch (soda::Image::ConversionException e)
+    {
+        std::cerr << "Caught unhandled exception: " << e.what();
+    }
+    catch (exception e)
+    {
+        std::cerr << "Caught unhandled exception: " << e.what();
+    }
+    catch (exception* e)
+    {
+        std::cerr << "Caught unhandled exception pointer: " << e->what();
+    }
 }

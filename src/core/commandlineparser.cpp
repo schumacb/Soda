@@ -1,3 +1,5 @@
+#include <iostream>
+
 #include "commandlineparser.hpp"
 #include "types.hpp"
 

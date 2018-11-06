@@ -85,7 +85,7 @@ int main(int argc, char **argv) {
         capture >> frame;
         if(!frame.empty())
         {
-            blobDetect.process(Image(frame), blob_detect_result);
+            blobDetect.process(Image(frame, ColorSpace::RGB), blob_detect_result);
             show_images(window_names);
         }
         else

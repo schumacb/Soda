@@ -60,6 +60,11 @@ public:
         _string.length();
     }
 
+    const char* c_str() const
+    {
+        return _string.c_str();
+    }
+
     operator const std::string&() const
     {
         return _string;

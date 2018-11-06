@@ -50,7 +50,7 @@ void BlobDetect::calculate_threshold(Image& input_image, ThresholdResult& result
 
     hsv.split();
 
-    auto& thrash = result.threshold;
+    auto& thresh = result.threshold;
     auto& hue_thrash = result.hue_threshold;
     auto& sat_thrash = result.sat_threshold;
     auto& val_thrash = result.val_threshold;
@@ -59,8 +59,8 @@ void BlobDetect::calculate_threshold(Image& input_image, ThresholdResult& result
     threshold(sat, sat_thrash, satuartion_range, invertSatThrash);
     threshold(val, val_thrash, value_range, invertValThrash);
 
-    min(hue_thrash, sat_thrash, thrash);
-    min(thrash, val_thrash, thrash);
+    min(hue_thrash, sat_thrash, thresh);
+    min(thresh, val_thrash, thresh);
 }
 
 void BlobDetect::denoise(Image imput_image, Image result)
@@ -109,13 +109,13 @@ void BlobDetect::process(Image input_image, BlobDetecResult& result)
     {
         return;
     }
-    auto & thrash = result.threshold_result.threshold;
+    auto & thresh = result.threshold_result.threshold;
     calculate_threshold(input_image, result.threshold_result);
-    denoise(result.threshold_result.threshold, result.denoised_result);
+    denoise(thresh, result.denoised_result);
 
     // Finds contours
     auto & contours = result.contours;
-    thrash.find_contours(contours);
+    thresh.find_contours(contours);
 
     // Extract blob information
     extract_blob_information(contours, result.blobs);
