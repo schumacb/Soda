@@ -17,8 +17,21 @@ if(SODA_BUILD_GUI)
 
     add_executable(${PROJECT_NAME} ${SOURCE_FILES})
 
+    # Soda
+    target_link_libraries(${PROJECT_NAME} blobdetect)
+
+    # OpenCV
+    find_package(OpenCV REQUIRED)
+    target_link_libraries(${PROJECT_NAME} ${OpenCV_LIBRARIES})
+
+    # Qt
     find_package(Qt5 COMPONENTS Core Widgets Gui)
     target_link_libraries(${PROJECT_NAME} Qt5::Core Qt5::Widgets Qt5::Gui)
+    include_directories(
+        .
+        ${PROJECT_SOURCE_DIR}/src
+        ${QT_INCLUDES}
+        )
 else()
   add_custom_target(${PROJECT_NAME} ${SOURCE_FILES})
 endif()

@@ -1,6 +1,13 @@
-#include <QGuiApplication>
+#include <QApplication>
+
+#include <mainwindow.h>
+
+using namespace soda;
 
 int main(int argc, char **argv) {
-    auto app = new QGuiApplication(argc, argv);
-    return app->exec();
+    QApplication app(argc, argv);
+    MainWindow mainWindow(nullptr);
+    app.quitOnLastWindowClosed();
+    mainWindow.show();
+    return app.exec();
 }

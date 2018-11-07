@@ -1004,5 +1004,6 @@
         <file>images/robotik-logo.png</file>
         <file>images/robotik-logo.svg</file>
         <file>images/robotik-logo.eps</file>
+        <file>../src/mainwindow.ui</file>
     </qresource>
 </RCC>
